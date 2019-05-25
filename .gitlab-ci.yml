@@ -1,0 +1,9 @@
+before_script:
+  - apt-get update
+  - apt-get install --yes cmake
+
+compile:
+  image: gcc
+  script:
+      - cmake -G"Unix Makefiles"
+      - make
