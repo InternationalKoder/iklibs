@@ -2,4 +2,4 @@ compile:
   image: rikorose/gcc-cmake:gcc-8
   script:
       - cmake -G"Unix Makefiles"
-      - make
+      - cmake --build . --target all
