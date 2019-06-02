@@ -1,5 +1,5 @@
 compile:
   image: rikorose/gcc-cmake:gcc-8
   script:
-      - cmake -G"Unix Makefiles"
+      - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=RELEASE
       - cmake --build . --target all
