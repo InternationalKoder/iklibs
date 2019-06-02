@@ -1,6 +1,6 @@
-#include "Log.hpp"
+#include "iklog/Log.hpp"
 #include <iostream>
-#include "Message.hpp"
+#include "iklog/Message.hpp"
 
 namespace iklog
 {

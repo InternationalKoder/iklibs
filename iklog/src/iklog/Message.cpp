@@ -1,4 +1,4 @@
-#include "Message.hpp"
+#include "iklog/Message.hpp"
 
 namespace iklog
 {
