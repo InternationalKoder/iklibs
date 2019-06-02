@@ -1,9 +1,5 @@
-before_script:
-  - apt-get update
-  - apt-get install --yes cmake
-
 compile:
-  image: gcc
+  image: rikorose/gcc-cmake:gcc-8
   script:
       - cmake -G"Unix Makefiles"
       - make
