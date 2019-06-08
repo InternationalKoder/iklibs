@@ -9,13 +9,21 @@ class Settings : public ikconf::Configuration
 
         Settings();
 
-        inline std::string getResourcesPath() const { return m_resourcesPath; }
-        inline int getThreadsNumber() const { return m_threadsNumber; }
+        inline std::string getTestString() const { return m_testString; }
+        inline int getTestInt() const { return m_testInt; }
+        inline float getTestFloat() const { return m_testFloat; }
+        inline bool getTestBool() const { return m_testBool; }
+        inline bool getTestCharAsChar() const { return m_testCharAsChar; }
+        inline bool getTestCharAsNumber() const { return m_testCharAsNumber; }
 
     private:
 
-        std::string m_resourcesPath;
-        int m_threadsNumber;
+        std::string m_testString;
+        int m_testInt;
+        float m_testFloat;
+        bool m_testBool;
+        char m_testCharAsChar;
+        char m_testCharAsNumber;
 };
 
 #endif // SETTINGS_HPP

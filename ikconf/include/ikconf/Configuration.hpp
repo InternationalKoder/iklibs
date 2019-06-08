@@ -41,7 +41,10 @@ namespace ikconf
                 m_properties[property.getName()] = property.getValue();
             }
 
-            IKCONF_EXPORT void read();
+            IKCONF_EXPORT inline std::any getPropertyValue(const std::string& propertyName) const
+            {
+                return m_properties.at(propertyName);
+            }
 
         private:
 

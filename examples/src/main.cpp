@@ -1,14 +1,28 @@
 #include "Settings.hpp"
 #include <iostream>
+#include <ikconf/readers/PropertiesReader.hpp>
+#include <ikconf/exceptions/ConfigurationException.hpp>
 
 int main()
 {
     Settings settings;
+    ikconf::PropertiesReader reader(settings);
 
-    settings.read();
+    try
+    {
+        reader.read("resources/test.properties");
+    }
+    catch(ikconf::ConfigurationException e)
+    {
+        std::cerr << "Error while getting configuration: " << e.what() << std::endl;
+    }
 
-    std::cout << settings.getResourcesPath() << std::endl;
-    std::cout << settings.getThreadsNumber() << std::endl;
+    std::cout << settings.getTestString() << std::endl;
+    std::cout << settings.getTestInt() << std::endl;
+    std::cout << settings.getTestFloat() << std::endl;
+    std::cout << settings.getTestBool() << std::endl;
+    std::cout << settings.getTestCharAsChar() << std::endl;
+    std::cout << settings.getTestCharAsNumber() << std::endl;
 
     return 0;
 }
