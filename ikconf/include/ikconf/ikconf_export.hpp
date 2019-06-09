@@ -9,20 +9,20 @@
 #  ifndef IKCONF_EXPORT
 #    ifdef ikconf_EXPORTS
         /* We are building this library */
-#      define IKCONF_EXPORT __declspec(dllexport)
+#      define IKCONF_EXPORT __attribute__((visibility("default")))
 #    else
         /* We are using this library */
-#      define IKCONF_EXPORT __declspec(dllimport)
+#      define IKCONF_EXPORT __attribute__((visibility("default")))
 #    endif
 #  endif
 
 #  ifndef IKCONF_NO_EXPORT
-#    define IKCONF_NO_EXPORT 
+#    define IKCONF_NO_EXPORT __attribute__((visibility("hidden")))
 #  endif
 #endif
 
 #ifndef IKCONF_DEPRECATED
-#  define IKCONF_DEPRECATED __declspec(deprecated)
+#  define IKCONF_DEPRECATED __attribute__ ((__deprecated__))
 #endif
 
 #ifndef IKCONF_DEPRECATED_EXPORT

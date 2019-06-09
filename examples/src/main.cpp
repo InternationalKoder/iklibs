@@ -12,7 +12,7 @@ int main()
     {
         reader.read("resources/test.properties");
     }
-    catch(ikconf::ConfigurationException e)
+    catch(const ikconf::ConfigurationException& e)
     {
         std::cerr << "Error while getting configuration: " << e.what() << std::endl;
     }

@@ -13,7 +13,7 @@ namespace ikconf
 
             ConfigurationException(const std::string& what);
 
-            inline virtual const char* what() const { return m_what.c_str(); }
+            inline virtual const char* what() const noexcept { return m_what.c_str(); }
 
         private:
 

@@ -15,7 +15,7 @@ namespace ikconf
             Property(const std::string& name, T& value) : m_name(name), m_value(&value) {}
 
             inline std::string getName() const { return m_name; }
-            inline T* const getValue() const { return m_value; }
+            inline T* getValue() const { return m_value; }
 
         private:
 
