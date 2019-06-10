@@ -9,6 +9,7 @@ namespace iklog
 
     const std::map<char, getFunc> Formatter::FORMAT_MAPPING
     {
+        {'L', &Formatter::getLogName},
         {'l', &Formatter::getLevel},
         {'p', &Formatter::getLevelPretty},
         {'m', &Formatter::getMessage},
@@ -66,7 +67,7 @@ namespace iklog
         const Level& level = message.getLevel();
         assert(level == Level::INFO || level == Level::DEBUG || level == Level::WARNING || level == Level::ERROR);
 
-        switch(message.getLevel())
+        switch(level)
         {
             case Level::INFO:
                 return "INFO";

@@ -4,13 +4,18 @@
 
 namespace iklog
 {
-    Log::Log(unsigned int levels, const Formatter& formatter) :
+    std::map<std::string, Log*> Log::m_logsList;
+
+    Log::Log(const std::string& name, unsigned int levels, const Formatter& formatter) :
+        m_name(name),
         m_levels(levels),
         m_startTime(std::chrono::system_clock::now()),
         m_formatter(formatter),
         m_workerThread(&Log::worker, this),
         m_stop(false)
     {
+        m_logsList[name] = this;
+
         m_outputs[Level::INFO] = &std::cout;
         m_outputs[Level::DEBUG] = &std::cout;
         m_outputs[Level::WARNING] = &std::cout;
@@ -54,7 +59,7 @@ namespace iklog
                     std::chrono::steady_clock::duration diff = std::chrono::system_clock::now() - m_startTime;
 
                     // possible to store log messages in memory for analysis
-                    Message logMessage(level, message, diff, std::chrono::system_clock::now());
+                    Message logMessage(m_name, level, message, diff, std::chrono::system_clock::now());
                     *m_outputs.at(level) << m_formatter.format(logMessage) << std::endl;
                 }
             }

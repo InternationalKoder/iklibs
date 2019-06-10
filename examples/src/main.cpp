@@ -1,10 +1,19 @@
 #include "Settings.hpp"
 #include <iostream>
+#include <iklog/Log.hpp>
 #include <ikconf/readers/PropertiesReader.hpp>
 #include <ikconf/exceptions/ConfigurationException.hpp>
 
 int main()
 {
+    iklog::Log log("iklibs-examples", iklog::Level::DEBUG | iklog::Level::WARNING | iklog::Level::ERROR);
+    log.info("Won't be displayed because the level is not activated");
+    log.warn("This warning should be displayed");
+
+    iklog::Log* examplesLog = iklog::Log::getLog("iklibs-examples");
+    examplesLog->disableLevels(iklog::Level::DEBUG);
+    log.debug("We retrieved a Log object and disabled debug level on it, this message should not appear");
+
     Settings settings;
     ikconf::PropertiesReader reader(settings);
 

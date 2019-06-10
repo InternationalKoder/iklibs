@@ -35,7 +35,8 @@ include_directories("include")
 set(EXECUTABLE_NAME "iklibs-examples")
 
 # Add ikconf library headers
+include_directories("../iklog/include")
 include_directories("../ikconf/include")
 
 add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
-target_link_libraries(${EXECUTABLE_NAME} PUBLIC ikconf)
+target_link_libraries(${EXECUTABLE_NAME} PUBLIC iklog ikconf)

@@ -2,7 +2,9 @@
 
 namespace iklog
 {
-    Message::Message(Level level, const std::string& message, const Duration& programDuration, const TimePoint& clockTime) :
+    Message::Message(const std::string& logName, Level level, const std::string& message,
+                     const Duration& programDuration, const TimePoint& clockTime) :
+        m_logName(logName),
         m_level(level),
         m_message(message),
         m_programDuration(programDuration),

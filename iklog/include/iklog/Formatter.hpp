@@ -12,10 +12,11 @@ namespace iklog
     {
         public:
 
-            IKLOG_EXPORT Formatter(const std::string& format = "%t [%p] %m");
+            IKLOG_EXPORT Formatter(const std::string& format = "%t %L [%p] %m");
 
             IKLOG_EXPORT std::string format(const Message& message) const;
 
+            IKLOG_EXPORT static inline std::string getLogName(const Message& message) { return message.getLogName(); }
             IKLOG_EXPORT static std::string getLevel(const Message& message);
             IKLOG_EXPORT static std::string getLevelPretty(const Message& message);
             IKLOG_EXPORT static inline std::string getMessage(const Message& message) { return message.getMessage(); }

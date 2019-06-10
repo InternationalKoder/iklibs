@@ -17,7 +17,7 @@ namespace iklog
     {
         public:
 
-            IKLOG_EXPORT Log(unsigned int levels, const Formatter& formatter = Formatter());
+            IKLOG_EXPORT Log(const std::string& name, unsigned int levels, const Formatter& formatter = Formatter());
 
             IKLOG_EXPORT ~Log();
 
@@ -29,6 +29,10 @@ namespace iklog
             IKLOG_EXPORT inline void error(const std::string& message) { log(Level::ERROR, message); }
 
             IKLOG_EXPORT inline bool isLevelEnabled(Level level) const { return (m_levels & level) != 0; }
+            IKLOG_EXPORT inline void enableLevels(unsigned int levels) { m_levels |= levels; }
+            IKLOG_EXPORT inline void disableLevels(unsigned int levels) { m_levels &= ~levels; }
+
+            IKLOG_EXPORT inline static Log* getLog(const std::string& name) { return m_logsList[name]; }
 
             IKLOG_EXPORT inline void setOutput(Level level, std::ostream& output) { m_outputs[level] = &output; }
             IKLOG_EXPORT inline void setFormatter(const Formatter& formatter) { m_formatter = formatter; }
@@ -37,6 +41,10 @@ namespace iklog
 
             void worker();
 
+            static std::map<std::string, Log*> m_logsList;
+
+
+            const std::string m_name;
             std::map<Level, std::ostream*> m_outputs;
             unsigned int m_levels;
             std::chrono::system_clock::time_point m_startTime;
