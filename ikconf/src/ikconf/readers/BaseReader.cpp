@@ -60,7 +60,27 @@ bool ikconf::BaseReader::tryConvertAndSetProperty(const std::string& name, const
 {
     bool added = false;
 
+    added = tryConvertAndSetProperty<std::string>(name, value);
+    if(added)
+        return true;
+
+    added = tryConvertAndSetProperty<int>(name, value);
+    if(added)
+        return true;
+
     added = tryConvertAndSetProperty<bool>(name, value);
+    if(added)
+        return true;
+
+    added = tryConvertAndSetProperty<unsigned int>(name, value);
+    if(added)
+        return true;
+
+    added = tryConvertAndSetProperty<float>(name, value);
+    if(added)
+        return true;
+
+    added = tryConvertAndSetProperty<double>(name, value);
     if(added)
         return true;
 
@@ -69,14 +89,6 @@ bool ikconf::BaseReader::tryConvertAndSetProperty(const std::string& name, const
         return true;
 
     added = tryConvertAndSetProperty<unsigned short int>(name, value);
-    if(added)
-        return true;
-
-    added = tryConvertAndSetProperty<int>(name, value);
-    if(added)
-        return true;
-
-    added = tryConvertAndSetProperty<unsigned int>(name, value);
     if(added)
         return true;
 
@@ -104,18 +116,5 @@ bool ikconf::BaseReader::tryConvertAndSetProperty(const std::string& name, const
     if(added)
         return true;
 
-    added = tryConvertAndSetProperty<float>(name, value);
-    if(added)
-        return true;
-
-    added = tryConvertAndSetProperty<double>(name, value);
-    if(added)
-        return true;
-
-    added = tryConvertAndSetProperty<long double>(name, value);
-    if(added)
-        return true;
-
-    // fallback is string
-    return tryConvertAndSetProperty<std::string>(name, value);
+    return tryConvertAndSetProperty<long double>(name, value);
 }

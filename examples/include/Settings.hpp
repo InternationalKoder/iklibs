@@ -13,8 +13,8 @@ class Settings : public ikconf::Configuration
         inline int getTestInt() const { return m_testInt; }
         inline float getTestFloat() const { return m_testFloat; }
         inline bool getTestBool() const { return m_testBool; }
-        inline bool getTestCharAsChar() const { return m_testCharAsChar; }
-        inline bool getTestCharAsNumber() const { return m_testCharAsNumber; }
+        inline char getTestCharAsChar() const { return m_testCharAsChar; }
+        inline char getTestCharAsNumber() const { return m_testCharAsNumber; }
 
     private:
 
