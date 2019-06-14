@@ -1,4 +1,7 @@
 #include "ikconf/Configuration.hpp"
 
-ikconf::Configuration::Configuration()
-{}
+namespace ikconf
+{
+    ikconf::Configuration::Configuration()
+    {}
+}

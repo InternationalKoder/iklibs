@@ -34,7 +34,7 @@ include_directories("include")
 
 set(EXECUTABLE_NAME "iklibs-examples")
 
-# Add ikconf library headers
+# Add iklog and ikconf library headers
 include_directories("../iklog/include")
 include_directories("../ikconf/include")
 

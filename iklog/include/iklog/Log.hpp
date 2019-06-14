@@ -19,8 +19,6 @@ namespace iklog
 
             IKLOG_EXPORT Log(const std::string& name, unsigned int levels, const Formatter& formatter = Formatter());
 
-            IKLOG_EXPORT ~Log();
-
             IKLOG_EXPORT void log(Level level, const std::string& message);
 
             IKLOG_EXPORT inline void info(const std::string& message) { log(Level::INFO, message); }
@@ -39,8 +37,6 @@ namespace iklog
 
         private:
 
-            void worker();
-
             static std::map<std::string, Log*> m_logsList;
 
 
@@ -49,12 +45,6 @@ namespace iklog
             unsigned int m_levels;
             std::chrono::system_clock::time_point m_startTime;
             Formatter m_formatter;
-            std::queue<std::pair<Level, std::string>> m_queue;
-
-            std::thread m_workerThread;
-            std::condition_variable m_conditionVar;
-            std::mutex m_mutex;
-            bool m_stop;
     };
 }
 

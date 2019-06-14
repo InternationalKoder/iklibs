@@ -2,6 +2,7 @@
 #include <ctime>
 #include <stdexcept>
 #include <cassert>
+#include <iostream>
 
 namespace iklog
 {
@@ -29,13 +30,7 @@ namespace iklog
         {
             if(formatted[i] == '%')
             {
-                try
-                {
-                    formatted.replace(i, 2, (FORMAT_MAPPING.at(formatted[i+1]))(message));
-                }
-                catch(const std::out_of_range&)
-                {
-                }
+                formatted.replace(i, 2, (FORMAT_MAPPING.at(formatted[i+1]))(message));
             }
         }
 

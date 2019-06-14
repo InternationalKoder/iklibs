@@ -1,7 +1,6 @@
 #ifndef CONFIGURATION_HPP
 #define CONFIGURATION_HPP
 
-#include <initializer_list>
 #include <any>
 #include <map>
 #include <memory>
@@ -44,6 +43,11 @@ namespace ikconf
             IKCONF_EXPORT inline std::any getPropertyValue(const std::string& propertyName) const
             {
                 return m_properties.at(propertyName);
+            }
+
+            IKCONF_EXPORT inline bool checkPropertyExists(const std::string& propertyName) const
+            {
+                return (m_properties.find(propertyName) != m_properties.end());
             }
 
         private:

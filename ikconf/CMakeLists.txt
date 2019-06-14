@@ -31,7 +31,11 @@ include_directories("include")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+# Add ikconf library headers
+include_directories("../iklog/include")
+
 add_library(ikconf SHARED ${source_files} ${include_files})
+target_link_libraries(ikconf PUBLIC iklog)
 
 GENERATE_EXPORT_HEADER(ikconf
              BASE_NAME IKCONF

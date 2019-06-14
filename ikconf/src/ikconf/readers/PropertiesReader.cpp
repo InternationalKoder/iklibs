@@ -3,44 +3,55 @@
 #include <fstream>
 #include "ikconf/exceptions/ConfigurationException.hpp"
 
-ikconf::PropertiesReader::PropertiesReader(const Configuration& configuration) :
-    BaseReader(configuration)
-{}
-
-void ikconf::PropertiesReader::read(const std::string& filePath)
+namespace ikconf
 {
-    std::ifstream file(filePath.c_str());
-    std::string line;
+    iklog::Log PropertiesReader::m_log("PropertiesReader", iklog::Level::ERROR | iklog::Level::WARNING);
 
-    if(!file.is_open())
-        throw ConfigurationException("Cannot open file '" + filePath + "'");
+    PropertiesReader::PropertiesReader(const Configuration& configuration) :
+        BaseReader(configuration)
+    {}
 
-    while(getline(file, line))
+    void PropertiesReader::read(const std::string& filePath)
     {
-        // don't go further if the line is empty
-        if(line.length() > 0)
+        std::ifstream file(filePath.c_str());
+        std::string line;
+
+        if(!file.is_open())
+            throw ConfigurationException("Cannot open file '" + filePath + "'");
+
+        while(getline(file, line))
         {
-            // don't interpret comments
-            if(line.front() != '#' && line.front() != '!')
+            // don't go further if the line is empty
+            if(line.length() > 0)
             {
-                size_t separatorPos = line.find_first_of('=');
+                // don't interpret comments
+                if(line.front() != '#' && line.front() != '!')
+                {
+                    size_t separatorPos = line.find_first_of('=');
 
-                // '=' character not found means the line is malformed
-                if(separatorPos == std::string::npos)
-                    throw ConfigurationException("Malformed line '" + line + "', missing '=' character");
+                    // '=' character not found means the line is malformed
+                    if(separatorPos == std::string::npos)
+                        throw ConfigurationException("Malformed line '" + line + "', missing '=' character");
 
-                const std::string propertyName = line.substr(0, separatorPos);
+                    const std::string propertyName = line.substr(0, separatorPos);
 
-                // check if property exists, if not add warning and skip
+                    // check if the value is known
+                    if(!m_configuration.checkPropertyExists(propertyName))
+                    {
+                        m_log.warn("Unknown property '" + propertyName + "' was skipped");
+                        continue;
+                    }
 
-                const std::any propertyValue = line.substr(separatorPos + 1);
+                    const std::any propertyValue = line.substr(separatorPos + 1);
 
-                const bool setPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue);
+                    const bool setPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue);
 
-                // warning: if(!setPropertySuccess)
+                    if(!setPropertySuccess)
+                        m_log.error("Failed to set property '" + propertyName + "'");
+                }
             }
         }
-    }
 
-    file.close();
+        file.close();
+    }
 }
