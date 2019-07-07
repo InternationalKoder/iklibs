@@ -5,7 +5,7 @@
 
 namespace ikconf
 {
-    iklog::Log PropertiesReader::m_log("PropertiesReader", iklog::Level::ERROR | iklog::Level::WARNING);
+    iklog::Log PropertiesReader::m_log("PropertiesReader", iklog::Level::WARNING);
 
     PropertiesReader::PropertiesReader(const Configuration& configuration) :
         BaseReader(configuration)
@@ -35,7 +35,7 @@ namespace ikconf
 
                     const std::string propertyName = line.substr(0, separatorPos);
 
-                    // check if the value is known
+                    // check if the property is known
                     if(!m_configuration.checkPropertyExists(propertyName))
                     {
                         m_log.warn("Unknown property '" + propertyName + "' was skipped");
@@ -47,7 +47,7 @@ namespace ikconf
                     const bool setPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue);
 
                     if(!setPropertySuccess)
-                        m_log.error("Failed to set property '" + propertyName + "'");
+                        throw ConfigurationException("Failed to set property '" + propertyName + "'");
                 }
             }
         }

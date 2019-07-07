@@ -12,9 +12,9 @@ namespace ikconf
     // specific template for bool, since it can be given as an integer or as a string
     // further interpretation is needed
     template<>
-    bool BaseReader::tryConvertAndSetProperty<bool>(const std::string& name, const std::any& value)
+    bool BaseReader::tryConvertAndSetProperty<bool>(const std::string& name, const std::any& value, Configuration& configuration)
     {
-        const std::any propertyValue = m_configuration.getPropertyValue(name);
+        const std::any propertyValue = configuration.getPropertyValue(name);
 
         if(propertyValue.type() == typeid(bool*))
         {
@@ -45,9 +45,9 @@ namespace ikconf
 
     // specific template for string, no conversion is needed
     template<>
-    bool BaseReader::tryConvertAndSetProperty<std::string>(const std::string& name, const std::any& value)
+    bool BaseReader::tryConvertAndSetProperty<std::string>(const std::string& name, const std::any& value, Configuration& configuration)
     {
-        const std::any propertyValue = m_configuration.getPropertyValue(name);
+        const std::any propertyValue = configuration.getPropertyValue(name);
 
         if(propertyValue.type() == typeid(std::string*))
         {
@@ -58,66 +58,73 @@ namespace ikconf
         return false;
     }
 
-    bool BaseReader::tryConvertAndSetProperty(const std::string& name, const std::any& value)
+    bool BaseReader::tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration)
     {
         bool added = false;
 
-        added = tryConvertAndSetProperty<std::string>(name, value);
+        added = tryConvertAndSetProperty<std::string>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<int>(name, value);
+        added = tryConvertAndSetProperty<int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<bool>(name, value);
+        added = tryConvertAndSetProperty<bool>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<unsigned int>(name, value);
+        added = tryConvertAndSetProperty<unsigned int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<float>(name, value);
+        added = tryConvertAndSetProperty<float>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<double>(name, value);
+        added = tryConvertAndSetProperty<double>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<short int>(name, value);
+        added = tryConvertAndSetProperty<short int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<unsigned short int>(name, value);
+        added = tryConvertAndSetProperty<unsigned short int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<long int>(name, value);
+        added = tryConvertAndSetProperty<long int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<unsigned long int>(name, value);
+        added = tryConvertAndSetProperty<unsigned long int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<long long int>(name, value);
+        added = tryConvertAndSetProperty<long long int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<unsigned long long int>(name, value);
+        added = tryConvertAndSetProperty<unsigned long long int>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<char>(name, value);
+        added = tryConvertAndSetProperty<char>(name, value, configuration);
         if(added)
             return true;
 
-        added = tryConvertAndSetProperty<unsigned char>(name, value);
+        added = tryConvertAndSetProperty<unsigned char>(name, value, configuration);
         if(added)
             return true;
 
-        return tryConvertAndSetProperty<long double>(name, value);
+        return tryConvertAndSetProperty<long double>(name, value, configuration);
+    }
+
+    std::string BaseReader::trim(const std::string& str)
+    {
+        auto wsfront = std::find_if_not(str.begin(), str.end(), [](char c) { return std::isspace(c); });
+        auto wsback = std::find_if_not(str.rbegin(), str.rend(), [](char c) { return std::isspace(c); }).base();
+        return (wsback <= wsfront ? std::string() : std::string(wsfront, wsback));
     }
 }

@@ -6,9 +6,12 @@ Settings::Settings() :
                           ikconf::Property("myfloat", m_testFloat),
                           ikconf::Property("mybool", m_testBool),
                           ikconf::Property("mychar.char", m_testCharAsChar),
-                          ikconf::Property("mychar.number", m_testCharAsNumber))
+                          ikconf::makeSubProperty({"mysubsettings", "my.substring"}, m_testSubString),
+                          ikconf::makeSubProperty({"mysubsettings", "mysubint"}, m_testSubInt),
+                          ikconf::makeSubProperty({"mysubsettings", "mysubsubsettings", "mysubsubfloat"}, m_testSubSubFloat),
+                          ikconf::makeSubProperty({"othersubsettings", "testOtherSubsettingsStr"}, m_testOtherSubSettingsStr))
 {
-    //addProperty(ikconf::Property("resources.path", m_resourcesPath));
-    //addProperty(ikconf::Property("threads.number", m_threadsNumber));
-    //addProperties(ikconf::Property("resources.path", m_resourcesPath), ikconf::Property("threads.number", m_threadsNumber));
+    //addProperty(ikconf::Property("my.string", m_testString));
+    //addProperty(ikconf::Property("myint", m_testInt));
+    //addProperties(ikconf::Property("my.string", m_testString), ikconf::Property("myint", m_testInt));
 }

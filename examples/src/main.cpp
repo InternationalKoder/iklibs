@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iklog/Log.hpp>
 #include <ikconf/readers/PropertiesReader.hpp>
+#include <ikconf/readers/JsonReader.hpp>
 #include <ikconf/exceptions/ConfigurationException.hpp>
 
 int main()
@@ -15,23 +16,47 @@ int main()
     log.debug("We retrieved a Log object and disabled debug level on it, this message should not appear");
 
     Settings settings;
-    ikconf::PropertiesReader reader(settings);
+    ikconf::PropertiesReader propertiesReader(settings);
 
     try
     {
-        reader.read("resources/test.properties");
+        propertiesReader.read("resources/test.properties");
     }
     catch(const ikconf::ConfigurationException& e)
     {
         std::cerr << "Error while getting configuration: " << e.what() << std::endl;
     }
 
+    std::cout << "Properties file:" << std::endl;
     std::cout << settings.getTestString() << std::endl;
     std::cout << settings.getTestInt() << std::endl;
     std::cout << settings.getTestFloat() << std::endl;
     std::cout << settings.getTestBool() << std::endl;
     std::cout << settings.getTestCharAsChar() << std::endl;
     std::cout << settings.getTestCharAsNumber() << std::endl;
+
+
+    ikconf::JsonReader jsonReader(settings);
+
+    try
+    {
+        jsonReader.read("resources/test.json");
+    }
+    catch(const ikconf::ConfigurationException& e)
+    {
+        std::cerr << "Error while getting configuration: " << e.what() << std::endl;
+    }
+
+    std::cout << "JSON file:" << std::endl;
+    std::cout << settings.getTestString() << std::endl;
+    std::cout << settings.getTestInt() << std::endl;
+    std::cout << settings.getTestFloat() << std::endl;
+    std::cout << settings.getTestBool() << std::endl;
+    std::cout << settings.getTestCharAsChar() << std::endl;
+    std::cout << settings.getTestSubString() << std::endl;
+    std::cout << settings.getTestSubInt() << std::endl;
+    std::cout << settings.getTestSubSubFloat() << std::endl;
+    std::cout << settings.getTestOtherSubSettingsStr() << std::endl;
 
     return 0;
 }

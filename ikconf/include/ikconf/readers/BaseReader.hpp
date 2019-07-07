@@ -24,9 +24,9 @@ namespace ikconf
 
             // generic template for all the fundamental types, except bool
             template<typename T>
-            bool tryConvertAndSetProperty(const std::string& name, const std::any& value)
+            static bool tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration)
             {
-                const std::any propertyValue = m_configuration.getPropertyValue(name);
+                const std::any propertyValue = configuration.getPropertyValue(name);
 
                 if(propertyValue.type() == typeid(T*))
                 {
@@ -68,7 +68,14 @@ namespace ikconf
             }
 
             // gather implementation of tryConvertAndSetProperty for all the fundamental types and std::string
-            bool tryConvertAndSetProperty(const std::string& name, const std::any& value);
+            inline bool tryConvertAndSetProperty(const std::string& name, const std::any& value)
+            {
+                return tryConvertAndSetProperty(name, value, m_configuration);
+            }
+            static bool tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration);
+
+            static std::string trim(const std::string& string);
+
 
             Configuration m_configuration;
 

@@ -1,0 +1,17 @@
+{
+    "my.string": "this is a JSON string",
+    "myint": 23,
+    "mysubsettings": {
+        "my.substring": "you can have JSON objects",
+        "mysubint": 45,
+        "mysubsubsettings": {
+            "mysubsubfloat": 96.1
+        }
+    },
+    "myfloat": 67.24,
+    "mybool": true,
+    "othersubsettings": {
+        "testOtherSubsettingsStr": "OK"
+    },
+    "mychar.char": C
+}

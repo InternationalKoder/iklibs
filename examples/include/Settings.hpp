@@ -15,6 +15,10 @@ class Settings : public ikconf::Configuration
         inline bool getTestBool() const { return m_testBool; }
         inline char getTestCharAsChar() const { return m_testCharAsChar; }
         inline char getTestCharAsNumber() const { return m_testCharAsNumber; }
+        inline std::string getTestSubString() const { return m_testSubString; }
+        inline int getTestSubInt() const { return m_testSubInt; }
+        inline float getTestSubSubFloat() const { return m_testSubSubFloat; }
+        inline std::string getTestOtherSubSettingsStr() const { return m_testOtherSubSettingsStr; }
 
     private:
 
@@ -24,6 +28,10 @@ class Settings : public ikconf::Configuration
         bool m_testBool;
         char m_testCharAsChar;
         char m_testCharAsNumber;
+        std::string m_testSubString;
+        int m_testSubInt;
+        float m_testSubSubFloat;
+        std::string m_testOtherSubSettingsStr;
 };
 
 #endif // SETTINGS_HPP
