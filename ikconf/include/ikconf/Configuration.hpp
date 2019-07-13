@@ -37,7 +37,11 @@ namespace ikconf
             template<typename T>
             inline void addProperty(const Property<T>& property)
             {
-                m_properties[property.getName()] = property.getValue();
+                if constexpr(std::is_base_of_v<Configuration, T>)
+                    m_properties[property.getName()] = static_cast<Configuration*>(property.getValue());
+                else
+                    m_properties[property.getName()] = property.getValue();
+
             }
 
             IKCONF_EXPORT inline std::any getPropertyValue(const std::string& propertyName) const

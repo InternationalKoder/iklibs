@@ -39,7 +39,7 @@ namespace ikconf
         file.close();
     }
 
-    void JsonReader::readObject(std::ifstream& file, Configuration &configuration, const std::string& basePropName)
+    void JsonReader::readObject(std::ifstream& file, Configuration& configuration)
     {
         char character = ',';
         std::string propertyName, propertyValue;
@@ -60,27 +60,30 @@ namespace ikconf
                 propertyName += character;
             } while(character != '"');
             propertyName.pop_back();
-            propertyName = basePropName + propertyName;
 
             character = readCharacter(file);
             if(character != ':')
                 handleUnexpectedCharacter(character);
 
+            // check if the property is known
+            if(!configuration.checkPropertyExists(propertyName))
+            {
+                m_log.warn("Unknown property '" + propertyName + "' was skipped");
+                continue;
+            }
+
+            // assign value to property
             character = readCharacter(file);
             if(character == '{')
             {
-                readObject(file, configuration, propertyName + SUB_PROPERTIES_SEPARATOR);
+                // value is an object
+                Configuration* subConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
+                readObject(file, *subConfig);
                 character = readCharacter(file);
             }
             else
             {
-                // check if the property is known
-                if(!m_configuration.checkPropertyExists(propertyName))
-                {
-                    m_log.warn("Unknown property '" + propertyName + "' was skipped");
-                    continue;
-                }
-
+                // value is a basic type
                 propertyValue += character;
 
                 file.unsetf(std::ios_base::skipws);

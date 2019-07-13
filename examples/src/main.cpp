@@ -53,10 +53,10 @@ int main()
     std::cout << settings.getTestFloat() << std::endl;
     std::cout << settings.getTestBool() << std::endl;
     std::cout << settings.getTestCharAsChar() << std::endl;
-    std::cout << settings.getTestSubString() << std::endl;
-    std::cout << settings.getTestSubInt() << std::endl;
-    std::cout << settings.getTestSubSubFloat() << std::endl;
-    std::cout << settings.getTestOtherSubSettingsStr() << std::endl;
+    std::cout << settings.getTestSubSettings().getTestSubString() << std::endl;
+    std::cout << settings.getTestSubSettings().getTestSubInt() << std::endl;
+    std::cout << settings.getTestSubSettings().getTestSubSubSettings().getTestSubSubFloat() << std::endl;
+    std::cout << settings.getTestOtherSubSettings().getTestOtherSubSettingsStr() << std::endl;
 
     return 0;
 }
