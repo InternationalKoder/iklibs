@@ -150,7 +150,7 @@ namespace ikconf
                 propertyValue = propertyValue.substr(1);
             }
 
-            addPropertySuccess = tryConvertAndAddToPropertyArray(propertyName, propertyValue, configuration);
+            addPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
         }
     }
 
