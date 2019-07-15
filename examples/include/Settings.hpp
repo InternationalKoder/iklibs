@@ -19,6 +19,8 @@ class Settings : public ikconf::Configuration
         inline OtherSubSettings getTestOtherSubSettings() const { return m_testOtherSubSettings; }
         inline char getTestCharAsChar() const { return m_testCharAsChar; }
         inline char getTestCharAsNumber() const { return m_testCharAsNumber; }
+        inline std::vector<int> getTestArray() const { return m_testArray; }
+        inline std::vector<std::string> getTestStringArray() const { return m_testStringArray; }
 
     private:
 
@@ -30,6 +32,8 @@ class Settings : public ikconf::Configuration
         OtherSubSettings m_testOtherSubSettings;
         char m_testCharAsChar;
         char m_testCharAsNumber;
+        std::vector<int> m_testArray;
+        std::vector<std::string> m_testStringArray;
 };
 
 #endif // SETTINGS_HPP

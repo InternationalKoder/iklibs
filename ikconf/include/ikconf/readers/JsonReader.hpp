@@ -19,6 +19,7 @@ namespace ikconf
             static iklog::Log m_log;
 
             void readObject(std::ifstream& file, Configuration& configuration);
+            void readArray(std::ifstream& file, Configuration& configuration, const std::string& propertyName);
             [[noreturn]] void handleUnexpectedCharacter(char character);
             char readCharacter(std::ifstream& file, bool acceptEof = false);
 

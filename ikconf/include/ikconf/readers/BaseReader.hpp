@@ -67,12 +67,46 @@ namespace ikconf
                 return false;
             }
 
+            // generic template for all the fundamental types, except bool
+            template<typename T>
+            static bool tryConvertAndAddToPropertyArray(const std::string& name, const std::any& value, Configuration& configuration)
+            {
+                const std::any propertyValue = configuration.getPropertyValue(name);
+
+                if(propertyValue.type() == typeid(std::vector<T>*))
+                {
+                    T convertedValue;
+
+                    // convert from string to T
+                    const std::string stringValue = std::any_cast<std::string>(value);
+                    std::istringstream conversionStream(stringValue);
+
+                    // stop if the conversion failed
+                    if(!(conversionStream >> convertedValue))
+                    {
+                        return false;
+                    }
+
+                    // set the value in the property
+                    std::any_cast<std::vector<T>*>(propertyValue)->push_back(convertedValue);
+
+                    return true;
+                }
+
+                return false;
+            }
+
             // gather implementation of tryConvertAndSetProperty for all the fundamental types and std::string
             inline bool tryConvertAndSetProperty(const std::string& name, const std::any& value)
             {
                 return tryConvertAndSetProperty(name, value, m_configuration);
             }
+            inline bool tryConvertAndAddToPropertyArray(const std::string& name, const std::any& value)
+            {
+                return tryConvertAndAddToPropertyArray(name, value, m_configuration);
+            }
             static bool tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration);
+            static bool tryConvertAndAddToPropertyArray(const std::string& name, const std::any& value, Configuration& configuration);
 
             static std::string trim(const std::string& string);
 

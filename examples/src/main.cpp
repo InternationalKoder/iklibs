@@ -58,5 +58,15 @@ int main()
     std::cout << settings.getTestSubSettings().getTestSubSubSettings().getTestSubSubFloat() << std::endl;
     std::cout << settings.getTestOtherSubSettings().getTestOtherSubSettingsStr() << std::endl;
 
+    for(const int& i : settings.getTestArray())
+    {
+        std::cout << "array item: " << i << std::endl;
+    }
+
+    for(const std::string& i : settings.getTestStringArray())
+    {
+        std::cout << "string array item: " << i << std::endl;
+    }
+
     return 0;
 }

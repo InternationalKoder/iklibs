@@ -10,8 +10,22 @@
     },
     "myfloat": 67.24,
     "mybool": true,
+    "mystringarray": [
+        "this",
+        "is",
+        "an",
+        "array",
+        "of",
+        "strings"
+    ],
     "othersubsettings": {
         "testOtherSubsettingsStr": "OK"
     },
-    "mychar.char": C
+    "mychar.char": C,
+    "myarray": [
+        10,
+        24,
+        7946,
+        2
+    ]
 }

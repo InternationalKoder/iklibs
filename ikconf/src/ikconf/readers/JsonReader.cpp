@@ -31,7 +31,7 @@ namespace ikconf
         }
         else if(character == '[')
         {
-            // read array
+            throw ConfigurationException("Array on base level is not supported, please insert the array in a JSON object");
         }
         else
             handleUnexpectedCharacter(character);
@@ -69,6 +69,18 @@ namespace ikconf
             if(!configuration.checkPropertyExists(propertyName))
             {
                 m_log.warn("Unknown property '" + propertyName + "' was skipped");
+                unsigned int level = 0;
+                bool insideString = false;
+                while(character != ',' || level > 0 || insideString)
+                {
+                    character = readCharacter(file, true);
+                    if(character == '[' || character == '{')
+                        level++;
+                    else if(character == ']' || character == '}')
+                        level--;
+                    else if(character == '"')
+                        insideString = !insideString;
+                }
                 continue;
             }
 
@@ -79,6 +91,12 @@ namespace ikconf
                 // value is an object
                 Configuration* subConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
                 readObject(file, *subConfig);
+                character = readCharacter(file);
+            }
+            else if(character == '[')
+            {
+                // value is an array
+                readArray(file, configuration, propertyName);
                 character = readCharacter(file);
             }
             else
@@ -110,6 +128,32 @@ namespace ikconf
             handleUnexpectedCharacter(character);
     }
 
+    void JsonReader::readArray(std::ifstream& file, Configuration& configuration, const std::string& propertyName)
+    {
+        std::string propertyValue;
+        char character = '[';
+        bool addPropertySuccess = true;
+
+        while(character != ']' && addPropertySuccess)
+        {
+            propertyValue = "";
+            file.unsetf(std::ios_base::skipws);
+            while(file >> character && character != ',' && character != ']')
+                propertyValue += character;
+            file.setf(std::ios_base::skipws);
+
+            propertyValue = trim(propertyValue);
+
+            if(propertyValue.front() == '"' && propertyValue.back() == '"')
+            {
+                propertyValue.pop_back();
+                propertyValue = propertyValue.substr(1);
+            }
+
+            addPropertySuccess = tryConvertAndAddToPropertyArray(propertyName, propertyValue, configuration);
+        }
+    }
+
     void JsonReader::handleUnexpectedCharacter(char character)
     {
         std::string errorMsg = "Unexpected character '";
@@ -123,11 +167,14 @@ namespace ikconf
     {
         char character = '\0';
 
-        while(file >> character && (character == '\n' || character == '\r' || character == '\t' || character == '\0'))
+        file.unsetf(std::ios_base::skipws);
+        while(file >> character && (character == ' ' || character == '\n'
+                                    || character == '\r' || character == '\t' || character == '\0'))
         {
             if(character == '\n')
                 m_lineNumber++;
         }
+        file.setf(std::ios_base::skipws);
 
         if(character == '\0' && !acceptEof)
             throw ConfigurationException("Unexpected end of file");
