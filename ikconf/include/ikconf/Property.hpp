@@ -1,5 +1,5 @@
-#ifndef PROPERTY_HPP
-#define PROPERTY_HPP
+#ifndef IKCONF_PROPERTY_HPP
+#define IKCONF_PROPERTY_HPP
 
 #include <string>
 #include <vector>
@@ -24,4 +24,4 @@ namespace ikconf
     };
 }
 
-#endif // PROPERTY_HPP
+#endif // IKCONF_PROPERTY_HPP

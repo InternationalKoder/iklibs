@@ -1,5 +1,5 @@
-#ifndef LOG_HPP
-#define LOG_HPP
+#ifndef IKLOG_LOG_HPP
+#define IKLOG_LOG_HPP
 
 #include "Level.hpp"
 #include "Formatter.hpp"
@@ -48,4 +48,4 @@ namespace iklog
     };
 }
 
-#endif
+#endif // IKLOG_LOG_HPP

@@ -1,5 +1,5 @@
-#ifndef FORMATTER_HPP
-#define FORMATTER_HPP
+#ifndef IKLOG_FORMATTER_HPP
+#define IKLOG_FORMATTER_HPP
 
 #include <string>
 #include <map>
@@ -35,4 +35,4 @@ namespace iklog
     };
 }
 
-#endif
+#endif // IKLOG_FORMATTER_HPP

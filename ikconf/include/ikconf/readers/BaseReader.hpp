@@ -1,5 +1,5 @@
-#ifndef BASE_READER_HPP
-#define BASE_READER_HPP
+#ifndef IKCONF_BASE_READER_HPP
+#define IKCONF_BASE_READER_HPP
 
 #include "ikconf/ikconf_export.hpp"
 #include "ikconf/Configuration.hpp"
@@ -90,4 +90,4 @@ namespace ikconf
     };
 }
 
-#endif // BASE_READER_HPP
+#endif // IKCONF_BASE_READER_HPP

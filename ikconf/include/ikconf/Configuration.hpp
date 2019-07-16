@@ -1,5 +1,5 @@
-#ifndef CONFIGURATION_HPP
-#define CONFIGURATION_HPP
+#ifndef IKCONF_CONFIGURATION_HPP
+#define IKCONF_CONFIGURATION_HPP
 
 #include <any>
 #include <map>
@@ -60,4 +60,4 @@ namespace ikconf
     };
 }
 
-#endif // CONFIGURATION_HPP
+#endif // IKCONF_CONFIGURATION_HPP

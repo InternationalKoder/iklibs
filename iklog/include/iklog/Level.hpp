@@ -1,5 +1,5 @@
-#ifndef LEVELS_HPP
-#define LEVELS_HPP
+#ifndef IKLOG_LEVELS_HPP
+#define IKLOG_LEVELS_HPP
 
 namespace iklog
 {
@@ -12,5 +12,5 @@ namespace iklog
     };
 }
 
-#endif
+#endif // IKLOG_LEVELS_HPP
 

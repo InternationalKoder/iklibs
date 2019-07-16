@@ -1,5 +1,5 @@
-#ifndef JSON_READER_HPP
-#define JSON_READER_HPP
+#ifndef IKCONF_JSON_READER_HPP
+#define IKCONF_JSON_READER_HPP
 
 #include "BaseReader.hpp"
 #include <iklog/Log.hpp>
@@ -27,4 +27,4 @@ namespace ikconf
     };
 }
 
-#endif // JSON_READER_HPP
+#endif // IKCONF_JSON_READER_HPP

@@ -1,5 +1,5 @@
-#ifndef PROPERTIES_READER_HPP
-#define PROPERTIES_READER_HPP
+#ifndef IKCONF_PROPERTIES_READER_HPP
+#define IKCONF_PROPERTIES_READER_HPP
 
 #include "BaseReader.hpp"
 #include <iklog/Log.hpp>
@@ -20,4 +20,4 @@ namespace ikconf
     };
 }
 
-#endif // PROPERTIES_READER_HPP
+#endif // IKCONF_PROPERTIES_READER_HPP

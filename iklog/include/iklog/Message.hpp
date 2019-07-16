@@ -1,5 +1,5 @@
-#ifndef MESSAGE_HPP
-#define MESSAGE_HPP
+#ifndef IKLOG_MESSAGE_HPP
+#define IKLOG_MESSAGE_HPP
 
 #include <string>
 #include <chrono>
@@ -34,4 +34,4 @@ namespace iklog
     };
 }
 
-#endif
+#endif // IKLOG_MESSAGE_HPP
