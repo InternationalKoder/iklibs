@@ -14,7 +14,7 @@ compile:
       - ./*
     expire_in: 1h
 
-install:
+binaries:
   stage: release
   only:
     - tags
