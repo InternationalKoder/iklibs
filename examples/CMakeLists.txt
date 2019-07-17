@@ -40,3 +40,7 @@ include_directories("../ikconf/include")
 
 add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
 target_link_libraries(${EXECUTABLE_NAME} PUBLIC iklog ikconf)
+
+install(TARGETS iklibs-examples)
+install(DIRECTORY include DESTINATION .)
+install(DIRECTORY resources DESTINATION .)

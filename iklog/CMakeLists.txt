@@ -43,3 +43,6 @@ GENERATE_EXPORT_HEADER(iklog
              EXPORT_FILE_NAME include/iklog/iklog_export.hpp
              STATIC_DEFINE IKLOG_BUILT_AS_STATIC
 )
+
+install(TARGETS iklog)
+install(DIRECTORY include DESTINATION .)

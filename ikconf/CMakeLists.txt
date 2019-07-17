@@ -44,3 +44,5 @@ GENERATE_EXPORT_HEADER(ikconf
              STATIC_DEFINE IKCONF_BUILT_AS_STATIC
 )
 
+install(TARGETS ikconf)
+install(DIRECTORY include DESTINATION .)
