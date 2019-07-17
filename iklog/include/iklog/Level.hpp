@@ -3,6 +3,9 @@
 
 namespace iklog
 {
+    /*!
+     * \brief Defines the logging levels
+     */
     enum Level
     {
         INFO = 0x0001,
