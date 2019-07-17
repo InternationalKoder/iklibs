@@ -4,6 +4,9 @@
 #include <ikconf/Configuration.hpp>
 #include "SubSubSettings.hpp"
 
+/*!
+ * \brief Shows how to implement a subobject in a configuration (ikconf)
+ */
 class SubSettings : public ikconf::Configuration
 {
     public:

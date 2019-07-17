@@ -5,7 +5,7 @@
 
 namespace ikconf
 {
-    iklog::Log PropertiesReader::m_log("PropertiesReader", iklog::Level::WARNING);
+    iklog::Log PropertiesReader::LOG("PropertiesReader", iklog::Level::WARNING);
 
     PropertiesReader::PropertiesReader(const Configuration& configuration) :
         BaseReader(configuration)
@@ -38,7 +38,7 @@ namespace ikconf
                     // check if the property is known
                     if(!m_configuration.checkPropertyExists(propertyName))
                     {
-                        m_log.warn("Unknown property '" + propertyName + "' was skipped");
+                        LOG.warn("Unknown property '" + propertyName + "' was skipped");
                         continue;
                     }
 

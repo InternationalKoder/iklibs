@@ -8,6 +8,7 @@ namespace iklog
 {
     typedef std::string(*getFunc)(const Message&);
 
+
     const std::map<char, getFunc> Formatter::FORMAT_MAPPING
     {
         {'L', &Formatter::getLogName},
@@ -18,9 +19,11 @@ namespace iklog
         {'t', &Formatter::getClockTime}
     };
 
+
     Formatter::Formatter(const std::string& format) :
         m_format(format)
     {}
+
 
     std::string Formatter::format(const Message& message) const
     {
@@ -36,6 +39,7 @@ namespace iklog
 
         return formatted;
     }
+
 
     std::string Formatter::getLevel(const Message& message)
     {
@@ -57,6 +61,7 @@ namespace iklog
         return "";
     }
 
+
     std::string Formatter::getLevelPretty(const Message& message)
     {
         const Level& level = message.getLevel();
@@ -77,6 +82,7 @@ namespace iklog
         return "    ";
     }
 
+
     std::string Formatter::getProgramDuration(const Message& message)
     {
         const Message::Duration& DURATION = message.getProgramDuration();
@@ -95,6 +101,7 @@ namespace iklog
 
         return duration;
     }
+
 
     std::string Formatter::getClockTime(const Message& message)
     {

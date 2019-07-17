@@ -5,12 +5,22 @@
 #include "SubSettings.hpp"
 #include "OtherSubSettings.hpp"
 
+/*!
+ * \brief Example of the implementation of a configuration with ikconf
+ *
+ * Shows how to implement a configuration (ikconf) :
+ * - inherit the ikconf::Configuration class
+ * - you can add other subclasses of ikconf::Configuration to group some properties in subobjects
+ * - if you want to have lists in your configuration, you must use std::vector so that ikconf can put the values
+ * - the properties are defined in the constructor
+ */
 class Settings : public ikconf::Configuration
 {
     public:
 
         Settings();
 
+        // getters for the properties
         inline std::string getTestString() const { return m_testString; }
         inline int getTestInt() const { return m_testInt; }
         inline SubSettings getTestSubSettings() const { return m_testSubSettings; }
@@ -24,6 +34,7 @@ class Settings : public ikconf::Configuration
 
     private:
 
+        // properties to valorize
         std::string m_testString;
         int m_testInt;
         SubSettings m_testSubSettings;

@@ -10,19 +10,47 @@
 
 namespace ikconf
 {
+    /*!
+     * \brief Base class for the configuration readers
+     *
+     * Configuration readers are the classes that handle the reading of a configuration file and the filling of the
+     * values in the configuration class
+     */
     class BaseReader
     {
         public:
 
+            /*!
+             * \brief Constructor which takes the configuration to valorize
+             * \param configuration The configuration that will hold the read values
+             */
             BaseReader(const Configuration& configuration);
+
 
             IKCONF_EXPORT virtual ~BaseReader();
 
+
+            /*!
+             * \brief Reads the given file and sets the properties in the configuration (given in the constructor)
+             * \param filePath Path to the file to read
+             */
             virtual void read(const std::string& filePath) = 0;
 
         protected:
 
-            // generic template for all the fundamental types, except bool
+            /*!
+             * \brief Tries to convert the given property, and sets the value in the configuration if possible
+             * \param name The name of the property that will receive the converted value
+             * \param value The value to convert and to set
+             * \param configuration The (sub)configuration containing the property to set
+             * \return True if the conversion and setting have been successfully done
+             */
+            static bool tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration);
+
+
+            /*!
+             * \brief Generic template for all the fundamental types, except bool
+             */
             template<typename T>
             static bool tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration)
             {
@@ -71,13 +99,21 @@ namespace ikconf
                 return false;
             }
 
-            // gather implementation of tryConvertAndSetProperty for all the fundamental types and std::string
+
+            /*!
+             * \brief Gathers implementation of tryConvertAndSetProperty for all the fundamental types and std::string
+             */
             inline bool tryConvertAndSetProperty(const std::string& name, const std::any& value)
             {
                 return tryConvertAndSetProperty(name, value, m_configuration);
             }
-            static bool tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration);
 
+
+            /*!
+             * \brief Removes the blank characters at the beginning and at the end of a std::string
+             * \param string The string to trim
+             * \return The trimmed string
+             */
             static std::string trim(const std::string& string);
 
 
@@ -85,6 +121,7 @@ namespace ikconf
 
         private:
 
+            // values to interpret as the 'true' boolean, other values are considered as 'false'
             static constexpr char TRUE_STR[] = "true";
             static constexpr int TRUE_INT = 1;
     };

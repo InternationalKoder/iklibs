@@ -8,12 +8,16 @@
 
 namespace iklog
 {
+    /*!
+     * \brief Defines a logging message, only contains data
+     */
     class Message
     {
         public:
 
             using Duration = std::chrono::steady_clock::duration;
             using TimePoint = std::chrono::system_clock::time_point;
+
 
             IKLOG_EXPORT Message(const std::string& logName, Level level, const std::string& message,
                                  const Duration& programDuration, const TimePoint& clockTime);

@@ -3,6 +3,9 @@
 
 #include <ikconf/Configuration.hpp>
 
+/*!
+ * \brief Allows to test subobjects within other subobjects in a configuration (ikconf)
+ */
 class SubSubSettings : public ikconf::Configuration
 {
     public:

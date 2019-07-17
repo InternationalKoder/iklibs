@@ -9,5 +9,5 @@ namespace iklog
         m_message(message),
         m_programDuration(programDuration),
         m_clockTime(clockTime)
-    { }
+    {}
 }

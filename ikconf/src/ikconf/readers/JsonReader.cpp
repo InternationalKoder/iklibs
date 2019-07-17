@@ -5,12 +5,14 @@
 
 namespace ikconf
 {
-    iklog::Log JsonReader::m_log("JsonReader", iklog::Level::WARNING);
+    iklog::Log JsonReader::LOG("JsonReader", iklog::Level::WARNING);
+
 
     JsonReader::JsonReader(const Configuration& configuration) :
         BaseReader(configuration),
         m_lineNumber(1)
     {}
+
 
     void JsonReader::read(const std::string& filePath)
     {
@@ -38,6 +40,7 @@ namespace ikconf
 
         file.close();
     }
+
 
     void JsonReader::readObject(std::ifstream& file, Configuration& configuration)
     {
@@ -68,7 +71,7 @@ namespace ikconf
             // check if the property is known
             if(!configuration.checkPropertyExists(propertyName))
             {
-                m_log.warn("Unknown property '" + propertyName + "' was skipped");
+                LOG.warn("Unknown property '" + propertyName + "' was skipped");
                 unsigned int level = 0;
                 bool insideString = false;
                 while(character != ',' || level > 0 || insideString)
@@ -128,6 +131,7 @@ namespace ikconf
             handleUnexpectedCharacter(character);
     }
 
+
     void JsonReader::readArray(std::ifstream& file, Configuration& configuration, const std::string& propertyName)
     {
         std::string propertyValue;
@@ -136,12 +140,14 @@ namespace ikconf
 
         while(character != ']' && addPropertySuccess)
         {
+            // read the value
             propertyValue = "";
             file.unsetf(std::ios_base::skipws);
             while(file >> character && character != ',' && character != ']')
                 propertyValue += character;
             file.setf(std::ios_base::skipws);
 
+            // arrange the value before inserting it
             propertyValue = trim(propertyValue);
 
             if(propertyValue.front() == '"' && propertyValue.back() == '"')
@@ -150,9 +156,11 @@ namespace ikconf
                 propertyValue = propertyValue.substr(1);
             }
 
+            // insert the value
             addPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
         }
     }
+
 
     void JsonReader::handleUnexpectedCharacter(char character)
     {
@@ -162,6 +170,7 @@ namespace ikconf
 
         throw ConfigurationException(errorMsg);
     }
+
 
     char JsonReader::readCharacter(std::ifstream& file, bool acceptEof)
     {
