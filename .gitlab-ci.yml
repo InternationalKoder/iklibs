@@ -7,7 +7,7 @@ stages:
 compile:
   stage: build
   script:
-    - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+    - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/release -DBUILD_EXAMPLES:BOOL=OFF
     - cmake --build . --parallel --config Release
 
 release:
@@ -15,8 +15,8 @@ release:
   only:
     - tags
   script:
-    - mkdir release
-    - cmake --install ./release --config Release
+    - mkdir ./release
+    - cmake --install . --config Release
   artifacts:
     paths:
       - release
