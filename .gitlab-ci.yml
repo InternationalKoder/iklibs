@@ -11,10 +11,7 @@ compile:
     - make -j 4
   artifacts:
     paths:
-      - CMakeFiles
-      - Makefile
-      - ./*/CMakeFiles
-      - ./*/Makefile
+      - ./*
     expire_in: 1h
 
 install:
@@ -33,6 +30,7 @@ documentation:
   stage: release
   only:
     - tags
+  image: hrektts/doxygen
   script:
     - doxygen Doxyfile
   artifacts:
