@@ -6,3 +6,5 @@ cmake_install.cmake
 CMakeLists.txt.user*
 *.cbp
 Makefile
+html/
+latex/
