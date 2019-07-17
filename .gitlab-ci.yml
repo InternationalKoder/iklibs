@@ -13,8 +13,8 @@ compile:
     paths:
       - CMakeFiles
       - Makefile
-      - */CMakeFiles
-      - */Makefile
+      - ./*/CMakeFiles
+      - ./*/Makefile
     expire_in: 1h
 
 install:
