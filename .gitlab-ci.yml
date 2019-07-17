@@ -9,8 +9,15 @@ compile:
   script:
     - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/release -DBUILD_EXAMPLES:BOOL=OFF
     - make -j 4
+  artifacts:
+    paths:
+      - CMakeFiles
+      - Makefile
+      - */CMakeFiles
+      - */Makefile
+    expire_in: 1h
 
-release:
+install:
   stage: release
   only:
     - tags
@@ -21,3 +28,14 @@ release:
     paths:
       - release
     name: iklibs-release
+
+documentation:
+  stage: release
+  only:
+    - tags
+  script:
+    - doxygen Doxyfile
+  artifacts:
+    paths:
+      - html
+    name: html-doc

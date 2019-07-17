@@ -12,12 +12,12 @@ namespace iklog
      * \brief Makes the formatting of a log message
      *
      * Available fields in the format are:
-     * %L - name of the iklog::Log object
-     * %l - full name of the logging level
-     * %p - logging level with a fixed number of characters
-     * %m - log message
-     * %d - duration from the creation of the iklog::Log object
-     * %t - current clock time
+     * - %L name of the iklog::Log object
+     * - %l full name of the logging level
+     * - %p logging level with a fixed number of characters
+     * - %m log message
+     * - %d duration from the creation of the iklog::Log object
+     * - %t current clock time
      */
     class Formatter
     {

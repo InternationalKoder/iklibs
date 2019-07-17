@@ -8,4 +8,4 @@ CMakeLists.txt.user*
 Makefile
 html/
 latex/
-*_export.hpp
+**/include/**/*_export.hpp
