@@ -1,15 +1,17 @@
 image: rikorose/gcc-cmake:gcc-8
 
 stages:
-  - compile
+  - build
   - release
 
 compile:
+  stage: build
   script:
     - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
     - cmake --build . --parallel --config Release
 
 release:
+  stage: release
   only:
     - tags
   script:
