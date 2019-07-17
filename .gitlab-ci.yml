@@ -1,5 +1,21 @@
+image: rikorose/gcc-cmake:gcc-8
+
+stages:
+  - compile
+  - release
+
 compile:
-  image: rikorose/gcc-cmake:gcc-8
   script:
-      - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
-      - cmake --build . --target all
+    - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+    - cmake --build . --parallel --config Release
+
+release:
+  only:
+    - tags
+  script:
+    - mkdir release
+    - cmake --install ./release --config Release
+  artifacts:
+    paths:
+      - release
+    name: iklibs-release
