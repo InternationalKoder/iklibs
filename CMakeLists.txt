@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 project(iklibs)
 
+set(CMAKE_DEBUG_POSTFIX -d)
+
 option(BUILD_IKLOG "Enable building iklog library" ON)
 option(BUILD_IKCONF "Enable building ikconf library" ON)
 option(BUILD_EXAMPLES "Enable building examples" ON)

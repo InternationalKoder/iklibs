@@ -9,20 +9,20 @@
 #  ifndef IKLOG_EXPORT
 #    ifdef iklog_EXPORTS
         /* We are building this library */
-#      define IKLOG_EXPORT __attribute__((visibility("default")))
+#      define IKLOG_EXPORT __declspec(dllexport)
 #    else
         /* We are using this library */
-#      define IKLOG_EXPORT __attribute__((visibility("default")))
+#      define IKLOG_EXPORT __declspec(dllimport)
 #    endif
 #  endif
 
 #  ifndef IKLOG_NO_EXPORT
-#    define IKLOG_NO_EXPORT __attribute__((visibility("hidden")))
+#    define IKLOG_NO_EXPORT 
 #  endif
 #endif
 
 #ifndef IKLOG_DEPRECATED
-#  define IKLOG_DEPRECATED __attribute__ ((__deprecated__))
+#  define IKLOG_DEPRECATED __declspec(deprecated)
 #endif
 
 #ifndef IKLOG_DEPRECATED_EXPORT
