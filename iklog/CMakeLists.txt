@@ -29,13 +29,9 @@ file(
 include_directories("src")
 include_directories("include")
 
-# Detect and add libpthread
-find_package(Threads)
-
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 add_library(iklog SHARED ${source_files} ${include_files})
-target_link_libraries(iklog ${CMAKE_THREAD_LIBS_INIT})
 
 GENERATE_EXPORT_HEADER(iklog
              BASE_NAME IKLOG
