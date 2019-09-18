@@ -4,6 +4,7 @@
 #include <ikconf/readers/PropertiesReader.hpp>
 #include <ikconf/readers/JsonReader.hpp>
 #include <ikconf/exceptions/ConfigurationException.hpp>
+#include <ikparll/ThreadPool.hpp>
 
 int main()
 {
@@ -76,6 +77,15 @@ int main()
     for(const std::string& i : settings.getTestStringArray())
     {
         std::cout << "string array item: " << i << std::endl;
+    }
+
+    // -------- IKPARLL
+    std::cout << "Thread pool test" << std::endl;
+    ikparll::ThreadPool<int, 3> threadPool([](int i) { std::cout << std::this_thread::get_id() << " : " << i*2 << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(1000)); });
+    for(int i = 0 ; i < 10 ; i++)
+    {
+        threadPool.addItem(i);
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 
     return EXIT_SUCCESS;
