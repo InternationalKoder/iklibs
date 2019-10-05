@@ -18,6 +18,9 @@ namespace ikparll
     {
         public:
 
+            static_assert(S > 0, "Cannot have a pool of 0 threads");
+            static_assert(S != 1, "Please use SingleConsumer for a single-thread pool");
+
             /*!
              * \brief Constructor taking the function to execute
              * \param function The function that will be executed on queued items by the threads

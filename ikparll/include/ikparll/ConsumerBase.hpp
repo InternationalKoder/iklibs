@@ -38,9 +38,10 @@ namespace ikparll
              */
             virtual void addItem(const T& item)
             {
-                m_queueMutex.lock();
-                m_queue.push(item);
-                m_queueMutex.unlock();
+                {
+                    std::lock_guard<std::mutex> lock(m_queueMutex);
+                    m_queue.push(item);
+                }
 
                 m_condVar.notify_one();
             }
