@@ -14,6 +14,17 @@ compile:
       - ./*
     expire_in: 1h
 
+cppcheck:
+  stage: build
+  script:
+    - apt-get update -qq
+    - apt-get install -y -qq cppcheck
+    - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .
+    - cppcheck --project=compile_commands.json &> cppcheck-report.txt
+  artifacts:
+    paths:
+      - cppcheck-report.txt
+
 binaries:
   stage: release
   only:
