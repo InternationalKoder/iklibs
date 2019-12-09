@@ -22,12 +22,11 @@
 
 #include "Level.hpp"
 #include "Formatter.hpp"
+#include "outputs/Output.hpp"
+#include "iklog/outputs/OstreamWrapper.hpp"
 #include <map>
 #include <chrono>
-#include <ostream>
-#include <thread>
-#include <condition_variable>
-#include <queue>
+#include <iostream>
 #include "iklog_export.hpp"
 
 namespace iklog
@@ -43,9 +42,11 @@ namespace iklog
              * \brief Constructor
              * \param name The name of the Log
              * \param levels List of the enabled logging levels (flags)
+             * \param output The output that will be used for all levels
              * \param formatter The formatter to use for the logging messages
              */
-            IKLOG_EXPORT Log(const std::string& name, unsigned int levels, const Formatter& formatter = Formatter());
+            IKLOG_EXPORT Log(const std::string& name, unsigned int levels, Output& output = DEFAULT_OUTPUT,
+                             const Formatter& formatter = Formatter());
 
 
             /*!
@@ -111,11 +112,24 @@ namespace iklog
 
 
             /*!
-             * \brief Changes the output stream for a specific level
-             * \param level The level that will have a new output stream
-             * \param output The output stream to use
+             * \brief Changes the output for a specific level
+             * \param level The level that will have a new output
+             * \param output The output to use
              */
-            IKLOG_EXPORT inline void setOutput(Level level, std::ostream& output) { m_outputs[level] = &output; }
+            IKLOG_EXPORT inline void setOutput(Level level, Output& output)
+            {
+                m_outputs[level] = &output;
+            }
+
+            /*!
+             * \brief Changes the output for all levels
+             * \param output The output to use
+             */
+            IKLOG_EXPORT void setOutput(Output& output)
+            {
+                for(const auto& outputEntry: m_outputs)
+                    m_outputs[outputEntry.first] = &output;
+            }
 
 
             IKLOG_EXPORT inline void setFormatter(const Formatter& formatter) { m_formatter = formatter; }
@@ -123,10 +137,11 @@ namespace iklog
         private:
 
             static std::map<std::string, Log*> m_logsList;
+            IKLOG_EXPORT static OstreamWrapper DEFAULT_OUTPUT;
 
 
             const std::string m_name;
-            std::map<Level, std::ostream*> m_outputs;
+            std::map<Level, Output*> m_outputs;
             unsigned int m_levels;
             std::chrono::system_clock::time_point m_startTime;
             Formatter m_formatter;

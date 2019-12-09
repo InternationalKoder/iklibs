@@ -17,22 +17,15 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef IKLOG_LEVELS_HPP
-#define IKLOG_LEVELS_HPP
+#include "iklog/outputs/Output.hpp"
 
 namespace iklog
 {
-    /*!
-     * \brief Defines the logging levels
-     */
-    enum Level
+    Output::~Output()
+    {}
+
+    std::ostream& operator<<(Output& output, const std::string& message)
     {
-        INFO    = 0x0001,
-        DEBUG   = 0x0010,
-        WARNING = 0x0100,
-        ERROR   = 0x1000
-    };
+        return output.write(message);
+    }
 }
-
-#endif // IKLOG_LEVELS_HPP
-

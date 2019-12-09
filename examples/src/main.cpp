@@ -20,10 +20,13 @@
 #include "Settings.hpp"
 #include <iostream>
 #include <iklog/Log.hpp>
+#include <iklog/outputs/RollingFileOutput.hpp>
 #include <ikconf/readers/PropertiesReader.hpp>
 #include <ikconf/readers/JsonReader.hpp>
 #include <ikconf/exceptions/ConfigurationException.hpp>
 #include <ikparll/ThreadPool.hpp>
+
+using namespace iklog::literals;
 
 int main()
 {
@@ -37,6 +40,12 @@ int main()
     iklog::Log* examplesLog = iklog::Log::getLog("iklibs-examples");
     examplesLog->disableLevels(iklog::Level::DEBUG);
     log.debug("We retrieved a Log object and disabled debug level on it, this message should not appear");
+
+    iklog::RollingFileOutput rollingFileOutput("examples.log", 512_b, 5);
+    iklog::Log rollingFileLog("rolling-file", iklog::Level::INFO, rollingFileOutput);
+
+    for(unsigned int i = 0 ; i < 80 ; i++)
+        rollingFileLog.info("Line number " + std::to_string(i));
 
     // -------- IKCONF
     // create the object that will hold our configuration

@@ -17,22 +17,17 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef IKLOG_LEVELS_HPP
-#define IKLOG_LEVELS_HPP
+#include "iklog/outputs/OstreamWrapper.hpp"
+#include <iostream>
 
 namespace iklog
 {
-    /*!
-     * \brief Defines the logging levels
-     */
-    enum Level
+    OstreamWrapper OstreamWrapper::COUT(std::cout);
+    OstreamWrapper OstreamWrapper::CERR(std::cerr);
+    OstreamWrapper OstreamWrapper::CLOG(std::clog);
+
+    OstreamWrapper::OstreamWrapper(std::ostream& ostream)
     {
-        INFO    = 0x0001,
-        DEBUG   = 0x0010,
-        WARNING = 0x0100,
-        ERROR   = 0x1000
-    };
+        m_ostream = &ostream;
+    }
 }
-
-#endif // IKLOG_LEVELS_HPP
-

@@ -18,14 +18,15 @@
 */
 
 #include "iklog/Log.hpp"
-#include <iostream>
 #include "iklog/Message.hpp"
+#include <iostream>
 
 namespace iklog
 {
     std::map<std::string, Log*> Log::m_logsList;
+    OstreamWrapper Log::DEFAULT_OUTPUT(std::cout);
 
-    Log::Log(const std::string& name, unsigned int levels, const Formatter& formatter) :
+    Log::Log(const std::string& name, unsigned int levels, Output& output, const Formatter& formatter) :
         m_name(name),
         m_levels(levels),
         m_startTime(std::chrono::system_clock::now()),
@@ -33,10 +34,10 @@ namespace iklog
     {
         m_logsList[name] = this;
 
-        m_outputs[Level::INFO] = &std::cout;
-        m_outputs[Level::DEBUG] = &std::cout;
-        m_outputs[Level::WARNING] = &std::cout;
-        m_outputs[Level::ERROR] = &std::cerr;
+        m_outputs[Level::INFO]    = &output;
+        m_outputs[Level::DEBUG]   = &output;
+        m_outputs[Level::WARNING] = &output;
+        m_outputs[Level::ERROR]   = &output;
     }
 
     void Log::log(Level level, const std::string& message)
@@ -45,7 +46,6 @@ namespace iklog
         {
             std::chrono::steady_clock::duration diff = std::chrono::system_clock::now() - m_startTime;
 
-            // possible to store log messages in memory for analysis
             Message logMessage(m_name, level, message, diff, std::chrono::system_clock::now());
             *m_outputs.at(level) << m_formatter.format(logMessage) << std::endl;
         }

@@ -17,22 +17,35 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef IKLOG_LEVELS_HPP
-#define IKLOG_LEVELS_HPP
+#ifndef IKLOG_OUTPUT_HPP
+#define IKLOG_OUTPUT_HPP
+
+#include <string>
+#include <ostream>
+#include "../iklog_export.hpp"
 
 namespace iklog
 {
     /*!
-     * \brief Defines the logging levels
+     * \brief Base class for complex outputs
+     *
+     * Abstract class that defines the base of a complex output system
      */
-    enum Level
+    class Output
     {
-        INFO    = 0x0001,
-        DEBUG   = 0x0010,
-        WARNING = 0x0100,
-        ERROR   = 0x1000
+        public:
+
+            IKLOG_EXPORT virtual ~Output();
+
+            /*!
+             * \brief Outputs the given string to the actual std::ostream
+             * \param message The string to output
+             * \return A stream that has the given string
+             */
+            virtual std::ostream& write(const std::string& message) = 0;
     };
+
+    std::ostream& operator<<(Output& output, const std::string& message);
 }
 
-#endif // IKLOG_LEVELS_HPP
-
+#endif // IKLOG_OUTPUT_HPP
