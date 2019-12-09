@@ -53,9 +53,7 @@ namespace ikparll
             ~ThreadPool()
             {
                 stop();
-
-                for(std::thread& thread : m_threads)
-                    thread.join();
+                std::for_each(m_threads.begin(), m_threads.end(), [](std::thread& t) { t.join(); });
             }
 
             /*!
