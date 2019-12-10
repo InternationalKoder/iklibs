@@ -64,6 +64,11 @@ namespace iklog
                 m_file.open(m_firstRollingFileName, std::ios::out | std::ios::app);
             }
 
+            /*!
+             * \brief Writes the given message to the current file in the rolling system
+             * \param message The message to write
+             * \return The stream that was used to write the message
+             */
             IKLOG_EXPORT virtual std::ostream& write(const std::string& message);
 
         private:

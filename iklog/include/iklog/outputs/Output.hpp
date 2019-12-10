@@ -27,9 +27,9 @@
 namespace iklog
 {
     /*!
-     * \brief Base class for complex outputs
+     * \brief Base class for iklog outputs
      *
-     * Abstract class that defines the base of a complex output system
+     * Abstract class that defines the base of a iklog output system
      */
     class Output
     {
@@ -38,9 +38,9 @@ namespace iklog
             IKLOG_EXPORT virtual ~Output();
 
             /*!
-             * \brief Outputs the given string to the actual std::ostream
-             * \param message The string to output
-             * \return A stream that has the given string
+             * \brief Writes the given string to the output
+             * \param message The string to write
+             * \return A stream stream on which the message has been written
              */
             virtual std::ostream& write(const std::string& message) = 0;
     };

@@ -24,16 +24,24 @@
 
 namespace iklog
 {
+    /*!
+     * \brief Wrapper to allow iklog using any std::ostream instance
+     */
     class OstreamWrapper : public Output
     {
         public:
 
-            IKLOG_EXPORT static OstreamWrapper COUT;
-            IKLOG_EXPORT static OstreamWrapper CERR;
-            IKLOG_EXPORT static OstreamWrapper CLOG;
+            IKLOG_EXPORT static OstreamWrapper COUT; //! wrapper for std::cout
+            IKLOG_EXPORT static OstreamWrapper CERR; //! wrapper for std::cerr
+            IKLOG_EXPORT static OstreamWrapper CLOG; //! wrapper for std::clog
 
             IKLOG_EXPORT OstreamWrapper(std::ostream& ostream);
 
+            /*!
+             * \brief Writes the given message on the wrapped std::ostream
+             * \param message The message to write
+             * \return The wrapped stream on which the message has been written
+             */
             virtual inline std::ostream& write(const std::string& message) { return *m_ostream << message; }
 
         private:

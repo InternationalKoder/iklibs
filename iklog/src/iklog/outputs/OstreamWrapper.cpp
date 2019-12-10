@@ -26,8 +26,7 @@ namespace iklog
     OstreamWrapper OstreamWrapper::CERR(std::cerr);
     OstreamWrapper OstreamWrapper::CLOG(std::clog);
 
-    OstreamWrapper::OstreamWrapper(std::ostream& ostream)
-    {
-        m_ostream = &ostream;
-    }
+    OstreamWrapper::OstreamWrapper(std::ostream& ostream) :
+        m_ostream(&ostream)
+    {}
 }
