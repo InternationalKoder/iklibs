@@ -24,6 +24,7 @@
 #include <functional>
 #include <queue>
 #include <mutex>
+#include <condition_variable>
 
 namespace ikparll
 {
@@ -33,8 +34,8 @@ namespace ikparll
         public:
 
             ConsumerBase(const std::function<void(T)>& function) :
-                m_function(function),
-                m_running(true)
+                m_running(true),
+                m_function(function)
             {}
 
             /*!

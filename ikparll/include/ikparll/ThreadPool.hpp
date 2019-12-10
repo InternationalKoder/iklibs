@@ -21,6 +21,7 @@
 #define IKPARLL_THREAD_POOL_HPP
 
 #include <array>
+#include <thread>
 #include "ConsumerBase.hpp"
 
 namespace ikparll
@@ -52,7 +53,7 @@ namespace ikparll
 
             ~ThreadPool()
             {
-                stop();
+                ConsumerBase<T>::stop();
                 std::for_each(m_threads.begin(), m_threads.end(), [](std::thread& t) { t.join(); });
             }
 
