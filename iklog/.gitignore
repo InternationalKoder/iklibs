@@ -1,8 +1,0 @@
-bin/
-lib/
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-CMakeLists.txt.user*
-*.cbp
-Makefile

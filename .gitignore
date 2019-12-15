@@ -2,10 +2,10 @@ bin/
 lib/
 CMakeFiles/
 CMakeCache.txt
-cmake_install.cmake
+*.cmake
 CMakeLists.txt.user*
 *.cbp
 Makefile
 html/
 latex/
-./**/include/**/*_export.hpp
+**/include/**/*_export.hpp

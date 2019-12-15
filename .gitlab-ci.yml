@@ -7,7 +7,7 @@ stages:
 compile:
   stage: build
   script:
-    - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/release -DBUILD_EXAMPLES:BOOL=OFF
+    - cmake -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(pwd)/release -DBUILD_EXAMPLES:BOOL=OFF -DCMAKE_CXX_FLAGS="-pedantic -Wall -Wextra -Wconversion -Wsign-conversion"
     - make -j 4
   artifacts:
     paths:

@@ -1,0 +1,12 @@
+get_filename_component(IKCONF_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${IKCONF_CMAKE_DIR})
+
+find_dependency(iklog 0.3 REQUIRED)
+
+if(NOT TARGET iklibs::ikconf)
+    include("${IKCONF_CMAKE_DIR}/ikconfTargets.cmake")
+endif()
+
+set(IKLOG_LIBRARIES iklibs::ikconf)

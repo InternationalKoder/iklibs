@@ -1,25 +1,68 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
-project(ikparll)
-if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
-endif()
+project(ikparll VERSION 0.3 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
-
-file(
-    GLOB_RECURSE
-    include_files
-    include/*
+# Project files
+set(INCLUDE_FILES
+    include/ikparll/ConsumerBase.hpp
+    include/ikparll/SingleConsumer.hpp
+    include/ikparll/ThreadPool.hpp
 )
 
-include_directories("include")
+# Define project structure for IDE
+set_property(TARGET PROPERTY USE_FOLDERS ON)
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/ikparll" FILES ${INCLUDE_FILES})
 
+# Define library
 add_library(ikparll INTERFACE)
-target_sources(ikparll INTERFACE ${include_files})
-target_include_directories(ikparll INTERFACE include/)
+add_library(iklibs::ikparll ALIAS ikparll)
+target_include_directories(ikparll
+    INTERFACE
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 
-install(TARGETS ikparll)
-install(DIRECTORY include DESTINATION .)
+# Build options
+target_compile_features(ikparll INTERFACE cxx_std_17)
+
+# Install
+include(GNUInstallDirs)
+install(TARGETS ikparll
+    EXPORT ikparll-targets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+install(EXPORT ikparll-targets
+    FILE ikparllTargets.cmake
+    NAMESPACE iklibs::
+    DESTINATION cmake
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/ikparllConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/ikparllConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/ikparllConfig.cmake
+    INSTALL_DESTINATION cmake
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/ikparllConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/ikparllConfigVersion.cmake
+    DESTINATION cmake
+)
+
+# Make the library available in the build tree
+export(EXPORT ikparll-targets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/ikparllTargets.cmake
+    NAMESPACE iklibs::
+)
+
+export(PACKAGE ikparll)

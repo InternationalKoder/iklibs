@@ -1,47 +1,56 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 
-project(iklibs-examples)
-if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pthread")
-elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
-endif()
+project(iklibs-examples VERSION 0.3 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-
-# Enable debug symbols by default
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build (Debug or Release)" FORCE)
-endif()
-
-# Project settings
-set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
-
-file(
-    GLOB_RECURSE
-    source_files
-    src/*
+# Project files
+set(SOURCE_FILES
+    src/main.cpp
+    src/OtherSubSettings.cpp
+    src/Settings.cpp
+    src/SubSettings.cpp
+    src/SubSubSettings.cpp
 )
 
-file(
-    GLOB_RECURSE
-    include_files
-    include/*
+set(INCLUDE_FILES
+    include/OtherSubSettings.hpp
+    include/Settings.hpp
+    include/SubSettings.hpp
+    include/SubSubSettings.hpp
 )
 
-include_directories("src")
-include_directories("include")
+# Define project structure for IDE
+set_property(TARGET PROPERTY USE_FOLDERS ON)
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" FILES ${SOURCE_FILES})
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include" FILES ${INCLUDE_FILES})
 
-set(EXECUTABLE_NAME "iklibs-examples")
+# Define executable
+add_executable(iklibs-examples ${SOURCE_FILES} ${INCLUDE_FILES})
+target_include_directories(iklibs-examples
+    PRIVATE
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
 
-# Add iklog, ikconf and ikparll library headers
-include_directories("../iklog/include")
-include_directories("../ikconf/include")
-include_directories("../ikparll/include")
+# Dependencies
+find_package(iklog 0.3 REQUIRED)
+find_package(ikconf 0.3 REQUIRED)
+find_package(ikparll 0.3 REQUIRED)
 
-add_executable(${EXECUTABLE_NAME} ${source_files} ${include_files})
-target_link_libraries(${EXECUTABLE_NAME} PUBLIC iklog ikconf)
+target_link_libraries(iklibs-examples PRIVATE iklibs::iklog iklibs::ikconf iklibs::ikparll)
 
+# Build options
+target_compile_features(iklibs-examples PRIVATE cxx_std_17)
+set_target_properties(iklibs-examples
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT ipo_supported)
+if(ipo_supported)
+  set_target_properties(iklibs-examples PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()
+
+# Install
 install(TARGETS iklibs-examples)
-install(DIRECTORY include DESTINATION .)
-install(DIRECTORY resources DESTINATION .)
+install(DIRECTORY resources DESTINATION bin)
