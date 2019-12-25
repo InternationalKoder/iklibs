@@ -91,9 +91,9 @@ namespace ikconf
             if(!configuration.checkPropertyExists(propertyName))
             {
                 LOG.warn("Unknown property '" + propertyName + "' was skipped");
-                unsigned int level = 0;
+                unsigned int level = 1;
                 bool insideString = false;
-                while(character != ',' || level > 0 || insideString)
+                while((character != ',' && level > 0) || insideString)
                 {
                     character = readCharacter(file, true);
                     if(character == '[' || character == '{')
