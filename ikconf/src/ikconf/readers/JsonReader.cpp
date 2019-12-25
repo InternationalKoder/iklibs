@@ -24,7 +24,9 @@
 
 namespace ikconf
 {
+#ifdef IKCONF_USE_IKLOG
     iklog::Log JsonReader::LOG("JsonReader", iklog::Level::WARNING);
+#endif
 
 
     JsonReader::JsonReader(const Configuration& configuration) :
@@ -90,7 +92,7 @@ namespace ikconf
             // check if the property is known
             if(!configuration.checkPropertyExists(propertyName))
             {
-                LOG.warn("Unknown property '" + propertyName + "' was skipped");
+                logWarningMessage("Unknown property '" + propertyName + "' was skipped");
                 unsigned int level = 1;
                 bool insideString = false;
                 while((character != ',' && level > 0) || insideString)

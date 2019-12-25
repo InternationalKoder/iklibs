@@ -21,7 +21,13 @@
 #define IKCONF_JSON_READER_HPP
 
 #include "BaseReader.hpp"
+#include "../lib_conf.hpp"
+
+#ifdef IKCONF_USE_IKLOG
 #include <iklog/Log.hpp>
+#else
+#include <iostream>
+#endif
 
 namespace ikconf
 {
@@ -54,7 +60,9 @@ namespace ikconf
 
         private:
 
+#ifdef IKCONF_USE_IKLOG
             static iklog::Log LOG;
+#endif
 
             /*!
              * \brief Reads a JSON object and sets the properties values it contains
@@ -87,6 +95,19 @@ namespace ikconf
              * \return The read character
              */
             char readCharacter(std::ifstream& file, bool acceptEof = false);
+
+            /*!
+             * \brief Writes a message using iklog if enabled, or standard output otherwise
+             * \param message The message to log
+             */
+            inline void logWarningMessage(const std::string& message)
+            {
+#ifdef IKCONF_USE_IKLOG
+                LOG.warn(message);
+#else
+                std::cout << "[WARN] " << message << std::endl;
+#endif
+            }
 
 
             unsigned int m_lineNumber; // Counter holding the current line number to give when an error occurs

@@ -7,4 +7,4 @@ if(NOT TARGET iklibs::ikparll)
     include("${IKPARLL_CMAKE_DIR}/ikparllTargets.cmake")
 endif()
 
-set(IKLOG_LIBRARIES iklibs::ikparll)
+set(IKPARLL_LIBRARIES iklibs::ikparll)

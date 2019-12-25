@@ -21,7 +21,13 @@
 #define IKCONF_PROPERTIES_READER_HPP
 
 #include "BaseReader.hpp"
+#include "../lib_conf.hpp"
+
+#ifdef IKCONF_USE_IKLOG
 #include <iklog/Log.hpp>
+#else
+#include <iostream>
+#endif
 
 namespace ikconf
 {
@@ -47,7 +53,23 @@ namespace ikconf
 
         private:
 
+#ifdef IKCONF_USE_IKLOG
             static iklog::Log LOG;
+#endif
+
+
+            /*!
+             * \brief Writes a message using iklog if enabled, or standard output otherwise
+             * \param message The message to log
+             */
+            inline void logWarningMessage(const std::string& message)
+            {
+#ifdef IKCONF_USE_IKLOG
+                LOG.warn(message);
+#else
+                std::cout << "[WARN] " << message << std::endl;
+#endif
+            }
     };
 }
 

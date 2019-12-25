@@ -9,3 +9,4 @@ Makefile
 html/
 latex/
 **/include/**/*_export.hpp
+**/include/**/lib_conf.hpp

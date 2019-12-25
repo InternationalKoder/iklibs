@@ -13,6 +13,7 @@ set(SOURCE_FILES
 )
 
 set(INCLUDE_FILES
+    include/iklog/iklog_export.hpp
     include/iklog/Formatter.hpp
     include/iklog/Level.hpp
     include/iklog/Log.hpp
