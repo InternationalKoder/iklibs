@@ -26,7 +26,7 @@ namespace iklog
     std::map<std::string, Log*> Log::m_logsList;
     OstreamWrapper Log::DEFAULT_OUTPUT(std::cout);
 
-    Log::Log(const std::string& name, unsigned int levels, Output& output, const Formatter& formatter) :
+    Log::Log(const std::string& name, int levels, Output& output, const Formatter& formatter) :
         m_name(name),
         m_levels(levels),
         m_startTime(std::chrono::system_clock::now()),

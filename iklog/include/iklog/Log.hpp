@@ -45,7 +45,7 @@ namespace iklog
              * \param output The output that will be used for all levels
              * \param formatter The formatter to use for the logging messages
              */
-            IKLOG_EXPORT Log(const std::string& name, unsigned int levels, Output& output = DEFAULT_OUTPUT,
+            IKLOG_EXPORT Log(const std::string& name, int levels, Output& output = DEFAULT_OUTPUT,
                              const Formatter& formatter = Formatter());
 
 
@@ -94,13 +94,13 @@ namespace iklog
              * \brief Enables the given levels
              * \param levels List of flags describing the levels to enable
              */
-            IKLOG_EXPORT inline void enableLevels(unsigned int levels) { m_levels |= levels; }
+            IKLOG_EXPORT inline void enableLevels(int levels) { m_levels |= levels; }
 
             /*!
              * \brief Disables the given levels
              * \param levels List of flags describing the levels to disable
              */
-            IKLOG_EXPORT inline void disableLevels(unsigned int levels) { m_levels &= ~levels; }
+            IKLOG_EXPORT inline void disableLevels(int levels) { m_levels &= ~levels; }
 
 
             /*!
