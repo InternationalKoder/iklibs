@@ -66,14 +66,14 @@ include(GenerateExportHeader)
 GENERATE_EXPORT_HEADER(ikconf
              BASE_NAME IKCONF
              EXPORT_MACRO_NAME IKCONF_EXPORT
-             EXPORT_FILE_NAME include/ikconf/ikconf_export.hpp
+             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/ikconf/ikconf_export.hpp
              STATIC_DEFINE IKCONF_BUILT_AS_STATIC
 )
 
 # Insert library configuration in header file
 configure_file(
   "cmake/lib_conf.hpp.in"
-  "include/ikconf/lib_conf.hpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/ikconf/lib_conf.hpp"
 )
 
 

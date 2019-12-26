@@ -60,7 +60,7 @@ include(GenerateExportHeader)
 GENERATE_EXPORT_HEADER(iklog
              BASE_NAME IKLOG
              EXPORT_MACRO_NAME IKLOG_EXPORT
-             EXPORT_FILE_NAME include/iklog/iklog_export.hpp
+             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/iklog/iklog_export.hpp
              STATIC_DEFINE IKLOG_BUILT_AS_STATIC
 )
 
