@@ -127,7 +127,7 @@ namespace iklog
         const Message::TimePoint& TIME = message.getClockTime();
         std::time_t time = std::chrono::system_clock::to_time_t(TIME);
 
-        struct tm tm;
+        struct tm tm = { 0, 0, 0, 1, 0, 0, 0, 0, -1 };
         #ifdef _WIN32
             localtime_s(&tm, &time);
         #elif defined __unix__

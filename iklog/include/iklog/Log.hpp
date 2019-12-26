@@ -142,7 +142,7 @@ namespace iklog
 
             const std::string m_name;
             std::map<Level, Output*> m_outputs;
-            unsigned int m_levels;
+            int m_levels;
             std::chrono::system_clock::time_point m_startTime;
             Formatter m_formatter;
     };
