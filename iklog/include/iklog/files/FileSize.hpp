@@ -35,7 +35,7 @@ namespace iklog
          * M is the level: each level multiplies by 1024
          */
         template<unsigned int M>
-        inline uintmax_t computeFileSizeUnit()
+        inline constexpr uintmax_t computeFileSizeUnit()
         {
             static_assert(M > 0, "Level of multiplier must be positive");
             return UNIT_MULTIPLIER * computeFileSizeUnit<M - 1>();
@@ -45,7 +45,7 @@ namespace iklog
          * \brief Neutral multiplier for conversion of file sizes to bytes
          */
         template<>
-        inline uintmax_t computeFileSizeUnit<0>()
+        inline constexpr uintmax_t computeFileSizeUnit<0>()
         {
             return 1;
         }
