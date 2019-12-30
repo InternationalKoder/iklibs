@@ -28,5 +28,15 @@
         7946,
         2
     ],
-    "unknownproperty": -1
+    "unknownproperty": -1,
+    "subsettingsarray": [
+        {
+            "value": "it is possible to have",
+            "index": 0
+        },
+        {
+            "value": "an array of objects",
+            "index": 1
+        }
+    ]
 }

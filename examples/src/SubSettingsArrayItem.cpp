@@ -17,13 +17,9 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "ikconf/Configuration.hpp"
+#include "SubSettingsArrayItem.hpp"
 
-namespace ikconf
-{
-    Configuration::Configuration()
-    {}
-
-    Configuration::~Configuration()
-    {}
-}
+SubSettingsArrayItem::SubSettingsArrayItem() :
+    ikconf::Configuration(ikconf::Property("value", m_value),
+                          ikconf::Property("index", m_index))
+{}

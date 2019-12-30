@@ -17,39 +17,41 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef IKCONF_CONFIGURATION_EXCEPTION_HPP
-#define IKCONF_CONFIGURATION_EXCEPTION_HPP
+#ifndef IKCONF_CONFIGURATION_LIST_HPP
+#define IKCONF_CONFIGURATION_LIST_HPP
 
-#include <exception>
+#include "Configuration.hpp"
+#include <vector>
+#include <any>
 #include <string>
-#include "ikconf/ikconf_export.hpp"
+#include "ikconf_export.hpp"
 
 namespace ikconf
 {
     /*!
-     * \brief Exception that is thrown when a problem occurs while building a configuration
+     * \brief Special configuration item that is actually a list of objects
      */
-    class ConfigurationException : public std::exception
+    template<typename T>
+    class ConfigurationList : public Configuration
     {
         public:
 
             /*!
-             * \brief Constructor which takes the description of the encountered problem
-             * \param what Description of the problem
+             * \brief Adds a new item in the list
+             * \return A pointer to the new item in the list
              */
-            IKCONF_EXPORT ConfigurationException(const std::string& what);
+            virtual Configuration* newListItem() override
+            {
+                m_properties.emplace_back();
+                return &m_properties.back();
+            }
 
-
-            /*!
-             * \brief Gives the description of the error
-             * \return A string describing the problem
-             */
-            IKCONF_EXPORT inline virtual const char* what() const noexcept { return m_what.c_str(); }
+            inline std::vector<T> getProperties() const { return m_properties; }
 
         private:
 
-            const std::string m_what;
+            std::vector<T> m_properties;
     };
 }
 
-#endif // IKCONF_CONFIGURATION_EXCEPTION_HPP
+#endif // IKCONF_CONFIGURATION_LIST_HPP

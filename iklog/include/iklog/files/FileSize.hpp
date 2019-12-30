@@ -25,10 +25,11 @@
 
 namespace iklog
 {
-    static constexpr unsigned short UNIT_MULTIPLIER = 1024; // multiplier to go from one unit to the next one
-
     namespace internal
     {
+
+        static constexpr unsigned short UNIT_MULTIPLIER = 1024; // multiplier to go from one unit to the next one
+
         /*!
          * \brief Calculates the multiplier to convert any file size unit to bytes
          *
@@ -64,14 +65,20 @@ namespace iklog
             FileSize(uintmax_t value) : m_value(value * internal::computeFileSizeUnit<MULTIPLIER>()) {}
 
             /*!
-             * \brief getValueInBytes Returns the file size given in the constructor converted to bytes
+             * \brief Returns the file size given in the constructor converted to bytes
              * \return The file size value in bytes
              */
             inline uintmax_t getValueInBytes() const { return m_value; }
 
+            /*!
+             * \brief Converts the FileSize to another FileSize but in bytes: FileSize<0>
+             * \return
+             */
+            inline FileSize<0> toBytes() const { return FileSize<0>(m_value); }
+
         private:
 
-            const uintmax_t m_value; // the value in bytes
+            uintmax_t m_value; // the value in bytes
     };
 
 

@@ -40,7 +40,6 @@ namespace ikconf
      *
      * Does NOT support:
      * - arrays as the base item, it means the base level must be an object (file must start with '{' and end with '}')
-     * - arrays of objects
      */
     class JsonReader : public BaseReader
     {

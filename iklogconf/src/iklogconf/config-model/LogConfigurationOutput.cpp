@@ -17,13 +17,14 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "ikconf/Configuration.hpp"
+#include "iklogconf/config-model/LogConfigurationOutput.hpp"
 
-namespace ikconf
+namespace iklogconf
 {
-    Configuration::Configuration()
-    {}
-
-    Configuration::~Configuration()
+    LogConfigurationOutput::LogConfigurationOutput() :
+        ikconf::Configuration(ikconf::Property("type", m_type),
+                              ikconf::Property("baseFileName", m_baseFileName),
+                              ikconf::Property("maxFileSize", m_maxFileSize),
+                              ikconf::Property("maxRollingFiles", m_maxRollingFiles))
     {}
 }

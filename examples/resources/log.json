@@ -1,0 +1,21 @@
+{
+    "logs": [
+        {
+            "name": "iklogconfStdoutLogger",
+            "output": {
+                "type": "stdout"
+            },
+            "levels": [ "ERROR", "WARNING", "INFO" ]
+        },
+        {
+            "name": "iklogconfRollingFileLogger",
+            "output": {
+                "type": "rolling-file",
+                "baseFileName": "iklogconf-log.log",
+                "maxFileSize": "100b",
+                "maxRollingFiles": 3
+            },
+            "levels": [ "INFO" ]
+        }
+    ]
+}

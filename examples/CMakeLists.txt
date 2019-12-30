@@ -8,6 +8,7 @@ set(SOURCE_FILES
     src/OtherSubSettings.cpp
     src/Settings.cpp
     src/SubSettings.cpp
+    src/SubSettingsArrayItem.cpp
     src/SubSubSettings.cpp
 )
 
@@ -15,6 +16,7 @@ set(INCLUDE_FILES
     include/OtherSubSettings.hpp
     include/Settings.hpp
     include/SubSettings.hpp
+    include/SubSettingsArrayItem.hpp
     include/SubSubSettings.hpp
 )
 
@@ -36,8 +38,9 @@ target_include_directories(iklibs-examples
 find_package(iklog 0.3 REQUIRED)
 find_package(ikconf 0.3 REQUIRED)
 find_package(ikparll 0.3 REQUIRED)
+find_package(iklogconf 0.3 REQUIRED)
 
-target_link_libraries(iklibs-examples PRIVATE iklibs::iklog iklibs::ikconf iklibs::ikparll)
+target_link_libraries(iklibs-examples PRIVATE iklibs::iklog iklibs::ikconf iklibs::ikparll iklibs::iklogconf)
 
 # Build options
 target_compile_features(iklibs-examples PRIVATE cxx_std_17)

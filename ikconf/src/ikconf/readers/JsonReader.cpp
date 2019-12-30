@@ -58,8 +58,6 @@ namespace ikconf
         }
         else
             handleUnexpectedCharacter(character);
-
-        file.close();
     }
 
 
@@ -116,12 +114,14 @@ namespace ikconf
                 Configuration* subConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
                 readObject(file, *subConfig);
                 character = readCharacter(file);
+                setPropertySuccess = true;
             }
             else if(character == '[')
             {
                 // value is an array
                 readArray(file, configuration, propertyName);
                 character = readCharacter(file);
+                setPropertySuccess = true;
             }
             else
             {
@@ -164,21 +164,32 @@ namespace ikconf
             // read the value
             propertyValue = "";
             file.unsetf(std::ios_base::skipws);
-            while(file >> character && character != ',' && character != ']')
+            while(file >> character && character != ',' && character != ']' && character != '{')
                 propertyValue += character;
             file.setf(std::ios_base::skipws);
 
-            // arrange the value before inserting it
-            propertyValue = trim(propertyValue);
-
-            if(propertyValue.front() == '"' && propertyValue.back() == '"')
+            if(character == '{')
             {
-                propertyValue.pop_back();
-                propertyValue = propertyValue.substr(1);
+                // value is an object
+                Configuration* const listConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
+                Configuration* const subConfig = listConfig->newListItem();
+                readObject(file, *subConfig);
+                character = readCharacter(file);
             }
+            else
+            {
+                // arrange the value before inserting it
+                propertyValue = trim(propertyValue);
 
-            // insert the value
-            addPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
+                if(propertyValue.front() == '"' && propertyValue.back() == '"')
+                {
+                    propertyValue.pop_back();
+                    propertyValue = propertyValue.substr(1);
+                }
+
+                // insert the value
+                addPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
+            }
         }
     }
 

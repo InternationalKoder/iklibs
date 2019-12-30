@@ -22,6 +22,7 @@
 
 #include "Output.hpp"
 #include "iklog/files/FileSize.hpp"
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <assert.h>
@@ -62,6 +63,8 @@ namespace iklog
                 assert(m_maxFileSize > 0);
                 assert(maxRollingFiles > 0);
                 m_file.open(m_firstRollingFileName, std::ios::out | std::ios::app);
+                if(!m_file.is_open())
+                    std::cerr << "Failed to open file '" << m_firstRollingFileName << "' in write mode" << std::endl;
             }
 
             /*!

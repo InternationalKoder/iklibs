@@ -17,13 +17,27 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "ikconf/Configuration.hpp"
+#ifndef SUB_SETTINGS_ARRAY_ITEM_HPP
+#define SUB_SETTINGS_ARRAY_ITEM_HPP
 
-namespace ikconf
+#include <ikconf/Configuration.hpp>
+
+/*!
+ * \brief Shows how to implement an list item (nothing special actually, it's just like the other configuration objects)
+ */
+class SubSettingsArrayItem : public ikconf::Configuration
 {
-    Configuration::Configuration()
-    {}
+    public:
 
-    Configuration::~Configuration()
-    {}
-}
+        SubSettingsArrayItem();
+
+        inline std::string getValue() const { return m_value; }
+        inline unsigned int getIndex() const { return m_index; }
+
+    private:
+
+        std::string m_value;
+        unsigned int m_index;
+};
+
+#endif // SUB_SETTINGS_ARRAY_ITEM_HPP

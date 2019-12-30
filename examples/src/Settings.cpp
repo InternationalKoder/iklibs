@@ -30,7 +30,8 @@ Settings::Settings() :
                           ikconf::Property("mysubsettings", m_testSubSettings),
                           ikconf::Property("othersubsettings", m_testOtherSubSettings),
                           ikconf::Property("myarray", m_testArray),
-                          ikconf::Property("mystringarray", m_testStringArray))
+                          ikconf::Property("mystringarray", m_testStringArray),
+                          ikconf::Property("subsettingsarray", m_testSubSettingsArray))
 {
     // alternatively, you can also define the properties by calling the addProperty and addProperties methods:
 

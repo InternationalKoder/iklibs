@@ -21,8 +21,10 @@
 #define SETTINGS_HPP
 
 #include <ikconf/Configuration.hpp>
+#include <ikconf/ConfigurationList.hpp>
 #include "SubSettings.hpp"
 #include "OtherSubSettings.hpp"
+#include "SubSettingsArrayItem.hpp"
 
 /*!
  * \brief Example of the implementation of a configuration with ikconf
@@ -32,6 +34,7 @@
  * - you can add other subclasses of ikconf::Configuration to group some properties in subobjects
  * - if you want to have lists in your configuration, you must use std::vector so that ikconf can put the values
  * - the properties are defined in the constructor
+ * - lists of objects have to be members of type ConfigurationList<T>
  */
 class Settings : public ikconf::Configuration
 {
@@ -50,6 +53,7 @@ class Settings : public ikconf::Configuration
         inline char getTestCharAsNumber() const { return m_testCharAsNumber; }
         inline std::vector<int> getTestArray() const { return m_testArray; }
         inline std::vector<std::string> getTestStringArray() const { return m_testStringArray; }
+        inline std::vector<SubSettingsArrayItem> getTestSubSettingsArray() const { return m_testSubSettingsArray.getProperties(); }
 
     private:
 
@@ -64,6 +68,7 @@ class Settings : public ikconf::Configuration
         char m_testCharAsNumber;
         std::vector<int> m_testArray;
         std::vector<std::string> m_testStringArray;
+        ikconf::ConfigurationList<SubSettingsArrayItem> m_testSubSettingsArray;
 };
 
 #endif // SETTINGS_HPP

@@ -24,6 +24,7 @@
 #include <map>
 #include <memory>
 #include "Property.hpp"
+#include "exceptions/ConfigurationException.hpp"
 #include "ikconf_export.hpp"
 
 namespace ikconf
@@ -39,6 +40,8 @@ namespace ikconf
              * \brief Simple constructor that allows to start without any property and set them later
              */
             IKCONF_EXPORT Configuration();
+
+            IKCONF_EXPORT virtual ~Configuration();
 
 
             /*!
@@ -82,7 +85,6 @@ namespace ikconf
                     m_properties[property.getName()] = static_cast<Configuration*>(property.getValue());
                 else
                     m_properties[property.getName()] = property.getValue();
-
             }
 
 
@@ -106,6 +108,13 @@ namespace ikconf
             {
                 return (m_properties.find(propertyName) != m_properties.end());
             }
+
+
+            /*!
+             * \brief For list Configuration only: creates a new element in the list and returns it
+             * \return A pointer to the new element in the list
+             */
+            virtual inline Configuration* newListItem() { throw ConfigurationException("This configuration element is not a list"); }
 
         private:
 

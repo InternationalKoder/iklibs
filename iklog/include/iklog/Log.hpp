@@ -38,6 +38,9 @@ namespace iklog
     {
         public:
 
+            IKLOG_EXPORT static OstreamWrapper DEFAULT_OUTPUT; // The default output for logs when no output is provided
+
+
             /*!
              * \brief Constructor
              * \param name The name of the Log
@@ -137,7 +140,6 @@ namespace iklog
         private:
 
             static std::map<std::string, Log*> m_logsList;
-            IKLOG_EXPORT static OstreamWrapper DEFAULT_OUTPUT;
 
 
             const std::string m_name;

@@ -17,13 +17,13 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "ikconf/Configuration.hpp"
+#include "iklogconf/config-model/LogConfigurationItem.hpp"
 
-namespace ikconf
+namespace iklogconf
 {
-    Configuration::Configuration()
-    {}
-
-    Configuration::~Configuration()
+    LogConfigurationItem::LogConfigurationItem() :
+        ikconf::Configuration(ikconf::Property("name", m_name),
+                              ikconf::Property("output", m_output),
+                              ikconf::Property("levels", m_levels))
     {}
 }

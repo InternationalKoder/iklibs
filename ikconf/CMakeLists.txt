@@ -18,6 +18,7 @@ set(INCLUDE_FILES
     include/ikconf/ikconf_export.hpp
     include/ikconf/lib_conf.hpp
     include/ikconf/Configuration.hpp
+    include/ikconf/ConfigurationList.hpp
     include/ikconf/Property.hpp
     include/ikconf/exceptions/ConfigurationException.hpp
     include/ikconf/readers/BaseReader.hpp

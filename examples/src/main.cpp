@@ -25,6 +25,7 @@
 #include <ikconf/readers/JsonReader.hpp>
 #include <ikconf/exceptions/ConfigurationException.hpp>
 #include <ikparll/ThreadPool.hpp>
+#include <iklogconf/LogConfigurator.hpp>
 
 using namespace iklog::literals;
 
@@ -107,6 +108,11 @@ int main()
         std::cout << "string array item: " << i << std::endl;
     }
 
+    for(const SubSettingsArrayItem& i : settings.getTestSubSettingsArray())
+    {
+        std::cout << "object array item: { " << i.getIndex() << " ; " << i.getValue() << " }" << std::endl;
+    }
+
     // -------- IKPARLL
     std::cout << "Thread pool test" << std::endl;
     ikparll::ThreadPool<int, 3> threadPool([](int i) { std::cout << std::this_thread::get_id() << " : " << i*2 << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(1000)); });
@@ -115,6 +121,28 @@ int main()
         threadPool.addItem(i);
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
+
+    // -------- IKLOGCONF
+    iklogconf::LogConfigurator logConfigurator;
+    try
+    {
+        logConfigurator.readJsonFile("resources/log.json");
+    }
+    catch(const ikconf::ConfigurationException& e)
+    {
+        std::cerr << "Error while getting log configuration: " << e.what() << std::endl;
+    }
+
+    iklog::Log* const iklogconfStdoutLogger = iklog::Log::getLog("iklogconfStdoutLogger");
+    iklogconfStdoutLogger->info("This log has been configured from a file!");
+    iklogconfStdoutLogger->debug("This message should not be displayed");
+
+    iklog::Log* const iklogconfRollingFileLogger = iklog::Log::getLog("iklogconfRollingFileLogger");
+    for(unsigned int i = 0 ; i < 10 ; i++)
+    {
+        iklogconfRollingFileLogger->info("Message " + std::to_string(i) + " on log configured from file");
+    }
+
 
     return EXIT_SUCCESS;
 }
