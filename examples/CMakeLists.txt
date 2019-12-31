@@ -40,7 +40,10 @@ find_package(ikconf 0.3 REQUIRED)
 find_package(ikparll 0.3 REQUIRED)
 find_package(iklogconf 0.3 REQUIRED)
 
-target_link_libraries(iklibs-examples PRIVATE iklibs::iklog iklibs::ikconf iklibs::ikparll iklibs::iklogconf)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+target_link_libraries(iklibs-examples PRIVATE iklibs::iklog iklibs::ikconf iklibs::ikparll iklibs::iklogconf Threads::Threads)
 
 # Build options
 target_compile_features(iklibs-examples PRIVATE cxx_std_17)

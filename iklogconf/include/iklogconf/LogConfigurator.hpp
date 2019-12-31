@@ -23,6 +23,7 @@
 #include "iklogconf_export.hpp"
 #include <string>
 #include <vector>
+#include <memory>
 #include <iklog/Log.hpp>
 
 namespace iklogconf
