@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -21,6 +21,7 @@
 #include <ikconf/readers/JsonReader.hpp>
 #include <iklog/outputs/RollingFileOutput.hpp>
 #include "iklogconf/config-model/LogConfiguration.hpp"
+#include <optional>
 
 namespace iklogconf
 {
@@ -58,7 +59,7 @@ namespace iklogconf
         }
 
         // Interpret the output type
-        iklog::Output* output = &iklog::Log::DEFAULT_OUTPUT;
+        std::optional<iklog::Output*> output;
         const LogConfigurationOutput& configOutput = configItem.getOutput();
         const std::string& configOutputType = configOutput.getType();
         if(configOutputType == "stdout")
@@ -104,7 +105,20 @@ namespace iklogconf
             }
         }
 
+        // Interpret the format
+        std::optional<iklog::Formatter> formatter;
+        if(configItem.getFormat() != "")
+            formatter = iklog::Formatter(configItem.getFormat());
+
         // Create log
-        m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels, *output));
+        if(output.has_value())
+        {
+            if(formatter.has_value())
+                m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels, *(output.value()), formatter.value()));
+            else
+                m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels, *(output.value())));
+        }
+        else
+            m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels));
     }
 }

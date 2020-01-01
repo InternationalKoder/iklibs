@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -37,9 +37,6 @@ namespace iklog
     class Log
     {
         public:
-
-            IKLOG_EXPORT static OstreamWrapper DEFAULT_OUTPUT; // The default output for logs when no output is provided
-
 
             /*!
              * \brief Constructor
@@ -140,6 +137,7 @@ namespace iklog
         private:
 
             static std::map<std::string, Log*> m_logsList;
+            IKLOG_EXPORT static OstreamWrapper DEFAULT_OUTPUT; // The default output for logs when no output is provided
 
 
             const std::string m_name;

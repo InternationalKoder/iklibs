@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -39,12 +39,14 @@ namespace iklogconf
             inline std::string getName() const { return m_name; }
             inline LogConfigurationOutput getOutput() const { return m_output; }
             inline std::vector<std::string> getLevels() const { return m_levels; }
+            inline std::string getFormat() const { return m_format; }
 
         private:
 
             std::string m_name; // log's name
             LogConfigurationOutput m_output; // the outputs where the messages will be written
             std::vector<std::string> m_levels; // logging levels
+            std::string m_format; // format for the log messages
     };
 }
 

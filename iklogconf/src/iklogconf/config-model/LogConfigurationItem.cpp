@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -24,6 +24,7 @@ namespace iklogconf
     LogConfigurationItem::LogConfigurationItem() :
         ikconf::Configuration(ikconf::Property("name", m_name),
                               ikconf::Property("output", m_output),
-                              ikconf::Property("levels", m_levels))
+                              ikconf::Property("levels", m_levels),
+                              ikconf::Property("format", m_format))
     {}
 }

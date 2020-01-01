@@ -5,7 +5,8 @@
             "output": {
                 "type": "stdout"
             },
-            "levels": [ "ERROR", "WARNING", "INFO" ]
+            "levels": [ "ERROR", "WARNING", "INFO" ],
+            "format": "custom format: %L %m"
         },
         {
             "name": "iklogconfRollingFileLogger",
