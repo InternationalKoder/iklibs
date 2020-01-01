@@ -22,6 +22,7 @@ The goal is more to provide ready to use tools than to have the fastest logging 
 
 Features:
 * Logging to any std::ofstream
+* Rolling files logging system
 * Easy message formatting configuration
 * Different logging levels with a precise selection of the levels to actually log
 
@@ -35,7 +36,7 @@ This way, you can have a configuration class that has exactly the same structure
 
 Features:
 * Simple binding of configuration properties
-* Supported file formats: .properties, JSON (not fully supported, but should be enough for configuration)
+* Supported file formats: .properties, JSON
 
 
 ikparll
@@ -45,3 +46,16 @@ Utilities for parallel computing.
 
 Features:
 * Thread pool executing a single function
+
+
+iklogconf
+---------
+
+Helps the configuration of an iklog logging system by using ikconf.
+In concrete terms, it gives all the tools to read a file of a conventional format and automatically create the logging system described by this file.
+See examples/resources/log.json for an example of the supported file format.
+
+Features:
+* Use of iklog and ikconf
+* Reading of a JSON file describing the logging system
+* Automatic creation of a logging system from a configuration
