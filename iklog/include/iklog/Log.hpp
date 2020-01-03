@@ -54,32 +54,32 @@ namespace iklog
              * \param level The level of the logging message
              * \param message The message to log
              */
-            IKLOG_EXPORT void log(Level level, const std::string& message);
+            IKLOG_EXPORT void log(Level level, const std::string& message) const;
 
 
             /*!
              * \brief Logs a message in INFO level
              * \param message The message to log
              */
-            IKLOG_EXPORT inline void info(const std::string& message) { log(Level::INFO, message); }
+            IKLOG_EXPORT inline void info(const std::string& message) const { log(Level::INFO, message); }
 
             /*!
              * \brief Logs a message in DEBUG level
              * \param message The message to log
              */
-            IKLOG_EXPORT inline void debug(const std::string& message) { log(Level::DEBUG, message); }
+            IKLOG_EXPORT inline void debug(const std::string& message) const { log(Level::DEBUG, message); }
 
             /*!
              * \brief Logs a message in WARNING level
              * \param message The message to log
              */
-            IKLOG_EXPORT inline void warn(const std::string& message) { log(Level::WARNING, message); }
+            IKLOG_EXPORT inline void warn(const std::string& message) const { log(Level::WARNING, message); }
 
             /*!
              * \brief Logs a message in ERROR level
              * \param message The message to log
              */
-            IKLOG_EXPORT inline void error(const std::string& message) { log(Level::ERROR, message); }
+            IKLOG_EXPORT inline void error(const std::string& message) const { log(Level::ERROR, message); }
 
 
             /*!

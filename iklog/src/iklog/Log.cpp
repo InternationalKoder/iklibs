@@ -40,7 +40,7 @@ namespace iklog
         m_outputs[Level::ERROR]   = &output;
     }
 
-    void Log::log(Level level, const std::string& message)
+    void Log::log(Level level, const std::string& message) const
     {
         if(isLevelEnabled(level))
         {
