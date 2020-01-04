@@ -19,6 +19,7 @@
 
 #include "iklog/Log.hpp"
 #include "iklog/Message.hpp"
+#include "iklog/NullLog.hpp"
 #include <iostream>
 
 namespace iklog
@@ -40,6 +41,9 @@ namespace iklog
         m_outputs.insert_or_assign(Level::ERROR,   &output);
     }
 
+    Log::~Log()
+    {}
+
     void Log::log(Level level, const std::string& message) const
     {
         if(isLevelEnabled(level))
@@ -49,5 +53,14 @@ namespace iklog
             Message logMessage(m_name, level, message, diff, std::chrono::system_clock::now());
             *m_outputs.at(level) << m_formatter.format(logMessage) << std::endl;
         }
+    }
+
+    Log* Log::getLog(const std::string& name)
+    {
+        auto it = m_logsList.find(name);
+        if(it != m_logsList.end())
+            return it->second;
+        else
+            return &NullLog::getInstance();
     }
 }

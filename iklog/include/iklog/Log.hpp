@@ -49,12 +49,15 @@ namespace iklog
                              const Formatter& formatter = Formatter());
 
 
+            IKLOG_EXPORT virtual ~Log();
+
+
             /*!
              * \brief Logs a message in the given level
              * \param level The level of the logging message
              * \param message The message to log
              */
-            IKLOG_EXPORT void log(Level level, const std::string& message) const;
+            IKLOG_EXPORT virtual void log(Level level, const std::string& message) const;
 
 
             /*!
@@ -104,11 +107,11 @@ namespace iklog
 
 
             /*!
-             * \brief Gives the Log object having a specific name
+             * \brief Gives the Log object having a specific name, or the iklog::NullLog if no Log has the given name
              * \param name The name of the Log to fetch
              * \return The Log with the given name if it has been found
              */
-            IKLOG_EXPORT inline static Log* getLog(const std::string& name) { return m_logsList.at(name); }
+            IKLOG_EXPORT static Log* getLog(const std::string& name);
 
 
             /*!
@@ -131,10 +134,13 @@ namespace iklog
 
             IKLOG_EXPORT inline void setFormatter(const Formatter& formatter) { m_formatter = formatter; }
 
+        protected:
+
+            IKLOG_EXPORT static OstreamWrapper DEFAULT_OUTPUT; // The default output for logs when no output is provided
+
         private:
 
             static std::map<std::string, Log*> m_logsList;
-            IKLOG_EXPORT static OstreamWrapper DEFAULT_OUTPUT; // The default output for logs when no output is provided
 
 
             const std::string m_name;

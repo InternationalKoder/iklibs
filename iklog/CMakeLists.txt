@@ -7,6 +7,7 @@ set(SOURCE_FILES
     src/iklog/Formatter.cpp
     src/iklog/Log.cpp
     src/iklog/Message.cpp
+    src/iklog/NullLog.cpp
     src/iklog/outputs/OstreamWrapper.cpp
     src/iklog/outputs/Output.cpp
     src/iklog/outputs/RollingFileOutput.cpp
@@ -18,6 +19,7 @@ set(INCLUDE_FILES
     include/iklog/Level.hpp
     include/iklog/Log.hpp
     include/iklog/Message.hpp
+    include/iklog/NullLog.hpp
     include/iklog/outputs/OstreamWrapper.hpp
     include/iklog/outputs/Output.hpp
     include/iklog/outputs/RollingFileOutput.hpp
