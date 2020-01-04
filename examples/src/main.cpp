@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -142,6 +142,13 @@ int main()
     {
         iklogconfRollingFileLogger->info("Message " + std::to_string(i) + " on log configured from file");
     }
+
+    iklog::Log* const iklogconfSingleOutput1 = iklog::Log::getLog("iklogconfSingleOutput-1");
+    iklog::Log* const iklogconfSingleOutput2 = iklog::Log::getLog("iklogconfSingleOutput-2");
+
+    iklogconfSingleOutput1->error("this log uses");
+    iklogconfSingleOutput2->warn("the same output as this one");
+    iklogconfSingleOutput1->error("and it works very well");
 
 
     return EXIT_SUCCESS;

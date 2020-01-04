@@ -38,13 +38,15 @@ namespace iklogconf
 
             inline std::string getName() const { return m_name; }
             inline LogConfigurationOutput getOutput() const { return m_output; }
+            inline std::string getOutputRef() const { return m_outputRef; }
             inline std::vector<std::string> getLevels() const { return m_levels; }
             inline std::string getFormat() const { return m_format; }
 
         private:
 
             std::string m_name; // log's name
-            LogConfigurationOutput m_output; // the outputs where the messages will be written
+            LogConfigurationOutput m_output; // the output where the messages will be written, cannot be combined with m_outputRef
+            std::string m_outputRef; // reference to a named output, cannot be combined with m_output
             std::vector<std::string> m_levels; // logging levels
             std::string m_format; // format for the log messages
     };

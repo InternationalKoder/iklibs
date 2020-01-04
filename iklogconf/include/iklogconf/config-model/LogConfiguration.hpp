@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -24,6 +24,7 @@
 #include <ikconf/ConfigurationList.hpp>
 #include <vector>
 #include "LogConfigurationItem.hpp"
+#include "OutputConfigurationItem.hpp"
 #include "../iklogconf_export.hpp"
 
 namespace iklogconf
@@ -38,10 +39,12 @@ namespace iklogconf
             IKLOGCONF_EXPORT LogConfiguration();
 
             inline std::vector<LogConfigurationItem> getLogConfigurationItems() const { return m_logs.getProperties(); }
+            inline std::vector<OutputConfigurationItem> getOutputConfigurationItems() const { return m_outputs.getProperties(); }
 
         private:
 
             ikconf::ConfigurationList<LogConfigurationItem> m_logs; // list of the log items
+            ikconf::ConfigurationList<OutputConfigurationItem> m_outputs; // list of the outputs
     };
 }
 

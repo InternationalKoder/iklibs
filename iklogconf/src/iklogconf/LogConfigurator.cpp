@@ -21,7 +21,6 @@
 #include <ikconf/readers/JsonReader.hpp>
 #include <iklog/outputs/RollingFileOutput.hpp>
 #include "iklogconf/config-model/LogConfiguration.hpp"
-#include <optional>
 
 namespace iklogconf
 {
@@ -32,10 +31,23 @@ namespace iklogconf
         ikconf::JsonReader jsonReader(configuration);
         jsonReader.read(filepath);
 
+        // Create outputs from configuration
+        const std::vector<OutputConfigurationItem>& outputItems = configuration.getOutputConfigurationItems();
+        std::for_each(outputItems.begin(), outputItems.end(),
+                      [this](const OutputConfigurationItem& item) { createOutput(item); });
+
         // Create loggers from configuration
-        const std::vector<LogConfigurationItem>& configItems = configuration.getLogConfigurationItems();
-        std::for_each(configItems.begin(), configItems.end(),
+        const std::vector<LogConfigurationItem>& logItems = configuration.getLogConfigurationItems();
+        std::for_each(logItems.begin(), logItems.end(),
                       [this](const LogConfigurationItem& item) { createLogger(item); });
+    }
+
+    void LogConfigurator::createOutput(const OutputConfigurationItem& configItem)
+    {
+        std::optional<iklog::Output*> output = createOutputBase(configItem);
+
+        if(output.has_value() && configItem.getName() != "")
+            m_namedOutputs.insert_or_assign(configItem.getName(), output.value());
     }
 
     void LogConfigurator::createLogger(const LogConfigurationItem& configItem)
@@ -58,10 +70,40 @@ namespace iklogconf
                 levels |= iklog::Level::DEBUG;
         }
 
-        // Interpret the output type
+        // Interpret the output or output-ref
         std::optional<iklog::Output*> output;
-        const LogConfigurationOutput& configOutput = configItem.getOutput();
-        const std::string& configOutputType = configOutput.getType();
+        if(configItem.getOutputRef() != "")
+        {
+            // Try to find the named output, ignore if it is not found
+            auto it = m_namedOutputs.find(configItem.getOutputRef());
+            if(it != m_namedOutputs.end())
+                output = it->second;
+        }
+        else
+            output = createOutputBase(configItem.getOutput());
+
+        // Interpret the format
+        std::optional<iklog::Formatter> formatter;
+        if(configItem.getFormat() != "")
+            formatter = iklog::Formatter(configItem.getFormat());
+
+        // Create log
+        if(output.has_value())
+        {
+            if(formatter.has_value())
+                m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels, *(output.value()), formatter.value()));
+            else
+                m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels, *(output.value())));
+        }
+        else
+            m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels));
+    }
+
+    std::optional<iklog::Output*> LogConfigurator::createOutputBase(const LogConfigurationOutput& configItem)
+    {
+        std::optional<iklog::Output*> output;
+        const std::string& configOutputType = configItem.getType();
+
         if(configOutputType == "stdout")
             output = &iklog::OstreamWrapper::COUT;
         else if(configOutputType == "stderr")
@@ -71,9 +113,10 @@ namespace iklogconf
         else if(configOutputType == "rolling-file")
         {
             // Rolling file output
-            const std::string& configMaxFileSize = configOutput.getMaxFileSize();
+            const std::string& configMaxFileSize = configItem.getMaxFileSize();
             iklog::FileSize maxFileSize = iklog::Bytes(0);
 
+            // Read the maximum file size
             if(configMaxFileSize.size() > 1)
             {
                 if(configMaxFileSize.size() > 2)
@@ -96,29 +139,16 @@ namespace iklogconf
                 }
             }
 
-            if(maxFileSize.getValueInBytes() > 0 && configOutput.getBaseFileName().size() > 0 &&
-                    configOutput.getMaxRollingFiles() > 0)
+            // Actual creation of the iklog::RollingFileOutput
+            if(maxFileSize.getValueInBytes() > 0 && configItem.getBaseFileName().size() > 0 &&
+                    configItem.getMaxRollingFiles() > 0)
             {
                 m_outputs.push_back(std::make_unique<iklog::RollingFileOutput>(
-                            configOutput.getBaseFileName(), maxFileSize, configOutput.getMaxRollingFiles()));
+                            configItem.getBaseFileName(), maxFileSize, configItem.getMaxRollingFiles()));
                 output = m_outputs.back().get();
             }
         }
 
-        // Interpret the format
-        std::optional<iklog::Formatter> formatter;
-        if(configItem.getFormat() != "")
-            formatter = iklog::Formatter(configItem.getFormat());
-
-        // Create log
-        if(output.has_value())
-        {
-            if(formatter.has_value())
-                m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels, *(output.value()), formatter.value()));
-            else
-                m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels, *(output.value())));
-        }
-        else
-            m_logs.emplace_back(std::make_unique<iklog::Log>(configItem.getName(), levels));
+        return output;
     }
 }

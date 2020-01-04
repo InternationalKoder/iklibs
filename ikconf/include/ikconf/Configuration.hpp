@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -82,9 +82,9 @@ namespace ikconf
             inline void addProperty(const Property<T>& property)
             {
                 if constexpr(std::is_base_of_v<Configuration, T>)
-                    m_properties[property.getName()] = static_cast<Configuration*>(property.getValue());
+                    m_properties.insert_or_assign(property.getName(), static_cast<Configuration*>(property.getValue()));
                 else
-                    m_properties[property.getName()] = property.getValue();
+                    m_properties.insert_or_assign(property.getName(), property.getValue());
             }
 
 

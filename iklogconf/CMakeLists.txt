@@ -8,6 +8,7 @@ set(SOURCE_FILES
     src/iklogconf/config-model/LogConfiguration.cpp
     src/iklogconf/config-model/LogConfigurationItem.cpp
     src/iklogconf/config-model/LogConfigurationOutput.cpp
+    src/iklogconf/config-model/OutputConfigurationItem.cpp
 )
 
 set(INCLUDE_FILES
@@ -16,6 +17,7 @@ set(INCLUDE_FILES
     include/iklogconf/config-model/LogConfiguration.hpp
     include/iklogconf/config-model/LogConfigurationItem.hpp
     include/iklogconf/config-model/LogConfigurationOutput.hpp
+    include/iklogconf/config-model/OutputConfigurationItem.hpp
 )
 
 # Define project structure for IDE

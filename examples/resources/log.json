@@ -17,6 +17,25 @@
                 "maxRollingFiles": 3
             },
             "levels": [ "INFO" ]
+        },
+        {
+            "name": "iklogconfSingleOutput-1",
+            "output-ref": "my-rollingfile-output",
+            "levels": [ "ERROR" ]
+        },
+        {
+            "name": "iklogconfSingleOutput-2",
+            "output-ref": "my-rollingfile-output",
+            "levels": [ "WARNING" ]
+        }
+    ],
+    "outputs": [
+        {
+            "name": "my-rollingfile-output",
+            "type": "rolling-file",
+            "baseFileName": "iklogconf-log-single-output.log",
+            "maxFileSize": "10kb",
+            "maxRollingFiles": 2
         }
     ]
 }

@@ -108,7 +108,7 @@ namespace iklog
              * \param name The name of the Log to fetch
              * \return The Log with the given name if it has been found
              */
-            IKLOG_EXPORT inline static Log* getLog(const std::string& name) { return m_logsList[name]; }
+            IKLOG_EXPORT inline static Log* getLog(const std::string& name) { return m_logsList.at(name); }
 
 
             /*!
@@ -116,10 +116,7 @@ namespace iklog
              * \param level The level that will have a new output
              * \param output The output to use
              */
-            IKLOG_EXPORT inline void setOutput(Level level, Output& output)
-            {
-                m_outputs[level] = &output;
-            }
+            IKLOG_EXPORT inline void setOutput(Level level, Output& output) { m_outputs.insert_or_assign(level, &output); }
 
             /*!
              * \brief Changes the output for all levels
@@ -128,7 +125,7 @@ namespace iklog
             IKLOG_EXPORT void setOutput(Output& output)
             {
                 for(const auto& outputEntry: m_outputs)
-                    m_outputs[outputEntry.first] = &output;
+                    m_outputs.insert_or_assign(outputEntry.first, &output);
             }
 
 

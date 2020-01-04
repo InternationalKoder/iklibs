@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020, InternationalKoder
+    Copyright (C) 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,12 +17,13 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "iklogconf/config-model/LogConfiguration.hpp"
+#include "iklogconf/config-model/OutputConfigurationItem.hpp"
 
 namespace iklogconf
 {
-    LogConfiguration::LogConfiguration() :
-        ikconf::Configuration(ikconf::Property("logs", m_logs),
-                              ikconf::Property("outputs", m_outputs))
-    {}
+    OutputConfigurationItem::OutputConfigurationItem() :
+        LogConfigurationOutput()
+    {
+        addProperty(ikconf::Property("name", m_name));
+    }
 }

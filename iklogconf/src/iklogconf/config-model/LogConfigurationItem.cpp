@@ -24,6 +24,7 @@ namespace iklogconf
     LogConfigurationItem::LogConfigurationItem() :
         ikconf::Configuration(ikconf::Property("name", m_name),
                               ikconf::Property("output", m_output),
+                              ikconf::Property("output-ref", m_outputRef),
                               ikconf::Property("levels", m_levels),
                               ikconf::Property("format", m_format))
     {}

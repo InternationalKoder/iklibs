@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -24,11 +24,14 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <optional>
 #include <iklog/Log.hpp>
 
 namespace iklogconf
 {
     class LogConfigurationItem;
+    class LogConfigurationOutput;
+    class OutputConfigurationItem;
 
     /*!
      * \brief Configures the logging system from a JSON file, by reading the file and creating the
@@ -47,14 +50,28 @@ namespace iklogconf
         private:
 
             /*!
+             * \brief Create a named iklog::Output instance from an item described in the configuration file
+             * \param configItem The item read from the file
+             */
+            void createOutput(const OutputConfigurationItem& configItem);
+
+            /*!
              * \brief Create a iklog::Log instance from an item described in the configuration file
              * \param configItem The item read from the file
              */
             void createLogger(const LogConfigurationItem& configItem);
 
+            /*!
+             * \brief Create a iklog::Output instance from an item described in the configuration file
+             * \param configItem The item read from the file
+             * \return The created iklog::Output if the description in the configuration file is valid
+             */
+            std::optional<iklog::Output*> createOutputBase(const LogConfigurationOutput& configItem);
+
 
             std::vector<std::unique_ptr<iklog::Log>> m_logs; // maintain a list of the allocated iklog::Log instances
             std::vector<std::unique_ptr<iklog::Output>> m_outputs; // maintain a list of the allocated iklog::Output instances
+            std::map<std::string, iklog::Output*> m_namedOutputs; // outputs created with an explicit name
     };
 }
 
