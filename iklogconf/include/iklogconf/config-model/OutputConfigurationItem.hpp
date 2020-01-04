@@ -24,6 +24,9 @@
 
 namespace iklogconf
 {
+    /*!
+     * \brief Represents the structure of a named output item from a log configuration file
+     */
     class OutputConfigurationItem : public LogConfigurationOutput
     {
         public:
