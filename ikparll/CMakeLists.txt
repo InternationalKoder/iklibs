@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(ikparll VERSION 1.0 LANGUAGES CXX)
+project(ikparll VERSION 1.1 LANGUAGES CXX)
 
 # Project files
 set(INCLUDE_FILES

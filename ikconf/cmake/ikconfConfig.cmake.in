@@ -4,7 +4,7 @@ include(CMakeFindDependencyMacro)
 list(APPEND CMAKE_MODULE_PATH ${IKCONF_CMAKE_DIR})
 
 if(IKCONF_USE_IKLOG)
-    find_dependency(iklog 1.0 REQUIRED)
+    find_dependency(iklog 1.1 REQUIRED)
 endif()
 
 if(NOT TARGET iklibs::ikconf)
