@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(iklogconf VERSION 0.3 LANGUAGES CXX)
+project(iklogconf VERSION 1.0 LANGUAGES CXX)
 
 # Project files
 set(SOURCE_FILES

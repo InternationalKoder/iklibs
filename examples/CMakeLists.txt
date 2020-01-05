@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(iklibs-examples VERSION 0.3 LANGUAGES CXX)
+project(iklibs-examples VERSION 1.0 LANGUAGES CXX)
 
 # Project files
 set(SOURCE_FILES
@@ -35,10 +35,10 @@ target_include_directories(iklibs-examples
 )
 
 # Dependencies
-find_package(iklog 0.3 REQUIRED)
-find_package(ikconf 0.3 REQUIRED)
-find_package(ikparll 0.3 REQUIRED)
-find_package(iklogconf 0.3 REQUIRED)
+find_package(iklog 1.0 REQUIRED)
+find_package(ikconf 1.0 REQUIRED)
+find_package(ikparll 1.0 REQUIRED)
+find_package(iklogconf 1.0 REQUIRED)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)

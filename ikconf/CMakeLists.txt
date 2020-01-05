@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(ikconf VERSION 0.3 LANGUAGES CXX)
+project(ikconf VERSION 1.0 LANGUAGES CXX)
 
 # Options
 option(IKCONF_USE_IKLOG "Enable the use of iklog as a logging library for ikconf" ON)
