@@ -24,7 +24,6 @@
 
 namespace iklog
 {
-    std::map<std::string, Log*> Log::m_logsList;
     OstreamWrapper Log::DEFAULT_OUTPUT(std::cout);
 
     Log::Log(const std::string& name, int levels, Output& output, const Formatter& formatter) :
@@ -33,7 +32,7 @@ namespace iklog
         m_startTime(std::chrono::system_clock::now()),
         m_formatter(formatter)
     {
-        m_logsList.insert_or_assign(name, this);
+        getLogsList().insert_or_assign(name, this);
 
         m_outputs.insert_or_assign(Level::INFO,    &output);
         m_outputs.insert_or_assign(Level::DEBUG,   &output);
@@ -57,8 +56,8 @@ namespace iklog
 
     Log* Log::getLog(const std::string& name)
     {
-        auto it = m_logsList.find(name);
-        if(it != m_logsList.end())
+        auto it = getLogsList().find(name);
+        if(it != getLogsList().end())
             return it->second;
         else
             return &NullLog::getInstance();

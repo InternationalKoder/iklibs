@@ -18,6 +18,7 @@
 */
 
 #include "iklog/NullLog.hpp"
+#include "iklog/Log.hpp"
 
 namespace iklog
 {

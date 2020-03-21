@@ -140,7 +140,11 @@ namespace iklog
 
         private:
 
-            static std::map<std::string, Log*> m_logsList;
+            inline static std::map<std::string, Log*>& getLogsList()
+            {
+                static std::map<std::string, Log*> logsList;
+                return logsList;
+            }
 
 
             const std::string m_name;
