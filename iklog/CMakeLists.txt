@@ -26,11 +26,6 @@ set(INCLUDE_FILES
     include/iklog/files/FileSize.hpp
 )
 
-# Define project structure for IDE
-set_property(TARGET PROPERTY USE_FOLDERS ON)
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src/iklog" FILES ${SOURCE_FILES})
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/iklog" FILES ${INCLUDE_FILES})
-
 # Define library
 add_library(iklog SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
 add_library(iklibs::iklog ALIAS iklog)

@@ -9,10 +9,6 @@ set(INCLUDE_FILES
     include/ikparll/ThreadPool.hpp
 )
 
-# Define project structure for IDE
-set_property(TARGET PROPERTY USE_FOLDERS ON)
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/ikparll" FILES ${INCLUDE_FILES})
-
 # Define library
 add_library(ikparll INTERFACE)
 add_library(iklibs::ikparll ALIAS ikparll)

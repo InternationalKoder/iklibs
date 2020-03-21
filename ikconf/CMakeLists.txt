@@ -26,11 +26,6 @@ set(INCLUDE_FILES
     include/ikconf/readers/PropertiesReader.hpp
 )
 
-# Define project structure for IDE
-set_property(TARGET PROPERTY USE_FOLDERS ON)
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src/ikconf" FILES ${SOURCE_FILES})
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/ikconf" FILES ${INCLUDE_FILES})
-
 # Define library
 add_library(ikconf SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
 add_library(iklibs::ikconf ALIAS ikconf)

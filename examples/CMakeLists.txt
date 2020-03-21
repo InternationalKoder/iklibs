@@ -20,11 +20,6 @@ set(INCLUDE_FILES
     include/SubSubSettings.hpp
 )
 
-# Define project structure for IDE
-set_property(TARGET PROPERTY USE_FOLDERS ON)
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" FILES ${SOURCE_FILES})
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include" FILES ${INCLUDE_FILES})
-
 # Define executable
 add_executable(iklibs-examples ${SOURCE_FILES} ${INCLUDE_FILES})
 target_include_directories(iklibs-examples

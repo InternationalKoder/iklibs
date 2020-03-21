@@ -20,11 +20,6 @@ set(INCLUDE_FILES
     include/iklogconf/config-model/OutputConfigurationItem.hpp
 )
 
-# Define project structure for IDE
-set_property(TARGET PROPERTY USE_FOLDERS ON)
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src/iklogconf" FILES ${SOURCE_FILES})
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/include/iklogconf" FILES ${INCLUDE_FILES})
-
 # Define library
 add_library(iklogconf SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
 add_library(iklibs::iklogconf ALIAS iklogconf)
