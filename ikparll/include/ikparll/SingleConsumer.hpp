@@ -21,6 +21,7 @@
 #define IKPARLL_SINGLE_CONSUMER_HPP
 
 #include "ConsumerBase.hpp"
+#include <thread>
 
 namespace ikparll
 {
@@ -47,7 +48,7 @@ namespace ikparll
 
             ~SingleConsumer()
             {
-                stop();
+                ConsumerBase<T>::stop();
                 m_thread.join();
             }
 
