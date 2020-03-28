@@ -82,9 +82,9 @@ namespace ikconf
             inline void addProperty(const Property<T>& property)
             {
                 if constexpr(std::is_base_of_v<Configuration, T>)
-                    m_properties.insert_or_assign(property.getName(), static_cast<Configuration*>(property.getValue()));
+                    m_properties[property.getName()] = static_cast<Configuration*>(property.getValue());
                 else
-                    m_properties.insert_or_assign(property.getName(), property.getValue());
+                    m_properties[property.getName()] = property.getValue();
             }
 
 
@@ -93,7 +93,7 @@ namespace ikconf
              * \param propertyName The name of the property to read
              * \return The value of the given property
              */
-            IKCONF_EXPORT inline std::any getPropertyValue(const std::string& propertyName) const
+            IKCONF_EXPORT inline const std::any& getPropertyValue(const std::string& propertyName) const
             {
                 return m_properties.at(propertyName);
             }

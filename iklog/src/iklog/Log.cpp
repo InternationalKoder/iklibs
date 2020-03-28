@@ -32,12 +32,12 @@ namespace iklog
         m_startTime(std::chrono::system_clock::now()),
         m_formatter(formatter)
     {
-        getLogsList().insert_or_assign(name, this);
+        getLogsList()[name] = this;
 
-        m_outputs.insert_or_assign(Level::INFO,    &output);
-        m_outputs.insert_or_assign(Level::DEBUG,   &output);
-        m_outputs.insert_or_assign(Level::WARNING, &output);
-        m_outputs.insert_or_assign(Level::ERROR,   &output);
+        m_outputs[Level::INFO]    = &output;
+        m_outputs[Level::DEBUG]   = &output;
+        m_outputs[Level::WARNING] = &output;
+        m_outputs[Level::ERROR]   = &output;
     }
 
     Log::~Log()

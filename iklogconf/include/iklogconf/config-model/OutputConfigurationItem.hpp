@@ -33,7 +33,7 @@ namespace iklogconf
 
             OutputConfigurationItem();
 
-            inline std::string getName() const { return m_name; }
+            inline const std::string& getName() const { return m_name; }
 
         private:
 

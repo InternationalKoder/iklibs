@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -46,7 +46,7 @@ namespace ikconf
                 return &m_properties.back();
             }
 
-            inline std::vector<T> getProperties() const { return m_properties; }
+            inline const std::vector<T>& getProperties() const { return m_properties; }
 
         private:
 

@@ -47,7 +47,7 @@ namespace iklogconf
         std::optional<iklog::Output*> output = createOutputBase(configItem);
 
         if(output.has_value() && configItem.getName() != "")
-            m_namedOutputs.insert_or_assign(configItem.getName(), output.value());
+            m_namedOutputs[configItem.getName()] = output.value();
     }
 
     void LogConfigurator::createLogger(const LogConfigurationItem& configItem)
@@ -132,7 +132,7 @@ namespace iklogconf
                     else if(unit[1] == 'b')
                         maxFileSize = iklog::Bytes(static_cast<uintmax_t>(std::stoi(value)));
                 }
-                else if(configMaxFileSize.at(configMaxFileSize.size() - 1) == 'b')
+                else if(configMaxFileSize[configMaxFileSize.size() - 1] == 'b')
                 {
                     maxFileSize = iklog::Bytes(static_cast<uintmax_t>(
                                             std::stoi(configMaxFileSize.substr(0, configMaxFileSize.size() - 1))));

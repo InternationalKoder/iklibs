@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -34,9 +34,9 @@ namespace iklogconf
 
             LogConfigurationOutput();
 
-            inline std::string getType() const { return m_type; }
-            inline std::string getBaseFileName() const { return m_baseFileName; }
-            inline std::string getMaxFileSize() const { return m_maxFileSize; }
+            inline const std::string& getType() const { return m_type; }
+            inline const std::string& getBaseFileName() const { return m_baseFileName; }
+            inline const std::string& getMaxFileSize() const { return m_maxFileSize; }
             inline unsigned int getMaxRollingFiles() const { return m_maxRollingFiles; }
 
         private:

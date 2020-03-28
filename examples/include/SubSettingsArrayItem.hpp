@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -31,7 +31,7 @@ class SubSettingsArrayItem : public ikconf::Configuration
 
         SubSettingsArrayItem();
 
-        inline std::string getValue() const { return m_value; }
+        inline const std::string& getValue() const { return m_value; }
         inline unsigned int getIndex() const { return m_index; }
 
     private:

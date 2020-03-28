@@ -119,7 +119,7 @@ namespace iklog
              * \param level The level that will have a new output
              * \param output The output to use
              */
-            IKLOG_EXPORT inline void setOutput(Level level, Output& output) { m_outputs.insert_or_assign(level, &output); }
+            IKLOG_EXPORT inline void setOutput(Level level, Output& output) { m_outputs[level] = &output; }
 
             /*!
              * \brief Changes the output for all levels
@@ -128,7 +128,7 @@ namespace iklog
             IKLOG_EXPORT void setOutput(Output& output)
             {
                 for(const auto& outputEntry: m_outputs)
-                    m_outputs.insert_or_assign(outputEntry.first, &output);
+                    m_outputs[outputEntry.first] = &output;
             }
 
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -31,7 +31,7 @@ class OtherSubSettings : public ikconf::Configuration
 
         OtherSubSettings();
 
-        inline std::string getTestOtherSubSettingsStr() const { return m_testOtherSubSettingsStr; }
+        inline const std::string& getTestOtherSubSettingsStr() const { return m_testOtherSubSettingsStr; }
 
     private:
 

@@ -38,8 +38,8 @@ namespace iklogconf
 
             IKLOGCONF_EXPORT LogConfiguration();
 
-            inline std::vector<LogConfigurationItem> getLogConfigurationItems() const { return m_logs.getProperties(); }
-            inline std::vector<OutputConfigurationItem> getOutputConfigurationItems() const { return m_outputs.getProperties(); }
+            inline const std::vector<LogConfigurationItem>& getLogConfigurationItems() const { return m_logs.getProperties(); }
+            inline const std::vector<OutputConfigurationItem>& getOutputConfigurationItems() const { return m_outputs.getProperties(); }
 
         private:
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -43,17 +43,17 @@ class Settings : public ikconf::Configuration
         Settings();
 
         // getters for the properties
-        inline std::string getTestString() const { return m_testString; }
+        inline const std::string& getTestString() const { return m_testString; }
         inline int getTestInt() const { return m_testInt; }
-        inline SubSettings getTestSubSettings() const { return m_testSubSettings; }
+        inline const SubSettings& getTestSubSettings() const { return m_testSubSettings; }
         inline float getTestFloat() const { return m_testFloat; }
         inline bool getTestBool() const { return m_testBool; }
-        inline OtherSubSettings getTestOtherSubSettings() const { return m_testOtherSubSettings; }
+        inline const OtherSubSettings& getTestOtherSubSettings() const { return m_testOtherSubSettings; }
         inline char getTestCharAsChar() const { return m_testCharAsChar; }
         inline char getTestCharAsNumber() const { return m_testCharAsNumber; }
-        inline std::vector<int> getTestArray() const { return m_testArray; }
-        inline std::vector<std::string> getTestStringArray() const { return m_testStringArray; }
-        inline std::vector<SubSettingsArrayItem> getTestSubSettingsArray() const { return m_testSubSettingsArray.getProperties(); }
+        inline const std::vector<int>& getTestArray() const { return m_testArray; }
+        inline const std::vector<std::string>& getTestStringArray() const { return m_testStringArray; }
+        inline const std::vector<SubSettingsArrayItem>& getTestSubSettingsArray() const { return m_testSubSettingsArray.getProperties(); }
 
     private:
 

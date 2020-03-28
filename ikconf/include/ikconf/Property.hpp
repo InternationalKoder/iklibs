@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -44,7 +44,7 @@ namespace ikconf
             Property(const std::string& name, T& value) : m_name(name), m_value(&value) {}
 
 
-            inline std::string getName() const { return m_name; }
+            inline const std::string& getName() const { return m_name; }
             inline T* getValue() const { return m_value; }
 
         private:

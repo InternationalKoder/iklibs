@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2020, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -41,11 +41,11 @@ namespace iklog
             IKLOG_EXPORT Message(const std::string& logName, Level level, const std::string& message,
                                  const Duration& programDuration, const TimePoint& clockTime);
 
-            IKLOG_EXPORT inline std::string getLogName() const { return m_logName; }
+            IKLOG_EXPORT inline const std::string& getLogName() const { return m_logName; }
             IKLOG_EXPORT inline Level getLevel() const { return m_level; }
-            IKLOG_EXPORT inline std::string getMessage() const { return m_message; }
-            IKLOG_EXPORT inline Duration getProgramDuration() const { return m_programDuration; }
-            IKLOG_EXPORT inline TimePoint getClockTime() const { return m_clockTime; }
+            IKLOG_EXPORT inline const std::string& getMessage() const { return m_message; }
+            IKLOG_EXPORT inline const Duration& getProgramDuration() const { return m_programDuration; }
+            IKLOG_EXPORT inline const TimePoint& getClockTime() const { return m_clockTime; }
 
         private:
 

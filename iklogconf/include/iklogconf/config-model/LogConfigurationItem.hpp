@@ -36,11 +36,11 @@ namespace iklogconf
 
             LogConfigurationItem();
 
-            inline std::string getName() const { return m_name; }
-            inline LogConfigurationOutput getOutput() const { return m_output; }
-            inline std::string getOutputRef() const { return m_outputRef; }
-            inline std::vector<std::string> getLevels() const { return m_levels; }
-            inline std::string getFormat() const { return m_format; }
+            inline const std::string& getName() const { return m_name; }
+            inline const LogConfigurationOutput& getOutput() const { return m_output; }
+            inline const std::string& getOutputRef() const { return m_outputRef; }
+            inline const std::vector<std::string>& getLevels() const { return m_levels; }
+            inline const std::string& getFormat() const { return m_format; }
 
         private:
 
