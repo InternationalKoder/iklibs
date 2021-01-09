@@ -18,6 +18,7 @@
 */
 
 #include "ikconf/readers/BufferedFile.hpp"
+#include <algorithm>
 
 namespace ikconf
 {
