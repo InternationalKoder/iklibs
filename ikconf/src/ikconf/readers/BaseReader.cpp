@@ -89,6 +89,29 @@ namespace ikconf
         return false;
     }
 
+#if _MSC_VER >= 1924
+    // the std::from_chars conversion method doesn't work when we want to convert to a single char
+    // so we have to define our own conversion method for this case
+    template<>
+    bool BaseReader::tryConvertAndSetProperty<char>(const std::string& name, const std::any& value, Configuration& configuration)
+    {
+        const std::any propertyValue = configuration.getPropertyValue(name);
+
+        if(propertyValue.type() == typeid(char*))
+        {
+            const std::string stringValue = std::any_cast<std::string>(value);
+
+            if(!stringValue.empty())
+            {
+                *std::any_cast<char*>(propertyValue) = stringValue[0];
+                return true;
+            }
+        }
+
+        return false;
+    }
+#endif
+
     bool BaseReader::tryConvertAndSetProperty(const std::string& name, const std::any& value, Configuration& configuration)
     {
         bool added = false;

@@ -80,11 +80,10 @@ namespace ikconf
                 {
                     T convertedValue;
 
-                    /*
-                    not supported by many compilers yet, we have to use the less effective way, based on streams
 
                     // convert from string to T
                     const std::string stringValue = std::any_cast<std::string>(value);
+#if _MSC_VER >= 1924
                     std::from_chars_result conversionResult =
                             std::from_chars(stringValue.data(), stringValue.data() + stringValue.size(), convertedValue);
 
@@ -94,10 +93,7 @@ namespace ikconf
                     {
                         return false;
                     }
-                    */
-
-                    // convert from string to T
-                    const std::string stringValue = std::any_cast<std::string>(value);
+#else
                     std::istringstream conversionStream(stringValue);
 
                     // stop if the conversion failed
@@ -105,6 +101,7 @@ namespace ikconf
                     {
                         return false;
                     }
+#endif
 
                     // set the value in the property
                     if(basicType)
