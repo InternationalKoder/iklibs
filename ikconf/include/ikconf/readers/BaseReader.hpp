@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2021, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -25,7 +25,10 @@
 #include "ikconf/ikconf_export.hpp"
 #include <charconv>
 #include <algorithm>
+
+#if _MSC_VER < 1924
 #include <sstream>
+#endif
 
 namespace ikconf
 {

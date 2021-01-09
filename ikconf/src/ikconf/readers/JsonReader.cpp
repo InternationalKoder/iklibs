@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2021, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -19,7 +19,7 @@
 
 #include "ikconf/readers/JsonReader.hpp"
 
-#include <fstream>
+#include "ikconf/readers/BufferedFile.hpp"
 #include "ikconf/exceptions/ConfigurationException.hpp"
 
 namespace ikconf
@@ -37,11 +37,11 @@ namespace ikconf
 
     void JsonReader::read(const std::string& filePath)
     {
-        std::ifstream file(filePath.c_str());
+        BufferedFile file(filePath.c_str());
         char character;
         m_lineNumber = 1;
 
-        if(!file.is_open())
+        if(!file.isOpen())
             throw ConfigurationException("Cannot open file '" + filePath + "'");
 
         std::string name, value;
@@ -61,7 +61,7 @@ namespace ikconf
     }
 
 
-    void JsonReader::readObject(std::ifstream& file, Configuration& configuration)
+    void JsonReader::readObject(BufferedFile& file, Configuration& configuration)
     {
         char character = ',';
         std::string propertyName, propertyValue;
@@ -128,10 +128,12 @@ namespace ikconf
                 // value is a basic type
                 propertyValue += character;
 
-                file.unsetf(std::ios_base::skipws);
-                while(file >> character && character != ',' && character != '}')
+                character = file.nextChar();
+                while(character != ',' && character != '}')
+                {
                     propertyValue += character;
-                file.setf(std::ios_base::skipws);
+                    character = file.nextChar();
+                }
 
                 propertyValue = trim(propertyValue);
 
@@ -153,7 +155,7 @@ namespace ikconf
     }
 
 
-    void JsonReader::readArray(std::ifstream& file, Configuration& configuration, const std::string& propertyName)
+    void JsonReader::readArray(BufferedFile& file, Configuration& configuration, const std::string& propertyName)
     {
         std::string propertyValue;
         char character = '[';
@@ -163,10 +165,12 @@ namespace ikconf
         {
             // read the value
             propertyValue = "";
-            file.unsetf(std::ios_base::skipws);
-            while(file >> character && character != ',' && character != ']' && character != '{')
+            character = file.nextChar();
+            while(character != ',' && character != ']' && character != '{')
+            {
                 propertyValue += character;
-            file.setf(std::ios_base::skipws);
+                character = file.nextChar();
+            }
 
             if(character == '{')
             {
@@ -204,18 +208,17 @@ namespace ikconf
     }
 
 
-    char JsonReader::readCharacter(std::ifstream& file, bool acceptEof)
+    char JsonReader::readCharacter(BufferedFile& file, bool acceptEof)
     {
         char character = '\0';
 
-        file.unsetf(std::ios_base::skipws);
-        while(file >> character && (character == ' ' || character == '\n'
-                                    || character == '\r' || character == '\t' || character == '\0'))
+        while(character == ' ' || character == '\n'
+              || character == '\r' || character == '\t' || character == '\0')
         {
+            character = file.nextChar();
             if(character == '\n')
-                m_lineNumber++;
+                ++m_lineNumber;
         }
-        file.setf(std::ios_base::skipws);
 
         if(character == '\0' && !acceptEof)
             throw ConfigurationException("Unexpected end of file");

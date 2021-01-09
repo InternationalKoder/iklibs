@@ -10,6 +10,7 @@ set(SOURCE_FILES
     src/ikconf/Configuration.cpp
     src/ikconf/exceptions/ConfigurationException.cpp
     src/ikconf/readers/BaseReader.cpp
+    src/ikconf/readers/BufferedFile.cpp
     src/ikconf/readers/JsonReader.cpp
     src/ikconf/readers/PropertiesReader.cpp
 )
@@ -22,6 +23,7 @@ set(INCLUDE_FILES
     include/ikconf/Property.hpp
     include/ikconf/exceptions/ConfigurationException.hpp
     include/ikconf/readers/BaseReader.hpp
+    include/ikconf/readers/BufferedFile.hpp
     include/ikconf/readers/JsonReader.hpp
     include/ikconf/readers/PropertiesReader.hpp
 )

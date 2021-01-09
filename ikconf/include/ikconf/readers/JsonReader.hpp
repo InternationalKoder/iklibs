@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2021, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -31,6 +31,8 @@
 
 namespace ikconf
 {
+    class BufferedFile;
+
     /*!
      * \brief Reader for JSON configuration files
      *
@@ -68,7 +70,7 @@ namespace ikconf
              * \param file The file to read from
              * \param configuration The configuration which contains the properties to set
              */
-            void readObject(std::ifstream& file, Configuration& configuration);
+            void readObject(BufferedFile& file, Configuration& configuration);
 
 
             /*!
@@ -77,7 +79,7 @@ namespace ikconf
              * \param configuration The configuration which contains the properties to set
              * \param propertyName The name of the property which will contain the array's value, the property must be std::vector
              */
-            void readArray(std::ifstream& file, Configuration& configuration, const std::string& propertyName);
+            void readArray(BufferedFile& file, Configuration& configuration, const std::string& propertyName);
 
 
             /*!
@@ -93,7 +95,7 @@ namespace ikconf
              * \param acceptEof Tells whether an exception should be thrown if EOF is met (false = throw)
              * \return The read character
              */
-            char readCharacter(std::ifstream& file, bool acceptEof = false);
+            char readCharacter(BufferedFile& file, bool acceptEof = false);
 
             /*!
              * \brief Writes a message using iklog if enabled, or standard output otherwise

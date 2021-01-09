@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2021, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -19,7 +19,7 @@
 
 #include "ikconf/readers/PropertiesReader.hpp"
 
-#include <fstream>
+#include "ikconf/readers/BufferedFile.hpp"
 #include "ikconf/exceptions/ConfigurationException.hpp"
 
 namespace ikconf
@@ -34,14 +34,16 @@ namespace ikconf
 
     void PropertiesReader::read(const std::string& filePath)
     {
-        std::ifstream file(filePath.c_str());
+        BufferedFile file(filePath.c_str());
         std::string line;
 
-        if(!file.is_open())
+        if(!file.isOpen())
             throw ConfigurationException("Cannot open file '" + filePath + "'");
 
-        while(getline(file, line))
+        while(!file.isEof())
         {
+            line = file.nextLine();
+
             // don't go further if the line is empty
             if(line.length() > 0)
             {
@@ -72,7 +74,5 @@ namespace ikconf
                 }
             }
         }
-
-        file.close();
     }
 }
