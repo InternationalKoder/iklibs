@@ -26,7 +26,11 @@
 #include <charconv>
 #include <algorithm>
 
-#if _MSC_VER < 1924
+#if _MSC_VER >= 1924
+#define USE_FROM_CHARS_CONVERSION
+#endif
+
+#ifndef USE_FROM_CHARS_CONVERSION
 #include <sstream>
 #endif
 
@@ -86,7 +90,7 @@ namespace ikconf
 
                     // convert from string to T
                     const std::string stringValue = std::any_cast<std::string>(value);
-#if _MSC_VER >= 1924
+#ifdef USE_FROM_CHARS_CONVERSION
                     std::from_chars_result conversionResult =
                             std::from_chars(stringValue.data(), stringValue.data() + stringValue.size(), convertedValue);
 
@@ -139,6 +143,33 @@ namespace ikconf
             Configuration m_configuration;
 
         private:
+
+#ifdef USE_FROM_CHARS_CONVERSION
+            /*!
+             * The std::from_chars conversion method doesn't work when we want to convert to a single char,
+             * so we have to define our own conversion method for this case
+             */
+            template<typename T,
+                     std::enable_if_t<std::is_same_v<T, char> ||
+                                      std::is_same_v<T, unsigned char>>* = nullptr>
+            static bool tryConvertAndSetChar(const std::string& name, const std::any& value, Configuration& configuration)
+            {
+                const std::any propertyValue = configuration.getPropertyValue(name);
+
+                if(propertyValue.type() == typeid(T*))
+                {
+                    const std::string stringValue = std::any_cast<std::string>(value);
+
+                    if(!stringValue.empty())
+                    {
+                        *std::any_cast<T*>(propertyValue) = stringValue[0];
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+#endif
 
             // values to interpret as the 'true' boolean, other values are considered as 'false'
             static constexpr char TRUE_STR[] = "true";
