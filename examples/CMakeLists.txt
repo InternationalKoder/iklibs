@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(iklibs-examples VERSION 1.1 LANGUAGES CXX)
+project(iklibs-examples VERSION 2.0 LANGUAGES CXX)
 
 # Project files
 set(SOURCE_FILES
@@ -30,15 +30,16 @@ target_include_directories(iklibs-examples
 )
 
 # Dependencies
-find_package(iklog 1.1 REQUIRED)
-find_package(ikconf 1.1 REQUIRED)
-find_package(ikparll 1.1 REQUIRED)
-find_package(iklogconf 1.1 REQUIRED)
+find_package(iklog 2.0 REQUIRED)
+find_package(ikconf 2.0 REQUIRED)
+find_package(ikparll 2.0 REQUIRED)
+find_package(iklogconf 2.0 REQUIRED)
+find_package(iknet 2.0 REQUIRED)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-target_link_libraries(iklibs-examples PRIVATE iklibs::iklog iklibs::ikconf iklibs::ikparll iklibs::iklogconf Threads::Threads)
+target_link_libraries(iklibs-examples PRIVATE iklibs::iklog iklibs::ikconf iklibs::ikparll iklibs::iklogconf iklibs::iknet Threads::Threads)
 
 # Build options
 target_compile_features(iklibs-examples PRIVATE cxx_std_17)

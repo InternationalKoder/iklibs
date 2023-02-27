@@ -59,3 +59,15 @@ Features:
 * Use of iklog and ikconf
 * Reading of a JSON file describing the logging system
 * Automatic creation of a logging system from a configuration
+
+
+iknet
+-----
+
+Low-level multi-platform networking library.
+
+Features:
+* TCP sockets
+* UDP sockets
+* Buffer utility
+* Socket polling
