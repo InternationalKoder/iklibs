@@ -1,4 +1,4 @@
-image: rikorose/gcc-cmake:gcc-8
+image: "ghcr.io/rikorose/gcc-cmake:latest"
 
 stages:
   - build
