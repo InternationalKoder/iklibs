@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2021, InternationalKoder
+    Copyright (C) 2021, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -92,7 +92,6 @@ namespace ikconf
             return;
 
         // fill buffer
-        m_buffer.clear();
         m_file.read(m_buffer.data(), BUFFER_SIZE);
         m_bufferPos = 0;
         m_bufferSize = m_file.gcount();
