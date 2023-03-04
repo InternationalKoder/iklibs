@@ -8,7 +8,6 @@ set(SOURCE_FILES
     src/iknet/Buffer.cpp
     src/iknet/Socket.cpp
     src/iknet/SocketInitializer.cpp
-    src/iknet/SocketPoller.cpp
     src/iknet/systemspec.cpp
     src/iknet/TcpListener.cpp
     src/iknet/TcpSocket.cpp
@@ -44,7 +43,7 @@ target_include_directories(iknet
 )
 
 if(WIN32)
-    target_link_libraries(iknet PRIVATE ws2_32)
+    target_link_libraries(iknet PUBLIC ws2_32)
 endif()
 
 # Build options

@@ -28,33 +28,7 @@ using PollResult = Result<std::optional<Socket*>, std::string>;
 
 const PollResult SocketPoller::poll(const std::chrono::milliseconds& timeout)
 {
-#ifdef _WIN32
-    const int pollResult = WSAPoll(m_pollInfo.data(), static_cast<ULONG>(m_pollInfo.size()), static_cast<INT>(timeout.count()));
-#else
-    const int pollResult = ::poll(m_pollInfo.data(), static_cast<nfds_t>(m_pollInfo.size()), static_cast<int>(timeout.count()));
-#endif
 
-    // Error
-    if(pollResult < 0)
-        return PollResult::makeFailure("Failed to poll sockets: " + lastNetworkErrorString());
-
-    // Timeout
-    if(pollResult == 0)
-        return PollResult::makeSuccess();
-
-    for(const priv::PollInfo& pollInfo : m_pollInfo)
-    {
-        if(pollInfo.revents & POLLRDNORM)
-        {
-            const auto socketIt = std::find_if(m_sockets.begin(), m_sockets.end(),
-                                               [&pollInfo](const Socket* const socket) { return pollInfo.fd == socket->getImpl(); });
-
-            if(socketIt != m_sockets.end())
-                return PollResult::makeSuccess(std::make_optional(*socketIt));
-        }
-    }
-
-    return PollResult::makeSuccess();
 }
 
 void SocketPoller::add(Socket& socket)

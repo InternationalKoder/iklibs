@@ -398,7 +398,7 @@ int main()
         }
         iknet::TcpSocket& tcpSocketIn3 = tcpSocketIn3Result.getSuccess();
 
-        iknet::SocketPoller socketPoller;
+        iknet::SocketPoller<iknet::TcpSocket> socketPoller;
         socketPoller.add(tcpSocketIn1);
         socketPoller.add(tcpSocketIn2);
         socketPoller.add(tcpSocketIn3);
@@ -409,7 +409,7 @@ int main()
             std::cerr << pollResult1.getFailure() << std::endl;
             return EXIT_FAILURE;
         }
-        const std::optional<const iknet::Socket*> poll1 = pollResult1.getSuccess();
+        const std::optional<const iknet::TcpSocket*> poll1 = pollResult1.getSuccess();
         if(poll1.has_value())
         {
             std::cerr << "SocketPoller got an unexpected result" << std::endl;
@@ -433,7 +433,7 @@ int main()
             std::cerr << pollResult2.getFailure() << std::endl;
             return EXIT_FAILURE;
         }
-        const std::optional<iknet::Socket*> poll2 = pollResult2.getSuccess();
+        const std::optional<iknet::TcpSocket*> poll2 = pollResult2.getSuccess();
         if(!poll2.has_value())
         {
             std::cerr << "SocketPoller got an unexpected result" << std::endl;
@@ -446,7 +446,7 @@ int main()
             return EXIT_FAILURE;
         }
 
-        const auto receiveResult = tcpSocketIn2.receive();
+        const auto receiveResult = poll2.value()->receive();
         if(receiveResult.isFailure())
         {
             std::cerr << receiveResult.getFailure() << std::endl;
