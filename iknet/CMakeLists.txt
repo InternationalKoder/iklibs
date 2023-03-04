@@ -18,7 +18,6 @@ set(INCLUDE_FILES
     include/iknet/AddrInfo.hpp
     include/iknet/Buffer.hpp
     include/iknet/iknet_export.hpp
-    include/iknet/Result.hpp
     include/iknet/SenderInfo.hpp
     include/iknet/Socket.hpp
     include/iknet/SocketInitializer.hpp
@@ -42,8 +41,11 @@ target_include_directories(iknet
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# Dependencies
 if(WIN32)
-    target_link_libraries(iknet PUBLIC ws2_32)
+    target_link_libraries(iknet PUBLIC ws2_32 iklibs::ikgen)
+else()
+    target_link_libraries(iknet PUBLIC iklibs::ikgen)
 endif()
 
 # Build options

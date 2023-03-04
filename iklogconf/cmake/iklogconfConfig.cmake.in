@@ -3,8 +3,8 @@ include(CMakeFindDependencyMacro)
 
 list(APPEND CMAKE_MODULE_PATH ${IKLOGCONF_CMAKE_DIR})
 
-find_dependency(iklog 1.1 REQUIRED)
-find_dependency(ikconf 1.1 REQUIRED)
+find_dependency(iklog 2.0 REQUIRED)
+find_dependency(ikconf 2.0 REQUIRED)
 
 if(NOT TARGET iklibs::iklogconf)
     include("${IKLOGCONF_CMAKE_DIR}/iklogconfTargets.cmake")

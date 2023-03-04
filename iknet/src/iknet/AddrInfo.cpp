@@ -29,15 +29,15 @@
 namespace iknet
 {
 
-Result<AddrInfo, std::string> AddrInfo::resolve(const std::string& host, uint16_t port, Protocol protocol, bool passive)
+ikgen::Result<AddrInfo, std::string> AddrInfo::resolve(const std::string& host, uint16_t port, Protocol protocol, bool passive)
 {
     try
     {
-        return Result<AddrInfo, std::string>::makeSuccess(host, port, protocol, passive);
+        return ikgen::Result<AddrInfo, std::string>::makeSuccess(host, port, protocol, passive);
     }
     catch(std::runtime_error& e)
     {
-        return Result<AddrInfo, std::string>::makeFailure(e.what());
+        return ikgen::Result<AddrInfo, std::string>::makeFailure(e.what());
     }
 }
 

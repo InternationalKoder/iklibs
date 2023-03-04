@@ -41,7 +41,7 @@ class TcpSocket : public Socket
          * \param remotePort Remote port to connect to
          * \return Either the newly created TcpSocket in case of success, or an error message otherwise
          */
-        IKNET_EXPORT static Result<TcpSocket, std::string> create(const std::string& remoteAddress, uint16_t remotePort);
+        IKNET_EXPORT static ikgen::Result<TcpSocket, std::string> create(const std::string& remoteAddress, uint16_t remotePort);
 
 
         /*!
@@ -64,14 +64,14 @@ class TcpSocket : public Socket
          * \param length The length of the buffer in bytes
          * \return Either the size of the effictively sent buffer in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<size_t, std::string> send(const char* const buffer, size_t length);
+        IKNET_EXPORT ikgen::Result<size_t, std::string> send(const char* const buffer, size_t length);
 
         /*!
          * \brief Send the given buffer on the socket
          * \param buffer The buffer to send
          * \return Nothing in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<EmptyResult, std::string> send(const Buffer& buffer);
+        IKNET_EXPORT ikgen::Result<ikgen::EmptyResult, std::string> send(const Buffer& buffer);
 
 
         /*!
@@ -80,13 +80,13 @@ class TcpSocket : public Socket
          * \param length The number of bytes to receive, the given buffer must be at least this length
          * \return Either the size of the effictively received data in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<size_t, std::string> receive(char* const buffer, size_t length);
+        IKNET_EXPORT ikgen::Result<size_t, std::string> receive(char* const buffer, size_t length);
 
         /*!
          * \brief Receives data from the socket and stores it in a buffer
          * \return A buffer filled with the received data in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<Buffer, std::string> receive();
+        IKNET_EXPORT ikgen::Result<Buffer, std::string> receive();
 
 
     private:

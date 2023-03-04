@@ -21,8 +21,8 @@
 #define IKNET_SOCKET_HPP
 
 #include "iknet_export.hpp"
-#include "Result.hpp"
 #include "iknet/systemspec.hpp"
+#include <ikgen/Result.hpp>
 
 namespace iknet
 {
@@ -45,7 +45,7 @@ class Socket
          * \param blocking Whether the socket should be in blocking mode
          * \return Nothing in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<EmptyResult, std::string> setBlocking(bool blocking);
+        IKNET_EXPORT ikgen::Result<ikgen::EmptyResult, std::string> setBlocking(bool blocking);
 
         inline SocketImpl& getImpl() { return m_socketImpl; }
         inline const SocketImpl& getImpl() const { return m_socketImpl; }

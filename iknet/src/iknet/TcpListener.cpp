@@ -31,9 +31,9 @@
 namespace iknet
 {
 
-using ResolveAddressResult = Result<AddrInfo, std::string>;
-using CreateResult = Result<TcpListener, std::string>;
-using AcceptResult = Result<TcpSocket, std::string>;
+using ResolveAddressResult = ikgen::Result<AddrInfo, std::string>;
+using CreateResult = ikgen::Result<TcpListener, std::string>;
+using AcceptResult = ikgen::Result<TcpSocket, std::string>;
 
 CreateResult TcpListener::create(const std::string& listenAddress, uint16_t listenPort, size_t maxWaitingConnections)
 {

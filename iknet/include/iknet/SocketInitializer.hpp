@@ -20,7 +20,6 @@
 #ifndef IKNET_SOCKET_INITIALIZER_HPP
 #define IKNET_SOCKET_INITIALIZER_HPP
 
-#include <memory>
 #include "iknet_export.hpp"
 
 namespace iknet::priv

@@ -14,6 +14,14 @@ Also, contributions are welcome as long as they do not change the nature of the 
 The following sections present the available libraries.
 There is also a module called `examples` that shows a basic usage of IKLibs.
 
+ikgen
+-----
+
+Generic classes and algorithms.
+
+Features:
+* Result class template which allows to explicitly return either a success value or an error value
+
 iklog
 -----
 

@@ -30,11 +30,11 @@
 namespace iknet
 {
 
-using ResolveAddressResult = Result<AddrInfo, std::string>;
-using CreateResult = Result<UdpSocket, std::string>;
-using IoResult = Result<size_t, std::string>;
-using LengthReceiveResult = Result<UdpRecLength, std::string>;
-using BufferReceiveResult = Result<UdpRecBuffer, std::string>;
+using ResolveAddressResult = ikgen::Result<AddrInfo, std::string>;
+using CreateResult = ikgen::Result<UdpSocket, std::string>;
+using IoResult = ikgen::Result<size_t, std::string>;
+using LengthReceiveResult = ikgen::Result<UdpRecLength, std::string>;
+using BufferReceiveResult = ikgen::Result<UdpRecBuffer, std::string>;
 
 
 CreateResult UdpSocket::create(const std::string& listenAddress, uint16_t listenPort)
@@ -137,13 +137,13 @@ IoResult UdpSocket::send(const char* const buffer, size_t length, const std::str
     return IoResult::makeSuccess(sendResult);
 }
 
-Result<EmptyResult, std::string> UdpSocket::send(const Buffer& buffer, const std::string& remoteAddress, uint16_t remotePort)
+ikgen::Result<ikgen::EmptyResult, std::string> UdpSocket::send(const Buffer& buffer, const std::string& remoteAddress, uint16_t remotePort)
 {
-    const Result<size_t, std::string> sendResult = send(reinterpret_cast<const char*>(buffer.getData()), buffer.getSize(),
+    const ikgen::Result<size_t, std::string> sendResult = send(reinterpret_cast<const char*>(buffer.getData()), buffer.getSize(),
                                                         remoteAddress, remotePort);
     return sendResult.isSuccess()
-            ? Result<EmptyResult, std::string>::makeSuccess()
-            : Result<EmptyResult, std::string>::makeFailure(sendResult.getFailure());
+            ? ikgen::Result<ikgen::EmptyResult, std::string>::makeSuccess()
+            : ikgen::Result<ikgen::EmptyResult, std::string>::makeFailure(sendResult.getFailure());
 }
 
 LengthReceiveResult UdpSocket::receive(char* const buffer, size_t length)

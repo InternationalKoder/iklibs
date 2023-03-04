@@ -17,14 +17,14 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef IKNET_RESULT_HPP
-#define IKNET_RESULT_HPP
+#ifndef IKGEN_RESULT_HPP
+#define IKGEN_RESULT_HPP
 
 #include <variant>
 #include <optional>
 #include <stdexcept>
 
-namespace iknet
+namespace ikgen
 {
 
 using EmptyResult = std::monostate;
@@ -289,4 +289,4 @@ class Result<SF, SF>
 
 }
 
-#endif // IKNET_RESULT_HPP
+#endif // IKGEN_RESULT_HPP

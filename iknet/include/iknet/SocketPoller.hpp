@@ -20,11 +20,11 @@
 #ifndef IKNET_SOCKET_POLLER_HPP
 #define IKNET_SOCKET_POLLER_HPP
 
+#include "Socket.hpp"
 #include <vector>
 #include <optional>
 #include <chrono>
-#include "Socket.hpp"
-#include "Result.hpp"
+#include <ikgen/Result.hpp>
 
 #ifdef _WIN32
 #include <WinSock2.h>
@@ -62,7 +62,7 @@ class SocketPoller
          * \return In case of success: an optional with a pointer to the first socket with incoming data that has been found,
          * or nothing if the timeout has been reached. An error message in case of failure
          */
-        const Result<std::optional<T*>, std::string> poll(const std::chrono::milliseconds& timeout)
+        const ikgen::Result<std::optional<T*>, std::string> poll(const std::chrono::milliseconds& timeout)
         {
 #ifdef _WIN32
             const int pollResult = WSAPoll(m_pollInfo.data(), static_cast<ULONG>(m_pollInfo.size()), static_cast<INT>(timeout.count()));
@@ -72,11 +72,11 @@ class SocketPoller
 
             // Error
             if(pollResult < 0)
-                return Result<std::optional<T*>, std::string>::makeFailure("Failed to poll sockets: " + lastNetworkErrorString());
+                return ikgen::Result<std::optional<T*>, std::string>::makeFailure("Failed to poll sockets: " + lastNetworkErrorString());
 
             // Timeout
             if(pollResult == 0)
-                return Result<std::optional<T*>, std::string>::makeSuccess();
+                return ikgen::Result<std::optional<T*>, std::string>::makeSuccess();
 
             for(const priv::PollInfo& pollInfo : m_pollInfo)
             {
@@ -86,11 +86,11 @@ class SocketPoller
                                                        [&pollInfo](const Socket* const socket) { return pollInfo.fd == socket->getImpl(); });
 
                     if(socketIt != m_sockets.end())
-                        return Result<std::optional<T*>, std::string>::makeSuccess(std::make_optional(*socketIt));
+                        return ikgen::Result<std::optional<T*>, std::string>::makeSuccess(std::make_optional(*socketIt));
                 }
             }
 
-            return Result<std::optional<T*>, std::string>::makeSuccess();
+            return ikgen::Result<std::optional<T*>, std::string>::makeSuccess();
         }
 
 

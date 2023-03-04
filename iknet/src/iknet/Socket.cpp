@@ -29,7 +29,7 @@
 namespace iknet
 {
 
-using SetBlockingResult = Result<EmptyResult, std::string>;
+using SetBlockingResult = ikgen::Result<ikgen::EmptyResult, std::string>;
 
 Socket::Socket() :
     m_socketImpl()

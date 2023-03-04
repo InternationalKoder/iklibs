@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
 project(ikparll VERSION 2.0 LANGUAGES CXX)
 
@@ -10,7 +10,7 @@ set(INCLUDE_FILES
 )
 
 # Define library
-add_library(ikparll INTERFACE)
+add_library(ikparll INTERFACE ${INCLUDE_FILES})
 add_library(iklibs::ikparll ALIAS ikparll)
 target_include_directories(ikparll
     INTERFACE

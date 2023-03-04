@@ -29,10 +29,10 @@
 namespace iknet
 {
 
-using ResolveAddressResult = Result<AddrInfo, std::string>;
-using CreateResult = Result<TcpSocket, std::string>;
-using IoResult = Result<size_t, std::string>;
-using ReceiveResult = Result<Buffer, std::string>;
+using ResolveAddressResult = ikgen::Result<AddrInfo, std::string>;
+using CreateResult = ikgen::Result<TcpSocket, std::string>;
+using IoResult = ikgen::Result<size_t, std::string>;
+using ReceiveResult = ikgen::Result<Buffer, std::string>;
 
 
 CreateResult TcpSocket::create(const std::string& remoteAddress, uint16_t remotePort)
@@ -121,12 +121,12 @@ IoResult TcpSocket::send(const char* const buffer, size_t length)
     return IoResult::makeSuccess(sendResult);
 }
 
-Result<EmptyResult, std::string> TcpSocket::send(const Buffer& buffer)
+ikgen::Result<ikgen::EmptyResult, std::string> TcpSocket::send(const Buffer& buffer)
 {
-    const Result<size_t, std::string> sendResult = send(reinterpret_cast<const char*>(buffer.getData()), buffer.getSize());
+    const ikgen::Result<size_t, std::string> sendResult = send(reinterpret_cast<const char*>(buffer.getData()), buffer.getSize());
     return sendResult.isSuccess()
-            ? Result<EmptyResult, std::string>::makeSuccess()
-            : Result<EmptyResult, std::string>::makeFailure(sendResult.getFailure());
+            ? ikgen::Result<ikgen::EmptyResult, std::string>::makeSuccess()
+            : ikgen::Result<ikgen::EmptyResult, std::string>::makeFailure(sendResult.getFailure());
 }
 
 IoResult TcpSocket::receive(char* const buffer, size_t length)
@@ -143,7 +143,7 @@ ReceiveResult TcpSocket::receive()
 {
     char buffer[TCP_MAX_LENGTH];
 
-    const Result<size_t, std::string> receiveResult = receive(buffer, TCP_MAX_LENGTH);
+    const ikgen::Result<size_t, std::string> receiveResult = receive(buffer, TCP_MAX_LENGTH);
     if(receiveResult.isFailure())
         return ReceiveResult::makeFailure(receiveResult.getFailure());
 

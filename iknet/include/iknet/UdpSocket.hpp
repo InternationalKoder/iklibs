@@ -53,7 +53,7 @@ class UdpSocket : public Socket
          * \param listenPort Port to bind on local device
          * \return Either the newly created UdpSocket in case of success, or an error message otherwise
          */
-        IKNET_EXPORT static Result<UdpSocket, std::string> create(const std::string& listenAddress, uint16_t listenPort);
+        IKNET_EXPORT static ikgen::Result<UdpSocket, std::string> create(const std::string& listenAddress, uint16_t listenPort);
 
 
         /*!
@@ -72,8 +72,8 @@ class UdpSocket : public Socket
          * \param remotePort Remote port the buffer will be sent to
          * \return Either the size of the effictively sent buffer in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<size_t, std::string> send(const char* const buffer, size_t length,
-                                                      const std::string& remoteAddress, uint16_t remotePort);
+        IKNET_EXPORT ikgen::Result<size_t, std::string> send(const char* const buffer, size_t length,
+                                                             const std::string& remoteAddress, uint16_t remotePort);
 
         /*!
          * \brief Send the given buffer on the socket
@@ -82,7 +82,7 @@ class UdpSocket : public Socket
          * \param remotePort Remote port the buffer will be sent to
          * \return Nothing in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<EmptyResult, std::string> send(const Buffer& buffer, const std::string& remoteAddress, uint16_t remotePort);
+        IKNET_EXPORT ikgen::Result<ikgen::EmptyResult, std::string> send(const Buffer& buffer, const std::string& remoteAddress, uint16_t remotePort);
 
 
         /*!
@@ -91,13 +91,13 @@ class UdpSocket : public Socket
          * \param length The number of bytes to receive, the given buffer must be at least this length
          * \return Either the size of the effictively received data with the sender host and port in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<UdpRecLength, std::string> receive(char* const buffer, size_t length);
+        IKNET_EXPORT ikgen::Result<UdpRecLength, std::string> receive(char* const buffer, size_t length);
 
         /*!
          * \brief Receives data from the socket and stores it in a buffer
          * \return A buffer filled with the received data and the sender's host and port in case of success, an error message otherwise
          */
-        IKNET_EXPORT Result<UdpRecBuffer, std::string> receive();
+        IKNET_EXPORT ikgen::Result<UdpRecBuffer, std::string> receive();
 
 
     private:

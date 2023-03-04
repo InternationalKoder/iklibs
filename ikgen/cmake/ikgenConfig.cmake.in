@@ -1,0 +1,10 @@
+get_filename_component(IKGEN_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${IKGEN_CMAKE_DIR})
+
+if(NOT TARGET iklibs::ikgen)
+    include("${IKGEN_CMAKE_DIR}/ikgenTargets.cmake")
+endif()
+
+set(IKGEN_LIBRARIES iklibs::ikgen)

@@ -22,8 +22,8 @@
 
 #include <string>
 #include "TcpSocket.hpp"
-#include "Result.hpp"
 #include "iknet_export.hpp"
+#include <ikgen/Result.hpp>
 
 namespace iknet
 {
@@ -42,9 +42,8 @@ class TcpListener
          * \param maxWaitingConnections Maximum allowed count of pending connections in queue waiting to be accepted
          * \return Either the newly created TcpListener in case of success, or an error message otherwise
          */
-        IKNET_EXPORT static Result<TcpListener, std::string> create(const std::string& listenAddress,
-                                                                    uint16_t listenPort,
-                                                                    size_t maxWaitingConnections = DEFAULT_MAX_WAITING_CONNECTIONS);
+        IKNET_EXPORT static ikgen::Result<TcpListener, std::string> create(const std::string& listenAddress, uint16_t listenPort,
+                                                                           size_t maxWaitingConnections = DEFAULT_MAX_WAITING_CONNECTIONS);
 
 
         /*!
@@ -65,7 +64,7 @@ class TcpListener
          * \brief Accepts one pending connection and opens a TCP socket
          * \return Either a new TcpSocket for the newly accepted connection in case of success, or an error message
          */
-        IKNET_EXPORT Result<TcpSocket, std::string> accept();
+        IKNET_EXPORT ikgen::Result<TcpSocket, std::string> accept();
 
     private:
 

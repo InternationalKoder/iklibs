@@ -20,8 +20,8 @@
 #ifndef IKNET_ADDR_INFO_HPP
 #define IKNET_ADDR_INFO_HPP
 
-#include "Result.hpp"
 #include "iknet_export.hpp"
+#include <ikgen/Result.hpp>
 #include <string>
 
 #ifdef _WIN32
@@ -53,7 +53,7 @@ class AddrInfo
          * \param passive Enable passive socket mode
          * \return Information to identify the searched host
          */
-        IKNET_EXPORT static Result<AddrInfo, std::string> resolve(const std::string& host, uint16_t port, Protocol protocol, bool passive = false);
+        IKNET_EXPORT static ikgen::Result<AddrInfo, std::string> resolve(const std::string& host, uint16_t port, Protocol protocol, bool passive = false);
 
         /*!
          * \brief Constructor, throws std::runtime_exception if a problem occurs
