@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020, 2023, InternationalKoder
+    Copyright (C) 2019, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,30 +17,11 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "iklogExamples.hpp"
-#include "ikconfExamples.hpp"
-#include "iklogconfExamples.hpp"
-#include "ikparllExamples.hpp"
-#include "iknetExamples.hpp"
+#include "ikconf/SubSettings.hpp"
 
-#include <iostream>
-
-int main()
-{
-    std::cout << "-------- IKLOG" << std::endl;
-    runIklogExamples();
-
-    std::cout << "-------- IKCONF" << std::endl;
-    runIkconfExamples();
-
-    std::cout << "-------- IKLOGCONF" << std::endl;
-    runIklogconfExamples();
-
-    std::cout << "-------- IKPARLL" << std::endl;
-    runIkparllExamples();
-
-    std::cout << "-------- IKNET" << std::endl;
-    runIknetExamples();
-
-    return EXIT_SUCCESS;
-}
+// properties in subobjects work exactly the same way as the main configuration class
+SubSettings::SubSettings() :
+    ikconf::Configuration(ikconf::Property("my.substring", m_testSubString),
+                          ikconf::Property("mysubint", m_testSubInt),
+                          ikconf::Property("mysubsubsettings", m_testSubSubSettings))
+{}

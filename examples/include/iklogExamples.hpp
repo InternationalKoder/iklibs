@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,11 +17,9 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "SubSettings.hpp"
+#ifndef IKLOG_EXAMPLES_HPP
+#define IKLOG_EXAMPLES_HPP
 
-// properties in subobjects work exactly the same way as the main configuration class
-SubSettings::SubSettings() :
-    ikconf::Configuration(ikconf::Property("my.substring", m_testSubString),
-                          ikconf::Property("mysubint", m_testSubInt),
-                          ikconf::Property("mysubsubsettings", m_testSubSubSettings))
-{}
+void runIklogExamples();
+
+#endif // IKLOG_EXAMPLES_HPP

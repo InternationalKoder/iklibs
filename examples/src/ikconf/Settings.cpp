@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,7 +17,7 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "Settings.hpp"
+#include "ikconf/Settings.hpp"
 
 // you can define the properties by giving them in the ikconf::Configuration constructor
 // the link between the name of the property in the file and the class member is done through the ikconf::Property class

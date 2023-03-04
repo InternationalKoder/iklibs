@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,9 +17,9 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "SubSubSettings.hpp"
+#ifndef IKLOGCONF_EXAMPLES_HPP
+#define IKLOGCONF_EXAMPLES_HPP
 
-// properties in subobjects work exactly the same way as the main configuration class
-SubSubSettings::SubSubSettings() :
-    ikconf::Configuration(ikconf::Property("mysubsubfloat", m_testSubSubFloat))
-{}
+void runIklogconfExamples();
+
+#endif // IKLOGCONF_EXAMPLES_HPP

@@ -4,20 +4,30 @@ project(iklibs-examples VERSION 2.0 LANGUAGES CXX)
 
 # Project files
 set(SOURCE_FILES
+    src/ikconf/OtherSubSettings.cpp
+    src/ikconf/Settings.cpp
+    src/ikconf/SubSettings.cpp
+    src/ikconf/SubSettingsArrayItem.cpp
+    src/ikconf/SubSubSettings.cpp
+    src/ikconfExamples.cpp
+    src/iklogconfExamples.cpp
+    src/iklogExamples.cpp
+    src/iknetExamples.cpp
+    src/ikparllExamples.cpp
     src/main.cpp
-    src/OtherSubSettings.cpp
-    src/Settings.cpp
-    src/SubSettings.cpp
-    src/SubSettingsArrayItem.cpp
-    src/SubSubSettings.cpp
 )
 
 set(INCLUDE_FILES
-    include/OtherSubSettings.hpp
-    include/Settings.hpp
-    include/SubSettings.hpp
-    include/SubSettingsArrayItem.hpp
-    include/SubSubSettings.hpp
+    include/ikconf/OtherSubSettings.hpp
+    include/ikconf/Settings.hpp
+    include/ikconf/SubSettings.hpp
+    include/ikconf/SubSettingsArrayItem.hpp
+    include/ikconf/SubSubSettings.hpp
+    include/ikconfExamples.hpp
+    include/iklogconfExamples.hpp
+    include/iklogExamples.hpp
+    include/iknetExamples.hpp
+    include/ikparllExamples.hpp
 )
 
 # Define executable

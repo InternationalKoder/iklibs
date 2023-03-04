@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,9 +17,19 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "SubSettingsArrayItem.hpp"
+#include "ikparllExamples.hpp"
 
-SubSettingsArrayItem::SubSettingsArrayItem() :
-    ikconf::Configuration(ikconf::Property("value", m_value),
-                          ikconf::Property("index", m_index))
-{}
+#include <ikparll/ThreadPool.hpp>
+#include <iostream>
+
+void runIkparllExamples()
+{
+    std::cout << "Thread pool test" << std::endl;
+    ikparll::ThreadPool<int, 3> threadPool([](int i) { std::cout << std::this_thread::get_id() << " : " << i*2 << std::endl; std::this_thread::sleep_for(std::chrono::milliseconds(1000)); });
+    for(int i = 0 ; i < 10 ; i++)
+    {
+        threadPool.addItem(i);
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(1200));
+}

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,9 +17,9 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "OtherSubSettings.hpp"
+#include "ikconf/SubSubSettings.hpp"
 
-// define the properties in the constructor, like any ikconf configuration
-OtherSubSettings::OtherSubSettings() :
-    ikconf::Configuration(ikconf::Property("testOtherSubsettingsStr", m_testOtherSubSettingsStr))
+// properties in subobjects work exactly the same way as the main configuration class
+SubSubSettings::SubSubSettings() :
+    ikconf::Configuration(ikconf::Property("mysubsubfloat", m_testSubSubFloat))
 {}

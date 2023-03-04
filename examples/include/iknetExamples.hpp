@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020, 2023, InternationalKoder
+    Copyright (C) 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -17,30 +17,13 @@
     along with IKLibs.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "iklogExamples.hpp"
-#include "ikconfExamples.hpp"
-#include "iklogconfExamples.hpp"
-#include "ikparllExamples.hpp"
-#include "iknetExamples.hpp"
+#ifndef IKNET_EXAMPLES_HPP
+#define IKNET_EXAMPLES_HPP
 
-#include <iostream>
+void runIknetExamples();
 
-int main()
-{
-    std::cout << "-------- IKLOG" << std::endl;
-    runIklogExamples();
+void runUdpSocketsExamples();
+void runTcpSocketsExamples();
+void runSocketPollerExamples();
 
-    std::cout << "-------- IKCONF" << std::endl;
-    runIkconfExamples();
-
-    std::cout << "-------- IKLOGCONF" << std::endl;
-    runIklogconfExamples();
-
-    std::cout << "-------- IKPARLL" << std::endl;
-    runIkparllExamples();
-
-    std::cout << "-------- IKNET" << std::endl;
-    runIknetExamples();
-
-    return EXIT_SUCCESS;
-}
+#endif // IKNET_EXAMPLES_HPP
