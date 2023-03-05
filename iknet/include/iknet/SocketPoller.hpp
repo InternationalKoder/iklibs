@@ -21,6 +21,7 @@
 #define IKNET_SOCKET_POLLER_HPP
 
 #include "Socket.hpp"
+#include <algorithm>
 #include <vector>
 #include <optional>
 #include <chrono>
