@@ -40,12 +40,6 @@ target_include_directories(${PROJECT_NAME}
 )
 
 # Dependencies
-find_package(iklog ${CMAKE_PROJECT_VERSION} REQUIRED)
-find_package(ikconf ${CMAKE_PROJECT_VERSION} REQUIRED)
-find_package(ikparll ${CMAKE_PROJECT_VERSION} REQUIRED)
-find_package(iklogconf ${CMAKE_PROJECT_VERSION} REQUIRED)
-find_package(iknet ${CMAKE_PROJECT_VERSION} REQUIRED)
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
