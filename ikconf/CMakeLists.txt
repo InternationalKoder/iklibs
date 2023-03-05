@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
-project(ikconf VERSION 2.0 LANGUAGES CXX)
+project(ikconf VERSION ${CMAKE_PROJECT_VERSION} LANGUAGES CXX)
+string(TOUPPER ${PROJECT_NAME} UPPER_PROJECT_NAME)
 
 # Options
 option(IKCONF_USE_IKLOG "Enable the use of iklog as a logging library for ikconf" ON)
@@ -29,9 +30,9 @@ set(INCLUDE_FILES
 )
 
 # Define library
-add_library(ikconf SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
-add_library(iklibs::ikconf ALIAS ikconf)
-target_include_directories(ikconf
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
+add_library(iklibs::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME}
     PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -41,12 +42,12 @@ target_include_directories(ikconf
 
 # Dependencies
 if(IKCONF_USE_IKLOG)
-    target_link_libraries(ikconf PUBLIC iklibs::iklog)
+    target_link_libraries(${PROJECT_NAME} PUBLIC iklibs::iklog)
 endif()
 
 # Build options
-target_compile_features(ikconf PRIVATE cxx_std_17)
-set_target_properties(ikconf
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+set_target_properties(${PROJECT_NAME}
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -56,29 +57,29 @@ set_target_properties(ikconf
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipo_supported)
 if(ipo_supported)
-  set_target_properties(ikconf PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+  set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
 # Export symbols
 include(GenerateExportHeader)
-GENERATE_EXPORT_HEADER(ikconf
-             BASE_NAME IKCONF
-             EXPORT_MACRO_NAME IKCONF_EXPORT
-             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/ikconf/ikconf_export.hpp
-             STATIC_DEFINE IKCONF_BUILT_AS_STATIC
+GENERATE_EXPORT_HEADER(${PROJECT_NAME}
+             BASE_NAME ${UPPER_PROJECT_NAME}
+             EXPORT_MACRO_NAME ${UPPER_PROJECT_NAME}_EXPORT
+             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_export.hpp
+             STATIC_DEFINE ${UPPER_PROJECT_NAME}_BUILT_AS_STATIC
 )
 
 # Insert library configuration in header file
 configure_file(
   "cmake/lib_conf.hpp.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/ikconf/lib_conf.hpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/lib_conf.hpp"
 )
 
 
 # Install
 include(GNUInstallDirs)
-install(TARGETS ikconf
-    EXPORT ikconf-targets
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -86,34 +87,34 @@ install(TARGETS ikconf
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(EXPORT ikconf-targets
-    FILE ikconfTargets.cmake
+install(EXPORT ${PROJECT_NAME}-targets
+    FILE ${PROJECT_NAME}Targets.cmake
     NAMESPACE iklibs::
     DESTINATION cmake
 )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/ikconfConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/ikconfConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/ikconfConfig.cmake
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     INSTALL_DESTINATION cmake
 )
 
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/ikconfConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/ikconfConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION cmake
 )
 
 # Make the library available in the build tree
-export(EXPORT ikconf-targets
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/ikconfTargets.cmake
+export(EXPORT ${PROJECT_NAME}-targets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
     NAMESPACE iklibs::
 )
 
-export(PACKAGE ikconf)
+export(PACKAGE ${PROJECT_NAME})

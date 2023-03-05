@@ -3,7 +3,7 @@ include(CMakeFindDependencyMacro)
 
 list(APPEND CMAKE_MODULE_PATH ${IKNET_CMAKE_DIR})
 
-find_dependency(ikgen 2.0 REQUIRED)
+find_dependency(ikgen ${CMAKE_PROJECT_VERSION} REQUIRED)
 
 if(NOT TARGET iklibs::iknet)
     include("${IKNET_CMAKE_DIR}/iknetTargets.cmake")

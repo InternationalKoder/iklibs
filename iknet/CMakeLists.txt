@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
-project(iknet VERSION 2.0 LANGUAGES CXX)
+project(iknet VERSION ${CMAKE_PROJECT_VERSION} LANGUAGES CXX)
+string(TOUPPER ${PROJECT_NAME} UPPER_PROJECT_NAME)
 
 # Project files
 set(SOURCE_FILES
@@ -31,9 +32,9 @@ set(INCLUDE_FILES
 )
 
 # Define library
-add_library(iknet SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
-add_library(iklibs::iknet ALIAS iknet)
-target_include_directories(iknet
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
+add_library(iklibs::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME}
     PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -43,14 +44,14 @@ target_include_directories(iknet
 
 # Dependencies
 if(WIN32)
-    target_link_libraries(iknet PUBLIC ws2_32 iklibs::ikgen)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ws2_32 iklibs::ikgen)
 else()
-    target_link_libraries(iknet PUBLIC iklibs::ikgen)
+    target_link_libraries(${PROJECT_NAME} PUBLIC iklibs::ikgen)
 endif()
 
 # Build options
-target_compile_features(iknet PUBLIC cxx_std_20)
-set_target_properties(iknet
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+set_target_properties(${PROJECT_NAME}
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -60,22 +61,22 @@ set_target_properties(iknet
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipo_supported)
 if(ipo_supported)
-  set_target_properties(iknet PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+  set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
 # Export symbols
 include(GenerateExportHeader)
-GENERATE_EXPORT_HEADER(iknet
-             BASE_NAME IKNET
-             EXPORT_MACRO_NAME IKNET_EXPORT
-             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/iknet/iknet_export.hpp
-             STATIC_DEFINE IKNET_BUILT_AS_STATIC
+GENERATE_EXPORT_HEADER(${PROJECT_NAME}
+             BASE_NAME ${UPPER_PROJECT_NAME}
+             EXPORT_MACRO_NAME ${UPPER_PROJECT_NAME}_EXPORT
+             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_export.hpp
+             STATIC_DEFINE ${UPPER_PROJECT_NAME}_BUILT_AS_STATIC
 )
 
 # Install
 include(GNUInstallDirs)
-install(TARGETS iknet
-    EXPORT iknet-targets
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -83,34 +84,34 @@ install(TARGETS iknet
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(EXPORT iknet-targets
-    FILE iknetTargets.cmake
+install(EXPORT ${PROJECT_NAME}-targets
+    FILE ${PROJECT_NAME}Targets.cmake
     NAMESPACE iklibs::
     DESTINATION cmake
 )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/iknetConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/iknetConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/iknetConfig.cmake
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     INSTALL_DESTINATION cmake
 )
 
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/iknetConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/iknetConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION cmake
 )
 
 # Make the library available in the build tree
-export(EXPORT iknet-targets
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/iknetTargets.cmake
+export(EXPORT ${PROJECT_NAME}-targets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
     NAMESPACE iklibs::
 )
 
-export(PACKAGE iknet)
+export(PACKAGE ${PROJECT_NAME})

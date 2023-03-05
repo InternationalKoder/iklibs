@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 
-project(iklogconf VERSION 2.0 LANGUAGES CXX)
+project(iklogconf VERSION ${CMAKE_PROJECT_VERSION} LANGUAGES CXX)
+string(TOUPPER ${PROJECT_NAME} UPPER_PROJECT_NAME)
 
 # Project files
 set(SOURCE_FILES
@@ -21,9 +22,9 @@ set(INCLUDE_FILES
 )
 
 # Define library
-add_library(iklogconf SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
-add_library(iklibs::iklogconf ALIAS iklogconf)
-target_include_directories(iklogconf
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${INCLUDE_FILES})
+add_library(iklibs::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_include_directories(${PROJECT_NAME}
     PUBLIC
     $<INSTALL_INTERFACE:include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -32,11 +33,11 @@ target_include_directories(iklogconf
 )
 
 # Dependencies
-target_link_libraries(iklogconf PUBLIC iklibs::iklog iklibs::ikconf)
+target_link_libraries(${PROJECT_NAME} PUBLIC iklibs::iklog iklibs::ikconf)
 
 # Build options
-target_compile_features(iklogconf PRIVATE cxx_std_17)
-set_target_properties(iklogconf
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+set_target_properties(${PROJECT_NAME}
     PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -46,22 +47,22 @@ set_target_properties(iklogconf
 include(CheckIPOSupported)
 check_ipo_supported(RESULT ipo_supported)
 if(ipo_supported)
-  set_target_properties(iklogconf PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+  set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
 # Export symbols
 include(GenerateExportHeader)
-GENERATE_EXPORT_HEADER(iklogconf
-             BASE_NAME IKLOGCONF
-             EXPORT_MACRO_NAME IKLOGCONF_EXPORT
-             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/iklogconf/iklogconf_export.hpp
-             STATIC_DEFINE IKLOGCONF_BUILT_AS_STATIC
+GENERATE_EXPORT_HEADER(${PROJECT_NAME}
+             BASE_NAME ${UPPER_PROJECT_NAME}
+             EXPORT_MACRO_NAME ${UPPER_PROJECT_NAME}_EXPORT
+             EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_export.hpp
+             STATIC_DEFINE ${UPPER_PROJECT_NAME}_BUILT_AS_STATIC
 )
 
 # Install
 include(GNUInstallDirs)
-install(TARGETS iklogconf
-    EXPORT iklogconf-targets
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}-targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -69,34 +70,34 @@ install(TARGETS iklogconf
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
-install(EXPORT iklogconf-targets
-    FILE iklogconfTargets.cmake
+install(EXPORT ${PROJECT_NAME}-targets
+    FILE ${PROJECT_NAME}Targets.cmake
     NAMESPACE iklibs::
     DESTINATION cmake
 )
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/iklogconfConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
-configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/iklogconfConfig.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/iklogconfConfig.cmake
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
     INSTALL_DESTINATION cmake
 )
 
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/iklogconfConfig.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/iklogconfConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION cmake
 )
 
 # Make the library available in the build tree
-export(EXPORT iklogconf-targets
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/iklogconfTargets.cmake
+export(EXPORT ${PROJECT_NAME}-targets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake
     NAMESPACE iklibs::
 )
 
-export(PACKAGE iklogconf)
+export(PACKAGE ${PROJECT_NAME})
