@@ -35,7 +35,12 @@ void runIkconfExamples()
 
     try
     {
-        propertiesReader.read("resources/test.properties");
+        std::vector<ikconf::Warning> warnings = propertiesReader.read("resources/test.properties");
+
+        for(const ikconf::Warning& warning : warnings)
+        {
+            std::cout << "Got warning while reading properties file: " << warning.getMessage() << std::endl;
+        }
     }
     catch(const ikconf::ConfigurationException& e)
     {
@@ -57,7 +62,12 @@ void runIkconfExamples()
 
     try
     {
-        jsonReader.read("resources/test.json");
+        std::vector<ikconf::Warning> warnings = jsonReader.read("resources/test.json");
+
+        for(const ikconf::Warning& warning : warnings)
+        {
+            std::cout << "Got warning while reading JSON file: " << warning.getMessage() << std::endl;
+        }
     }
     catch(const ikconf::ConfigurationException& e)
     {

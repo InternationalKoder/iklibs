@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -21,56 +21,32 @@
 #define IKCONF_PROPERTIES_READER_HPP
 
 #include "BaseReader.hpp"
-#include "../lib_conf.hpp"
-
-#ifdef IKCONF_USE_IKLOG
-#include <iklog/Log.hpp>
-#else
-#include <iostream>
-#endif
 
 namespace ikconf
 {
-    /*!
-     * \brief Reader for .properties configuration files
-     */
-    class PropertiesReader : public BaseReader
-    {
-        public:
 
-            /*!
-             * \brief Constructor which takes the configuration to valorize
-             * \param configuration The configuration that will hold the read values
-             */
-            IKCONF_EXPORT PropertiesReader(const Configuration& configuration);
+/*!
+ * \brief Reader for .properties configuration files
+ */
+class PropertiesReader : public BaseReader
+{
+    public:
 
-
-            /*!
-             * \brief Reads the given .properties file and sets the properties in the configuration (given in the constructor)
-             * \param filePath Path to the .properties file to read
-             */
-            IKCONF_EXPORT virtual void read(const std::string& filePath);
-
-        private:
-
-#ifdef IKCONF_USE_IKLOG
-            static iklog::Log LOG;
-#endif
+        /*!
+         * \brief Constructor which takes the configuration to valorize
+         * \param configuration The configuration that will hold the read values
+         */
+        IKCONF_EXPORT PropertiesReader(const Configuration& configuration);
 
 
-            /*!
-             * \brief Writes a message using iklog if enabled, or standard output otherwise
-             * \param message The message to log
-             */
-            inline void logWarningMessage(const std::string& message)
-            {
-#ifdef IKCONF_USE_IKLOG
-                LOG.warn(message);
-#else
-                std::cout << "[WARN] " << message << std::endl;
-#endif
-            }
-    };
+        /*!
+         * \brief Reads the given .properties file and sets the properties in the configuration (given in the constructor)
+         * \param filePath Path to the .properties file to read
+         * \return The warnings that may have been raised while reading the properties
+         */
+        IKCONF_EXPORT virtual std::vector<Warning> read(const std::string& filePath);
+};
+
 }
 
 #endif // IKCONF_PROPERTIES_READER_HPP

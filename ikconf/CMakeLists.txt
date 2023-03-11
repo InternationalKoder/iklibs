@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.19)
 project(ikconf VERSION ${CMAKE_PROJECT_VERSION} LANGUAGES CXX)
 string(TOUPPER ${PROJECT_NAME} UPPER_PROJECT_NAME)
 
-# Options
-option(IKCONF_USE_IKLOG "Enable the use of iklog as a logging library for ikconf" ON)
-
 # Project files
 set(SOURCE_FILES
     src/ikconf/Configuration.cpp
@@ -18,10 +15,10 @@ set(SOURCE_FILES
 
 set(INCLUDE_FILES
     include/ikconf/ikconf_export.hpp
-    include/ikconf/lib_conf.hpp
     include/ikconf/Configuration.hpp
     include/ikconf/ConfigurationList.hpp
     include/ikconf/Property.hpp
+    include/ikconf/Warning.hpp
     include/ikconf/exceptions/ConfigurationException.hpp
     include/ikconf/readers/BaseReader.hpp
     include/ikconf/readers/BufferedFile.hpp
@@ -39,11 +36,6 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-# Dependencies
-if(IKCONF_USE_IKLOG)
-    target_link_libraries(${PROJECT_NAME} PUBLIC iklibs::iklog)
-endif()
 
 # Build options
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
@@ -68,13 +60,6 @@ GENERATE_EXPORT_HEADER(${PROJECT_NAME}
              EXPORT_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/${PROJECT_NAME}_export.hpp
              STATIC_DEFINE ${UPPER_PROJECT_NAME}_BUILT_AS_STATIC
 )
-
-# Insert library configuration in header file
-configure_file(
-  "cmake/lib_conf.hpp.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/${PROJECT_NAME}/lib_conf.hpp"
-)
-
 
 # Install
 include(GNUInstallDirs)

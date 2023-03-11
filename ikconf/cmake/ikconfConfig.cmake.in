@@ -3,10 +3,6 @@ include(CMakeFindDependencyMacro)
 
 list(APPEND CMAKE_MODULE_PATH ${IKCONF_CMAKE_DIR})
 
-if(IKCONF_USE_IKLOG)
-    find_dependency(iklog ${CMAKE_PROJECT_VERSION} REQUIRED)
-endif()
-
 if(NOT TARGET iklibs::ikconf)
     include("${IKCONF_CMAKE_DIR}/ikconfTargets.cmake")
 endif()
