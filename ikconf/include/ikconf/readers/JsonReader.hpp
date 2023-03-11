@@ -50,9 +50,9 @@ class JsonReader : public BaseReader
         /*!
          * \brief Reads the given JSON file and sets the properties in the configuration (given in the constructor)
          * \param filePath Path to the JSON file to read
-         * \return The warnings that may have been raised while reading the properties
+         * \return The warnings that may have been raised while reading the properties, or an error message
          */
-        IKCONF_EXPORT virtual std::vector<Warning> read(const std::string& filePath);
+        IKCONF_EXPORT virtual ikgen::Result<std::vector<Warning>, std::string> read(const std::string& filePath);
 
     private:
 
@@ -60,9 +60,9 @@ class JsonReader : public BaseReader
          * \brief Reads a JSON object and sets the properties values it contains
          * \param file The file to read from
          * \param configuration The configuration which contains the properties to set
-         * \return The warnings that may have been raised while reading the JSON object
+         * \return The warnings that may have been raised while reading the JSON object, or an error message
          */
-        std::vector<Warning> readObject(BufferedFile& file, Configuration& configuration);
+        ikgen::Result<std::vector<Warning>, std::string> readObject(BufferedFile& file, Configuration& configuration);
 
 
         /*!
@@ -70,24 +70,25 @@ class JsonReader : public BaseReader
          * \param file The file to read from
          * \param configuration The configuration which contains the properties to set
          * \param propertyName The name of the property which will contain the array's value, the property must be std::vector
+         * \return An error message if the reading fails
          */
-        void readArray(BufferedFile& file, Configuration& configuration, const std::string& propertyName);
+        ikgen::Result<ikgen::EmptyResult, std::string> readArray(BufferedFile& file, Configuration& configuration, const std::string& propertyName);
 
 
         /*!
-         * \brief Throws an exception indicating that an unexpected character was found during the reading
+         * \brief Builds a message indicating that an unexpected character was found during the reading
          * \param character The unexpected character to report
          */
-        [[noreturn]] void handleUnexpectedCharacter(char character);
+        std::string buildUnexpectedCharacterMessage(char character);
 
 
         /*!
          * \brief Reads a character from the given file, ignoring all the blank characters and incrementing line number
          * \param file The file to read from
-         * \param acceptEof Tells whether an exception should be thrown if EOF is met (false = throw)
-         * \return The read character
+         * \param acceptEof Tells whether an error should be returned if EOF is met (false = error)
+         * \return The read character, or an error message
          */
-        char readCharacter(BufferedFile& file, bool acceptEof = false);
+        ikgen::Result<char, std::string> readCharacter(BufferedFile& file, bool acceptEof = false);
 
 
         unsigned int m_lineNumber; // Counter holding the current line number to give when an error occurs

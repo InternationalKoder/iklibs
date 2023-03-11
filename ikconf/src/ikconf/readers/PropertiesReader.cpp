@@ -20,7 +20,6 @@
 #include "ikconf/readers/PropertiesReader.hpp"
 
 #include "ikconf/readers/BufferedFile.hpp"
-#include "ikconf/exceptions/ConfigurationException.hpp"
 
 namespace ikconf
 {
@@ -29,13 +28,13 @@ PropertiesReader::PropertiesReader(const Configuration& configuration) :
     BaseReader(configuration)
 {}
 
-std::vector<Warning> PropertiesReader::read(const std::string& filePath)
+ikgen::Result<std::vector<Warning>, std::string> PropertiesReader::read(const std::string& filePath)
 {
     BufferedFile file(filePath.c_str());
     std::string line;
 
     if(!file.isOpen())
-        throw ConfigurationException("Cannot open file '" + filePath + "'");
+        return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Cannot open file '" + filePath + "'");
 
     std::vector<Warning> warnings;
 
@@ -53,7 +52,7 @@ std::vector<Warning> PropertiesReader::read(const std::string& filePath)
 
                 // '=' character not found means the line is malformed
                 if(separatorPos == std::string::npos)
-                    throw ConfigurationException("Malformed line '" + line + "', missing '=' character");
+                    return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Malformed line '" + line + "', missing '=' character");
 
                 const std::string propertyName = line.substr(0, separatorPos);
 
@@ -69,12 +68,12 @@ std::vector<Warning> PropertiesReader::read(const std::string& filePath)
                 const bool setPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue);
 
                 if(!setPropertySuccess)
-                    throw ConfigurationException("Failed to set property '" + propertyName + "'");
+                    return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Failed to set property '" + propertyName + "'");
             }
         }
     }
 
-    return warnings;
+    return ikgen::Result<std::vector<Warning>, std::string>::success(std::move(warnings));
 }
 
 }

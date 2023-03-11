@@ -5,8 +5,6 @@ string(TOUPPER ${PROJECT_NAME} UPPER_PROJECT_NAME)
 
 # Project files
 set(SOURCE_FILES
-    src/ikconf/Configuration.cpp
-    src/ikconf/exceptions/ConfigurationException.cpp
     src/ikconf/readers/BaseReader.cpp
     src/ikconf/readers/BufferedFile.cpp
     src/ikconf/readers/JsonReader.cpp
@@ -19,7 +17,6 @@ set(INCLUDE_FILES
     include/ikconf/ConfigurationList.hpp
     include/ikconf/Property.hpp
     include/ikconf/Warning.hpp
-    include/ikconf/exceptions/ConfigurationException.hpp
     include/ikconf/readers/BaseReader.hpp
     include/ikconf/readers/BufferedFile.hpp
     include/ikconf/readers/JsonReader.hpp
@@ -36,6 +33,9 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
+
+# Dependencies
+target_link_libraries(${PROJECT_NAME} PUBLIC iklibs::ikgen)
 
 # Build options
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)

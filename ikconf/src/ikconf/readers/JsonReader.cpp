@@ -20,7 +20,6 @@
 #include "ikconf/readers/JsonReader.hpp"
 
 #include "ikconf/readers/BufferedFile.hpp"
-#include "ikconf/exceptions/ConfigurationException.hpp"
 
 namespace ikconf
 {
@@ -31,18 +30,21 @@ JsonReader::JsonReader(const Configuration& configuration) :
 {}
 
 
-std::vector<Warning> JsonReader::read(const std::string& filePath)
+ikgen::Result<std::vector<Warning>, std::string> JsonReader::read(const std::string& filePath)
 {
     BufferedFile file(filePath.c_str());
     char character;
     m_lineNumber = 1;
 
     if(!file.isOpen())
-        throw ConfigurationException("Cannot open file '" + filePath + "'");
+        return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Cannot open file '" + filePath + "'");
 
     std::string name, value;
 
-    character = readCharacter(file);
+    ikgen::Result<char, std::string> readCharacterResult = readCharacter(file);
+    if(readCharacterResult.isFailure())
+        return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+    character = readCharacterResult.getSuccess();
 
     if(character == '{')
     {
@@ -50,39 +52,52 @@ std::vector<Warning> JsonReader::read(const std::string& filePath)
     }
     else if(character == '[')
     {
-        throw ConfigurationException("Array on base level is not supported, please insert the array in a JSON object");
+        return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Array on base level is not supported, please insert the array in a JSON object");
     }
     else
-        handleUnexpectedCharacter(character);
+        return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
 }
 
 
-std::vector<Warning> JsonReader::readObject(BufferedFile& file, Configuration& configuration)
+ikgen::Result<std::vector<Warning>, std::string> JsonReader::readObject(BufferedFile& file, Configuration& configuration)
 {
     std::vector<Warning> warnings;
     char character = ',';
     std::string propertyName, propertyValue;
     bool setPropertySuccess = false;
+    ikgen::Result<char, std::string> readCharacterResult = ikgen::Result<char, std::string>::makeSuccess(',');
 
     while(character == ',')
     {
         propertyName = "";
         propertyValue = "";
 
-        character = readCharacter(file);
+        readCharacterResult = readCharacter(file);
+        if(readCharacterResult.isFailure())
+            return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+        character = readCharacterResult.getSuccess();
+
         if(character != '"')
-            handleUnexpectedCharacter(character);
+            return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
 
         do
         {
-            character = readCharacter(file);
+            readCharacterResult = readCharacter(file);
+            if(readCharacterResult.isFailure())
+                return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+            character = readCharacterResult.getSuccess();
+
             propertyName += character;
         } while(character != '"');
         propertyName.pop_back();
 
-        character = readCharacter(file);
+        readCharacterResult = readCharacter(file);
+        if(readCharacterResult.isFailure())
+            return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+        character = readCharacterResult.getSuccess();
+
         if(character != ':')
-            handleUnexpectedCharacter(character);
+            return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
 
         // check if the property is known
         if(!configuration.checkPropertyExists(propertyName))
@@ -92,7 +107,11 @@ std::vector<Warning> JsonReader::readObject(BufferedFile& file, Configuration& c
             bool insideString = false;
             while((character != ',' && level > 0) || insideString)
             {
-                character = readCharacter(file, true);
+                readCharacterResult = readCharacter(file, true);
+                if(readCharacterResult.isFailure())
+                    return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+                character = readCharacterResult.getSuccess();
+
                 if(character == '[' || character == '{')
                     level++;
                 else if(character == ']' || character == '}')
@@ -104,20 +123,34 @@ std::vector<Warning> JsonReader::readObject(BufferedFile& file, Configuration& c
         }
 
         // assign value to property
-        character = readCharacter(file);
+        readCharacterResult = readCharacter(file);
+        if(readCharacterResult.isFailure())
+            return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+        character = readCharacterResult.getSuccess();
+
         if(character == '{')
         {
             // value is an object
             Configuration* subConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
             readObject(file, *subConfig);
-            character = readCharacter(file);
+
+            readCharacterResult = readCharacter(file);
+            if(readCharacterResult.isFailure())
+                return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+            character = readCharacterResult.getSuccess();
+
             setPropertySuccess = true;
         }
         else if(character == '[')
         {
             // value is an array
             readArray(file, configuration, propertyName);
-            character = readCharacter(file);
+
+            readCharacterResult = readCharacter(file);
+            if(readCharacterResult.isFailure())
+                return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+            character = readCharacterResult.getSuccess();
+
             setPropertySuccess = true;
         }
         else
@@ -144,17 +177,17 @@ std::vector<Warning> JsonReader::readObject(BufferedFile& file, Configuration& c
         }
 
         if(!setPropertySuccess)
-            throw ConfigurationException("Failed to set property '" + propertyName + "'");
+            return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Failed to set property '" + propertyName + "'");
     }
 
     if(character != '}')
-        handleUnexpectedCharacter(character);
+        return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
 
-    return warnings;
+    return ikgen::Result<std::vector<Warning>, std::string>::success(std::move(warnings));
 }
 
 
-void JsonReader::readArray(BufferedFile& file, Configuration& configuration, const std::string& propertyName)
+ikgen::Result<ikgen::EmptyResult, std::string> JsonReader::readArray(BufferedFile& file, Configuration& configuration, const std::string& propertyName)
 {
     std::string propertyValue;
     char character = '[';
@@ -177,7 +210,11 @@ void JsonReader::readArray(BufferedFile& file, Configuration& configuration, con
             Configuration* const listConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
             Configuration* const subConfig = listConfig->newListItem();
             readObject(file, *subConfig);
-            character = readCharacter(file);
+
+            auto readCharacterResult = readCharacter(file);
+            if(readCharacterResult.isFailure())
+                return ikgen::Result<ikgen::EmptyResult, std::string>::failure(std::move(readCharacterResult.getFailure()));
+            character = readCharacterResult.getSuccess();
         }
         else
         {
@@ -194,20 +231,22 @@ void JsonReader::readArray(BufferedFile& file, Configuration& configuration, con
             addPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
         }
     }
+
+    return ikgen::Result<ikgen::EmptyResult, std::string>::makeSuccess();
 }
 
 
-void JsonReader::handleUnexpectedCharacter(char character)
+std::string JsonReader::buildUnexpectedCharacterMessage(char character)
 {
     std::string errorMsg = "Unexpected character '";
     errorMsg.push_back(character);
     errorMsg += "' at line " + std::to_string(m_lineNumber);
 
-    throw ConfigurationException(errorMsg);
+    return errorMsg;
 }
 
 
-char JsonReader::readCharacter(BufferedFile& file, bool acceptEof)
+ikgen::Result<char, std::string> JsonReader::readCharacter(BufferedFile& file, bool acceptEof)
 {
     char character = '\0';
 
@@ -220,9 +259,9 @@ char JsonReader::readCharacter(BufferedFile& file, bool acceptEof)
     }
 
     if(character == '\0' && !acceptEof)
-        throw ConfigurationException("Unexpected end of file");
+        return ikgen::Result<char, std::string>::makeFailure("Unexpected end of file");
 
-    return character;
+    return ikgen::Result<char, std::string>::success(std::move(character));
 }
 
 }

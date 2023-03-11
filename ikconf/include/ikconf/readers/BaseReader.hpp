@@ -23,6 +23,7 @@
 #include "ikconf/Configuration.hpp"
 #include "ikconf/Warning.hpp"
 #include "ikconf/ikconf_export.hpp"
+#include <ikgen/Result.hpp>
 #include <charconv>
 #include <algorithm>
 
@@ -60,9 +61,9 @@ class BaseReader
         /*!
          * \brief Reads the given file and sets the properties in the configuration (given in the constructor)
          * \param filePath Path to the file to read
-         * \return The warnings that may have been raised while reading the properties
+         * \return The warnings that may have been raised while reading the properties, or an error message
          */
-        virtual std::vector<Warning> read(const std::string& filePath) = 0;
+        virtual ikgen::Result<std::vector<Warning>, std::string> read(const std::string& filePath) = 0;
 
     protected:
 
@@ -174,7 +175,7 @@ class BaseReader
 #endif
 
         // values to interpret as the 'true' boolean, other values are considered as 'false'
-        static constexpr char TRUE_STR[] = "true";
+        static constexpr std::string_view TRUE_STR = "true";
         static constexpr int TRUE_INT = 1;
 };
 

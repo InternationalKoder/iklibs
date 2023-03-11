@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020, InternationalKoder
+    Copyright (C) 2019, 2020, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -24,34 +24,35 @@
 #include <vector>
 #include <any>
 #include <string>
-#include "ikconf_export.hpp"
 
 namespace ikconf
 {
-    /*!
-     * \brief Special configuration item that is actually a list of objects
-     */
-    template<typename T>
-    class ConfigurationList : public Configuration
-    {
-        public:
 
-            /*!
-             * \brief Adds a new item in the list
-             * \return A pointer to the new item in the list
-             */
-            virtual Configuration* newListItem() override
-            {
-                m_properties.emplace_back();
-                return &m_properties.back();
-            }
+/*!
+ * \brief Special configuration item that is actually a list of objects
+ */
+template<typename T>
+class ConfigurationList : public Configuration
+{
+    public:
 
-            inline const std::vector<T>& getProperties() const { return m_properties; }
+        /*!
+         * \brief Adds a new item in the list
+         * \return A pointer to the new item in the list
+         */
+        virtual Configuration* newListItem() override
+        {
+            m_properties.emplace_back();
+            return &m_properties.back();
+        }
 
-        private:
+        inline const std::vector<T>& getProperties() const { return m_properties; }
 
-            std::vector<T> m_properties;
-    };
+    private:
+
+        std::vector<T> m_properties;
+};
+
 }
 
 #endif // IKCONF_CONFIGURATION_LIST_HPP

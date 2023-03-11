@@ -22,7 +22,6 @@
 #include "ikconf/Settings.hpp"
 #include <ikconf/readers/PropertiesReader.hpp>
 #include <ikconf/readers/JsonReader.hpp>
-#include <ikconf/exceptions/ConfigurationException.hpp>
 #include <iostream>
 
 void runIkconfExamples()
@@ -32,20 +31,17 @@ void runIkconfExamples()
 
     // read from a .properties file
     ikconf::PropertiesReader propertiesReader(settings);
+    ikgen::Result<std::vector<ikconf::Warning>, std::string> propertiesReadResult = propertiesReader.read("resources/test.properties");
 
-    try
+    if(propertiesReadResult.isSuccess())
     {
-        std::vector<ikconf::Warning> warnings = propertiesReader.read("resources/test.properties");
-
-        for(const ikconf::Warning& warning : warnings)
+        for(const ikconf::Warning& warning : propertiesReadResult.getSuccess())
         {
             std::cout << "Got warning while reading properties file: " << warning.getMessage() << std::endl;
         }
     }
-    catch(const ikconf::ConfigurationException& e)
-    {
-        std::cerr << "Error while getting configuration: " << e.what() << std::endl;
-    }
+    else
+        std::cerr << "Error while getting configuration: " << propertiesReadResult.getFailure() << std::endl;
 
     // display the read values from the file
     std::cout << "Properties file:" << std::endl;
@@ -60,19 +56,17 @@ void runIkconfExamples()
     // now read from a .json file
     ikconf::JsonReader jsonReader(settings);
 
-    try
-    {
-        std::vector<ikconf::Warning> warnings = jsonReader.read("resources/test.json");
+    ikgen::Result<std::vector<ikconf::Warning>, std::string> jsonReadResult = jsonReader.read("resources/test.json");
 
-        for(const ikconf::Warning& warning : warnings)
+    if(jsonReadResult.isSuccess())
+    {
+        for(const ikconf::Warning& warning : jsonReadResult.getSuccess())
         {
             std::cout << "Got warning while reading JSON file: " << warning.getMessage() << std::endl;
         }
     }
-    catch(const ikconf::ConfigurationException& e)
-    {
-        std::cerr << "Error while getting configuration: " << e.what() << std::endl;
-    }
+    else
+        std::cerr << "Error while getting configuration: " << jsonReadResult.getFailure() << std::endl;
 
     // display the read values from the file
     std::cout << "JSON file:" << std::endl;

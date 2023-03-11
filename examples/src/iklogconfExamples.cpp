@@ -20,19 +20,21 @@
 #include "iklogconfExamples.hpp"
 
 #include <iklogconf/LogConfigurator.hpp>
-#include <ikconf/exceptions/ConfigurationException.hpp>
 
 void runIklogconfExamples()
 {
     iklogconf::LogConfigurator logConfigurator;
-    try
+    ikgen::Result<std::vector<ikconf::Warning>, std::string> readResult = logConfigurator.readJsonFile("resources/log.json");
+
+    if(readResult.isSuccess())
     {
-        logConfigurator.readJsonFile("resources/log.json");
+        for(const ikconf::Warning& warning : readResult.getSuccess())
+        {
+            std::cout << "Got warning while reading log configuration file: " << warning.getMessage() << std::endl;
+        }
     }
-    catch(const ikconf::ConfigurationException& e)
-    {
-        std::cerr << "Error while getting log configuration: " << e.what() << std::endl;
-    }
+    else
+        std::cerr << "Error while getting log configuration: " << readResult.getFailure() << std::endl;
 
     iklog::Log* const iklogconfStdoutLogger = iklog::Log::getLog("iklogconfStdoutLogger");
     iklogconfStdoutLogger->info("This log has been configured from a file!");

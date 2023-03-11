@@ -42,9 +42,9 @@ class PropertiesReader : public BaseReader
         /*!
          * \brief Reads the given .properties file and sets the properties in the configuration (given in the constructor)
          * \param filePath Path to the .properties file to read
-         * \return The warnings that may have been raised while reading the properties
+         * \return The warnings that may have been raised while reading the properties, or an error message
          */
-        IKCONF_EXPORT virtual std::vector<Warning> read(const std::string& filePath);
+        IKCONF_EXPORT virtual ikgen::Result<std::vector<Warning>, std::string> read(const std::string& filePath);
 };
 
 }
