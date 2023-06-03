@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -26,26 +26,29 @@
 
 namespace iklog
 {
-    /*!
-     * \brief Base class for iklog outputs
-     *
-     * Abstract class that defines the base of a iklog output system
-     */
-    class Output
-    {
-        public:
 
-            IKLOG_EXPORT virtual ~Output();
+/*!
+ * \brief Base class for iklog outputs
+ *
+ * Abstract class that defines the base of a iklog output system
+ */
+class Output
+{
+    public:
 
-            /*!
-             * \brief Writes the given string to the output
-             * \param message The string to write
-             * \return A stream stream on which the message has been written
-             */
-            virtual std::ostream& write(const std::string& message) = 0;
-    };
+        IKLOG_EXPORT Output();
+        IKLOG_EXPORT virtual ~Output();
 
-    std::ostream& operator<<(Output& output, const std::string& message);
+        /*!
+         * \brief Writes the given string to the output
+         * \param message The string to write
+         * \return A stream stream on which the message has been written
+         */
+        virtual std::ostream& write(const std::string& message) = 0;
+};
+
+std::ostream& operator<<(Output& output, const std::string& message);
+
 }
 
 #endif // IKLOG_OUTPUT_HPP

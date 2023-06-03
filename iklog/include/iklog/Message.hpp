@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020, InternationalKoder
+    Copyright (C) 2019, 2020, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -27,34 +27,36 @@
 
 namespace iklog
 {
-    /*!
-     * \brief Defines a logging message, only contains data
-     */
-    class Message
-    {
-        public:
 
-            using Duration = std::chrono::steady_clock::duration;
-            using TimePoint = std::chrono::system_clock::time_point;
+/*!
+ * \brief Defines a logging message, only contains data
+ */
+class Message
+{
+    public:
+
+        using Duration = std::chrono::steady_clock::duration;
+        using TimePoint = std::chrono::system_clock::time_point;
 
 
-            IKLOG_EXPORT Message(const std::string& logName, Level level, const std::string& message,
-                                 const Duration& programDuration, const TimePoint& clockTime);
+        IKLOG_EXPORT Message(const std::string& logName, Level level, const std::string& message,
+                             const Duration& programDuration, const TimePoint& clockTime);
 
-            IKLOG_EXPORT inline const std::string& getLogName() const { return m_logName; }
-            IKLOG_EXPORT inline Level getLevel() const { return m_level; }
-            IKLOG_EXPORT inline const std::string& getMessage() const { return m_message; }
-            IKLOG_EXPORT inline const Duration& getProgramDuration() const { return m_programDuration; }
-            IKLOG_EXPORT inline const TimePoint& getClockTime() const { return m_clockTime; }
+        inline const std::string& getLogName() const { return m_logName; }
+        inline Level getLevel() const { return m_level; }
+        inline const std::string& getMessage() const { return m_message; }
+        inline const Duration& getProgramDuration() const { return m_programDuration; }
+        inline const TimePoint& getClockTime() const { return m_clockTime; }
 
-        private:
+    private:
 
-            const std::string m_logName;
-            const Level m_level;
-            const std::string m_message;
-            const Duration  m_programDuration;
-            const TimePoint  m_clockTime;
-    };
+        const std::string m_logName;
+        const Level m_level;
+        const std::string m_message;
+        const Duration  m_programDuration;
+        const TimePoint  m_clockTime;
+};
+
 }
 
 #endif // IKLOG_MESSAGE_HPP

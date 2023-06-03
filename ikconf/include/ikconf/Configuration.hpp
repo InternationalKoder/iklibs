@@ -25,7 +25,6 @@
 #include <memory>
 #include <stdexcept>
 #include "Property.hpp"
-#include "ikconf_export.hpp"
 
 namespace ikconf
 {
@@ -40,9 +39,9 @@ class Configuration
         /*!
          * \brief Simple constructor that allows to start without any property and set them later
          */
-        IKCONF_EXPORT Configuration() {}
+        Configuration() {}
 
-        IKCONF_EXPORT virtual ~Configuration() {}
+        virtual ~Configuration() {}
 
 
         /*!

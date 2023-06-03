@@ -20,7 +20,6 @@
 #ifndef IKNET_UDP_REC_LENGTH_HPP
 #define IKNET_UDP_REC_LENGTH_HPP
 
-#include "iknet_export.hpp"
 #include "SenderInfo.hpp"
 
 namespace iknet
@@ -33,12 +32,12 @@ class UdpRecLength
 {
     public:
 
-        IKNET_EXPORT UdpRecLength(size_t length, std::string senderHost, uint16_t senderPort) :
+        UdpRecLength(size_t length, std::string senderHost, uint16_t senderPort) :
             m_length(length),
             m_sender(std::move(senderHost), senderPort)
         {}
 
-        IKNET_EXPORT UdpRecLength(size_t length, SenderInfo sender) :
+        UdpRecLength(size_t length, SenderInfo sender) :
             m_length(length),
             m_sender(std::move(sender))
         {}

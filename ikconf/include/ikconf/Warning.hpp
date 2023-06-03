@@ -20,7 +20,6 @@
 #ifndef IKCONF_WARNING_HPP
 #define IKCONF_WARNING_HPP
 
-#include "ikconf_export.hpp"
 #include <string>
 
 namespace ikconf
@@ -35,7 +34,7 @@ class Warning
             SKIPPED_UNKNOWN_PROPERTY
         };
 
-        IKCONF_EXPORT Warning(Type type, std::string message) :
+        Warning(Type type, std::string message) :
             m_type(type),
             m_message(std::move(message))
         {}

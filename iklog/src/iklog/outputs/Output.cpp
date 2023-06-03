@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, InternationalKoder
+    Copyright (C) 2019, 2023, InternationalKoder
 
     This file is part of IKLibs.
 
@@ -21,11 +21,13 @@
 
 namespace iklog
 {
-    Output::~Output()
-    {}
 
-    std::ostream& operator<<(Output& output, const std::string& message)
-    {
-        return output.write(message);
-    }
+Output::Output() = default;
+Output::~Output() = default;
+
+std::ostream& operator<<(Output& output, const std::string& message)
+{
+    return output.write(message);
+}
+
 }

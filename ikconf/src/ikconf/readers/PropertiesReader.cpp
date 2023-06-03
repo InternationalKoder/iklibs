@@ -28,6 +28,8 @@ PropertiesReader::PropertiesReader(const Configuration& configuration) :
     BaseReader(configuration)
 {}
 
+PropertiesReader::~PropertiesReader() = default;
+
 ikgen::Result<std::vector<Warning>, std::string> PropertiesReader::read(const std::string& filePath)
 {
     BufferedFile file(filePath.c_str());

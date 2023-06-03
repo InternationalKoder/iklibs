@@ -22,7 +22,6 @@
 
 #include "Buffer.hpp"
 #include "SenderInfo.hpp"
-#include "iknet_export.hpp"
 
 namespace iknet
 {
@@ -34,12 +33,12 @@ class UdpRecBuffer
 {
     public:
 
-        IKNET_EXPORT UdpRecBuffer(Buffer buffer, std::string senderHost, uint16_t senderPort) :
+        UdpRecBuffer(Buffer buffer, std::string senderHost, uint16_t senderPort) :
             m_buffer(std::move(buffer)),
             m_sender(std::move(senderHost), senderPort)
         {}
 
-        IKNET_EXPORT UdpRecBuffer(Buffer buffer, SenderInfo sender) :
+        UdpRecBuffer(Buffer buffer, SenderInfo sender) :
             m_buffer(std::move(buffer)),
             m_sender(std::move(sender))
         {}

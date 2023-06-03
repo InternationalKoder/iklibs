@@ -38,6 +38,8 @@ class PropertiesReader : public BaseReader
          */
         IKCONF_EXPORT PropertiesReader(const Configuration& configuration);
 
+        IKCONF_EXPORT virtual ~PropertiesReader();
+
 
         /*!
          * \brief Reads the given .properties file and sets the properties in the configuration (given in the constructor)

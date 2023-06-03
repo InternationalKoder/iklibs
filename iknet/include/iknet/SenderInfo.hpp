@@ -20,7 +20,6 @@
 #ifndef IKNET_SENDER_INFO_HPP
 #define IKNET_SENDER_INFO_HPP
 
-#include "iknet_export.hpp"
 #include <string>
 
 namespace iknet
@@ -33,7 +32,7 @@ class SenderInfo
 {
     public:
 
-        IKNET_EXPORT SenderInfo(std::string host, uint16_t port) :
+        SenderInfo(std::string host, uint16_t port) :
             m_host(std::move(host)),
             m_port(port)
         {}

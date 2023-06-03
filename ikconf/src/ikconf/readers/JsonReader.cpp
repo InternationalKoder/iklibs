@@ -30,6 +30,9 @@ JsonReader::JsonReader(const Configuration& configuration) :
 {}
 
 
+JsonReader::~JsonReader() = default;
+
+
 ikgen::Result<std::vector<Warning>, std::string> JsonReader::read(const std::string& filePath)
 {
     BufferedFile file(filePath.c_str());

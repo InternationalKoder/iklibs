@@ -47,6 +47,8 @@ class JsonReader : public BaseReader
          */
         IKCONF_EXPORT JsonReader(const Configuration& configuration);
 
+        IKCONF_EXPORT ~JsonReader();
+
         /*!
          * \brief Reads the given JSON file and sets the properties in the configuration (given in the constructor)
          * \param filePath Path to the JSON file to read

@@ -45,12 +45,62 @@ namespace iklog
             /*!
              * \brief Constructor
              * \param baseFilename The file name without the rolling system extension, for example "myfile.log"
-             * \param maxFileSize The maximum size for each logging file, a new file is created when reached
+             * \param maxFileSize The maximum size in bytes for each logging file, a new file is created when reached
              * \param maxRollingFiles The maximum number of files, the oldest file is removed when reached
              */
+            IKLOG_EXPORT RollingFileOutput(const std::string& baseFilename, const Bytes& maxFileSize,
+                                           unsigned int maxRollingFiles);
+
+            /*!
+             * \brief Constructor
+             * \param baseFilename The file name without the rolling system extension, for example "myfile.log"
+             * \param maxFileSize The maximum size in kilobytes for each logging file, a new file is created when reached
+             * \param maxRollingFiles The maximum number of files, the oldest file is removed when reached
+             */
+            IKLOG_EXPORT RollingFileOutput(const std::string& baseFilename, const KiloBytes& maxFileSize,
+                                           unsigned int maxRollingFiles);
+
+            /*!
+             * \brief Constructor
+             * \param baseFilename The file name without the rolling system extension, for example "myfile.log"
+             * \param maxFileSize The maximum size in megabytes for each logging file, a new file is created when reached
+             * \param maxRollingFiles The maximum number of files, the oldest file is removed when reached
+             */
+            IKLOG_EXPORT RollingFileOutput(const std::string& baseFilename, const MegaBytes& maxFileSize,
+                                           unsigned int maxRollingFiles);
+
+            /*!
+             * \brief Constructor
+             * \param baseFilename The file name without the rolling system extension, for example "myfile.log"
+             * \param maxFileSize The maximum size in gigabytes for each logging file, a new file is created when reached
+             * \param maxRollingFiles The maximum number of files, the oldest file is removed when reached
+             */
+            IKLOG_EXPORT RollingFileOutput(const std::string& baseFilename, const GigaBytes& maxFileSize,
+                                           unsigned int maxRollingFiles);
+
+            IKLOG_EXPORT virtual ~RollingFileOutput();
+
+            /*!
+             * \brief Writes the given message to the current file in the rolling system
+             * \param message The message to write
+             * \return The stream that was used to write the message
+             */
+            IKLOG_EXPORT virtual std::ostream& write(const std::string& message);
+
+        private:
+
+            static constexpr char SEPARATOR = '.'; // separator that will go between the file name and the rolling index
+
+
+            /*!
+             * \brief Constructor
+             * \param baseFilename The file name without the rolling system extension, for example "myfile.log"
+             * \param maxRollingFiles The maximum number of files, the oldest file is removed when reached
+             * \param maxFileSize The maximum size for each logging file, a new file is created when reached
+             */
             template<unsigned short MULTIPLIER>
-            RollingFileOutput(const std::string& baseFilename, const FileSize<MULTIPLIER>& maxFileSize,
-                              unsigned int maxRollingFiles) :
+            RollingFileOutput(const std::string& baseFilename, unsigned int maxRollingFiles,
+                              const FileSize<MULTIPLIER>& maxFileSize) :
                 iklog::Output(),
                 m_maxRoll(maxRollingFiles - 1),
                 m_maxFileSize(maxFileSize.getValueInBytes()),
@@ -66,17 +116,6 @@ namespace iklog
                 if(!m_file.is_open())
                     std::cerr << "Failed to open file '" << m_firstRollingFileName << "' in write mode" << std::endl;
             }
-
-            /*!
-             * \brief Writes the given message to the current file in the rolling system
-             * \param message The message to write
-             * \return The stream that was used to write the message
-             */
-            IKLOG_EXPORT virtual std::ostream& write(const std::string& message);
-
-        private:
-
-            static constexpr char SEPARATOR = '.'; // separator that will go between the file name and the rolling index
 
 
             /*!
