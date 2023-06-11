@@ -24,11 +24,11 @@
 void runIklogconfExamples()
 {
     iklogconf::LogConfigurator logConfigurator;
-    ikgen::Result<std::vector<ikconf::Warning>, std::string> readResult = logConfigurator.readJsonFile("resources/log.json");
+    ikgen::Result<std::vector<iklogconf::Warning>, std::string> readResult = logConfigurator.readJsonFile("resources/log.json");
 
     if(readResult.isSuccess())
     {
-        for(const ikconf::Warning& warning : readResult.getSuccess())
+        for(const iklogconf::Warning& warning : readResult.getSuccess())
         {
             std::cout << "Got warning while reading log configuration file: " << warning.getMessage() << std::endl;
         }

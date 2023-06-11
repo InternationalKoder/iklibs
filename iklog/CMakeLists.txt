@@ -38,6 +38,9 @@ target_include_directories(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# Dependencies
+target_link_libraries(${PROJECT_NAME} PUBLIC iklibs::ikgen)
+
 # Build options
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 set_target_properties(${PROJECT_NAME}

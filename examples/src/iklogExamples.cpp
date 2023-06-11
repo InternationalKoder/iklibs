@@ -36,7 +36,14 @@ void runIklogExamples()
     examplesLog->disableLevels(iklog::Level::DEBUG);
     log.debug("We retrieved a Log object and disabled debug level on it, this message should not appear");
 
-    iklog::RollingFileOutput rollingFileOutput("examples.log", 512_b, 5);
+    auto createRollingFileOutputResult = iklog::RollingFileOutput::create("examples.log", 512_b, 5);
+    if(createRollingFileOutputResult.isFailure())
+    {
+        std::cerr << createRollingFileOutputResult.getFailure() << std::endl;
+        return;
+    }
+
+    iklog::RollingFileOutput& rollingFileOutput = createRollingFileOutputResult.getSuccess();
     iklog::Log rollingFileLog("rolling-file", iklog::Level::INFO, rollingFileOutput);
 
     for(unsigned int i = 0 ; i < 80 ; i++)

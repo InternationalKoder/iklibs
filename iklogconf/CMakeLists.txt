@@ -14,6 +14,7 @@ set(SOURCE_FILES
 
 set(INCLUDE_FILES
     include/iklogconf/LogConfigurator.hpp
+    include/iklogconf/Warning.hpp
     include/iklogconf/iklogconf_export.hpp
     include/iklogconf/config-model/LogConfiguration.hpp
     include/iklogconf/config-model/LogConfigurationItem.hpp

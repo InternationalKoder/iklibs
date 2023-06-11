@@ -21,12 +21,11 @@
 #define IKLOGCONF_LOG_CONFIGURATOR_HPP
 
 #include "iklogconf_export.hpp"
+#include "Warning.hpp"
 #include <string>
 #include <vector>
 #include <memory>
-#include <optional>
 #include <iklog/Log.hpp>
-#include <ikconf/Warning.hpp>
 #include <ikgen/Result.hpp>
 
 namespace iklogconf
@@ -49,28 +48,30 @@ class LogConfigurator
          * \param filePath Path to the JSON file
          * \return The warnings that may have been raised while reading the JSON file, or an error message
          */
-        IKLOGCONF_EXPORT ikgen::Result<std::vector<ikconf::Warning>, std::string> readJsonFile(const std::string& filePath);
+        IKLOGCONF_EXPORT ikgen::Result<std::vector<Warning>, std::string> readJsonFile(const std::string& filePath);
 
     private:
 
         /*!
          * \brief Create a named iklog::Output instance from an item described in the configuration file
          * \param configItem The item read from the file
+         * \return A warning, if one is raised while creating the output
          */
-        void createOutput(const OutputConfigurationItem& configItem);
+        std::optional<Warning> createOutput(const OutputConfigurationItem& configItem);
 
         /*!
          * \brief Create a iklog::Log instance from an item described in the configuration file
          * \param configItem The item read from the file
+         * \return A list of warnings
          */
-        void createLogger(const LogConfigurationItem& configItem);
+        std::vector<Warning> createLogger(const LogConfigurationItem& configItem);
 
         /*!
          * \brief Create a iklog::Output instance from an item described in the configuration file
          * \param configItem The item read from the file
-         * \return The created iklog::Output if the description in the configuration file is valid
+         * \return The created iklog::Output if the description in the configuration file is valid, or a warning
          */
-        std::optional<iklog::Output*> createOutputBase(const LogConfigurationOutput& configItem);
+        ikgen::Result<iklog::Output*, Warning> createOutputBase(const LogConfigurationOutput& configItem);
 
 
         std::vector<std::unique_ptr<iklog::Log>> m_logs; // maintain a list of the allocated iklog::Log instances
