@@ -121,7 +121,7 @@ Buffer& Buffer::operator<<(int16_t value)
 
 Buffer& Buffer::operator<<(int32_t value)
 {
-    pushValue(static_cast<int32_t>(htons(static_cast<uint32_t>(value))));
+    pushValue(static_cast<int32_t>(htonl(static_cast<uint32_t>(value))));
     return *this;
 }
 

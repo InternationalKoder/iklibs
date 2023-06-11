@@ -86,7 +86,7 @@ TcpListener::TcpListener(const std::string& listenAddress, uint16_t listenPort, 
 #endif
 
         // Bind
-        bindResult = bind(m_socketImpl, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
+        bindResult = bind(m_socketImpl, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
 
         if(bindResult != 0)
         {

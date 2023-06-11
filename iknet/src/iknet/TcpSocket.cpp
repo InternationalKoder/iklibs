@@ -34,6 +34,12 @@ using CreateResult = ikgen::Result<TcpSocket, std::string>;
 using IoResult = ikgen::Result<size_t, std::string>;
 using ReceiveResult = ikgen::Result<Buffer, std::string>;
 
+#ifdef _WIN32
+using IoSize = int;
+#else
+using IoSize = ssize_t;
+#endif
+
 
 CreateResult TcpSocket::create(const std::string& remoteAddress, uint16_t remotePort)
 {
@@ -86,7 +92,7 @@ TcpSocket::TcpSocket(const std::string& remoteAddress, uint16_t remotePort)
 #endif
 
         // Connect
-        connectResult = connect(m_socketImpl, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
+        connectResult = connect(m_socketImpl, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
 
         if(connectResult != 0)
         {
@@ -113,7 +119,11 @@ TcpSocket::TcpSocket(SocketImpl socketImpl) :
 
 IoResult TcpSocket::send(const char* const buffer, size_t length)
 {
-    const int sendResult = ::send(m_socketImpl, buffer, static_cast<int>(length), 0);
+#ifdef _WIN32
+    const IoSize sendResult = ::send(m_socketImpl, buffer, static_cast<int>(length), 0);
+#else
+    const IoSize sendResult = ::send(m_socketImpl, buffer, length, 0);
+#endif
 
     if(isSocketInvalid(sendResult))
         return IoResult::makeFailure("Failed to send data on TCP socket: " + lastNetworkErrorString());
@@ -131,7 +141,11 @@ ikgen::Result<ikgen::EmptyResult, std::string> TcpSocket::send(const Buffer& buf
 
 IoResult TcpSocket::receive(char* const buffer, size_t length)
 {
-    const int receivedLength = ::recv(m_socketImpl, buffer, static_cast<int>(length), 0);
+#ifdef _WIN32
+    const IoSize receivedLength = ::recv(m_socketImpl, buffer, static_cast<int>(length), 0);
+#else
+    const IoSize receivedLength = ::recv(m_socketImpl, buffer, length, 0);
+#endif
 
     if(receivedLength < 0)
         return IoResult::makeFailure("Failed to receive data from TCP socket: " + lastNetworkErrorString());
