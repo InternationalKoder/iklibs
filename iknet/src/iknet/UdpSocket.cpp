@@ -88,7 +88,7 @@ UdpSocket::UdpSocket(const std::string& listenAddress, uint16_t listenPort)
 #endif
 
         // Bind
-        bindResult = bind(m_socketImpl, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
+        bindResult = bind(m_socketImpl, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
 
         if(bindResult != 0)
         {
@@ -108,7 +108,7 @@ UdpSocket::UdpSocket(const std::string& listenAddress, uint16_t listenPort)
         throw std::runtime_error("Failed to bind UDP socket: " + error);
     }
 
-    m_addressFamily = addr->ai_family;
+    m_addressFamily = static_cast<sa_family_t>(addr->ai_family);
 }
 
 IoResult UdpSocket::send(const char* const buffer, size_t length, const std::string& remoteAddress, uint16_t remotePort)
@@ -121,17 +121,21 @@ IoResult UdpSocket::send(const char* const buffer, size_t length, const std::str
     AddrInfo& remoteAddr = resolveRemoteAddrResult.getSuccess();
 
     // Send
-    int sendResult = iknet::DEFAULT_SOCKET_ERROR;
+    IoSize sendResult = iknet::DEFAULT_SOCKET_ERROR;
     addrinfo* addr = remoteAddr.getImpl();
-    while(iknet::isSendError(sendResult) && addr != nullptr)
+    while(isSendError(sendResult) && addr != nullptr)
     {
-        sendResult = ::sendto(m_socketImpl, buffer, static_cast<int>(length), 0, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
+#ifdef _WIN32
+        sendResult = ::sendto(m_socketImpl, buffer, static_cast<int>(length), 0, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
+#else
+        sendResult = ::sendto(m_socketImpl, buffer, length, 0, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
+#endif
 
-        if(iknet::isSendError(sendResult))
+        if(isSendError(sendResult))
             addr = addr->ai_next;
     }
 
-    if(iknet::isSendError(sendResult))
+    if(isSendError(sendResult))
         return IoResult::makeFailure("Failed to send data on UDP socket: " + lastNetworkErrorString());
 
     return IoResult::makeSuccess(sendResult);
@@ -152,7 +156,7 @@ LengthReceiveResult UdpSocket::receive(char* const buffer, size_t length)
     sockaddr_storage senderAddress;
     socklen_t addrSize = sizeof(sockaddr_storage);
 
-    int receivedLength = -1;
+    IoSize receivedLength = -1;
 #ifdef _WIN32
     receivedLength = ::recvfrom(m_socketImpl, buffer, static_cast<int>(length), 0, reinterpret_cast<sockaddr*>(&senderAddress), &addrSize);
 #else
@@ -199,7 +203,7 @@ BufferReceiveResult UdpSocket::receive()
     const UdpRecLength& received = receiveResult.getSuccess();
     const size_t receivedLength = received.getLength();
 
-    if(receivedLength < 0)
+    if(receivedLength == 0)
         return BufferReceiveResult::makeSuccess(Buffer(), std::move(received.getSender()));
 
     std::vector<std::byte> byteBuffer(receivedLength);

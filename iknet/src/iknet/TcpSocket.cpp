@@ -86,7 +86,7 @@ TcpSocket::TcpSocket(const std::string& remoteAddress, uint16_t remotePort)
 #endif
 
         // Connect
-        connectResult = connect(m_socketImpl, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
+        connectResult = connect(m_socketImpl, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
 
         if(connectResult != 0)
         {
@@ -113,9 +113,13 @@ TcpSocket::TcpSocket(SocketImpl socketImpl) :
 
 IoResult TcpSocket::send(const char* const buffer, size_t length)
 {
-    const int sendResult = ::send(m_socketImpl, buffer, static_cast<int>(length), 0);
+#ifdef _WIN32
+    const IoSize sendResult = ::send(m_socketImpl, buffer, static_cast<int>(length), 0);
+#else
+    const IoSize sendResult = ::send(m_socketImpl, buffer, length, 0);
+#endif
 
-    if(isSocketInvalid(sendResult))
+    if(isSendError(sendResult))
         return IoResult::makeFailure("Failed to send data on TCP socket: " + lastNetworkErrorString());
 
     return IoResult::makeSuccess(sendResult);
@@ -131,7 +135,11 @@ ikgen::Result<ikgen::EmptyResult, std::string> TcpSocket::send(const Buffer& buf
 
 IoResult TcpSocket::receive(char* const buffer, size_t length)
 {
-    const int receivedLength = ::recv(m_socketImpl, buffer, static_cast<int>(length), 0);
+#ifdef _WIN32
+    const IoSize receivedLength = ::recv(m_socketImpl, buffer, static_cast<int>(length), 0);
+#else
+    const IoSize receivedLength = ::recv(m_socketImpl, buffer, length, 0);
+#endif
 
     if(receivedLength < 0)
         return IoResult::makeFailure("Failed to receive data from TCP socket: " + lastNetworkErrorString());
@@ -143,13 +151,13 @@ ReceiveResult TcpSocket::receive()
 {
     char buffer[TCP_MAX_LENGTH];
 
-    const ikgen::Result<size_t, std::string> receiveResult = receive(buffer, TCP_MAX_LENGTH);
+    const IoResult receiveResult = receive(buffer, TCP_MAX_LENGTH);
     if(receiveResult.isFailure())
         return ReceiveResult::makeFailure(receiveResult.getFailure());
 
     const size_t receivedLength = receiveResult.getSuccess();
 
-    if(receivedLength < 0)
+    if(receivedLength == 0)
         return ReceiveResult::makeSuccess();
 
     std::vector<std::byte> byteBuffer(receivedLength);

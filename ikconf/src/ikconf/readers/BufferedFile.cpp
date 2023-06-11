@@ -22,78 +22,82 @@
 
 namespace ikconf
 {
-    BufferedFile::BufferedFile(const std::string& filePath) :
-        m_file(filePath.c_str()),
-        m_buffer(BUFFER_SIZE),
-        m_bufferPos(0),
-        m_bufferSize(0)
-    {}
 
-    char BufferedFile::nextChar()
+using BufferItDiffType = std::vector<char>::difference_type;
+
+BufferedFile::BufferedFile(const std::string& filePath) :
+    m_file(filePath.c_str()),
+    m_buffer(BUFFER_SIZE),
+    m_bufferPos(0),
+    m_bufferSize(0)
+{}
+
+char BufferedFile::nextChar()
+{
+    // fill buffer if we have already read it all
+    if(m_bufferPos >= m_bufferSize)
     {
-        // fill buffer if we have already read it all
+        fillBuffer();
         if(m_bufferPos >= m_bufferSize)
-        {
-            fillBuffer();
-            if(m_bufferPos >= m_bufferSize)
-                return '\0';
-        }
-
-        // return character from buffer
-        return m_buffer[m_bufferPos++];
+            return '\0';
     }
 
-    std::string BufferedFile::nextLine()
+    // return character from buffer
+    return m_buffer[m_bufferPos++];
+}
+
+std::string BufferedFile::nextLine()
+{
+    // fill buffer if we have already read it all
+    if(m_bufferPos >= m_bufferSize)
     {
-        // fill buffer if we have already read it all
+        fillBuffer();
         if(m_bufferPos >= m_bufferSize)
-        {
-            fillBuffer();
-            if(m_bufferPos >= m_bufferSize)
-                return "";
-        }
+            return "";
+    }
 
-        // return line from buffer
-        bool fullLine = false;
-        std::string line = "";
-        while(!fullLine && m_bufferPos < m_bufferSize)
-        {
-            const auto beginIt = m_buffer.begin() + m_bufferPos;
-            const auto endIt = m_buffer.begin() + m_bufferSize;
-            auto lineEnd = std::find(beginIt, m_buffer.begin() + m_bufferSize, '\n');
+    // return line from buffer
+    bool fullLine = false;
+    std::string line = "";
+    while(!fullLine && m_bufferPos < m_bufferSize)
+    {
+        const auto beginIt = m_buffer.begin() + static_cast<BufferItDiffType>(m_bufferPos);
+        const auto endIt = m_buffer.begin() + static_cast<BufferItDiffType>(m_bufferSize);
+        auto lineEnd = std::find(beginIt, m_buffer.begin() + static_cast<BufferItDiffType>(m_bufferSize), '\n');
 
-            if(lineEnd == beginIt)
+        if(lineEnd == beginIt)
+        {
+            if(*beginIt == '\n')
             {
-                if(*beginIt == '\n')
-                {
-                    ++m_bufferPos;
-                    return line;
-                }
+                ++m_bufferPos;
+                return line;
             }
-
-            std::string linePart(beginIt, lineEnd);
-            line += linePart;
-            m_bufferPos += linePart.size() + 1; // + 1 is for the dropped '\n'
-
-            // if the "end of line" character has not been found, we have to fill the buffer again
-            if(lineEnd == endIt)
-                fillBuffer();
-            else
-                fullLine = true;
         }
 
-        return line;
+        std::string linePart(beginIt, lineEnd);
+        line += linePart;
+        m_bufferPos += linePart.size() + 1; // + 1 is for the dropped '\n'
+
+        // if the "end of line" character has not been found, we have to fill the buffer again
+        if(lineEnd == endIt)
+            fillBuffer();
+        else
+            fullLine = true;
     }
 
-    void BufferedFile::fillBuffer()
-    {
-        // nothing to do if there is nothing to read from the file
-        if(!m_file.is_open() || m_file.eof())
-            return;
+    return line;
+}
 
-        // fill buffer
-        m_file.read(m_buffer.data(), BUFFER_SIZE);
-        m_bufferPos = 0;
-        m_bufferSize = m_file.gcount();
-    }
+void BufferedFile::fillBuffer()
+{
+    // nothing to do if there is nothing to read from the file
+    if(!m_file.is_open() || m_file.eof())
+        return;
+
+    // fill buffer
+    m_file.read(m_buffer.data(), BUFFER_SIZE);
+    m_bufferPos = 0;
+    m_bufferSize = static_cast<size_t>(m_file.gcount());
+}
+
 }

@@ -39,14 +39,14 @@ namespace iknet
 
 #ifdef _WIN32
 using SocketImpl = SOCKET;
-#else
-using SocketImpl = int;
-#endif
+using IoSize = int;
 
-#ifdef _WIN32
 static constexpr SocketImpl DEFAULT_INVALID_SOCKET = INVALID_SOCKET;
 static constexpr int DEFAULT_SOCKET_ERROR = SOCKET_ERROR;
 #else
+using SocketImpl = int;
+using IoSize = ssize_t;
+
 static constexpr SocketImpl DEFAULT_INVALID_SOCKET = -1;
 static constexpr int DEFAULT_SOCKET_ERROR = -1;
 #endif
@@ -76,7 +76,7 @@ IKNET_EXPORT bool isSocketInvalid(const SocketImpl& socket);
  * \param sendResult The result of the send call
  * \return True if the code returned by send call is an error
  */
-IKNET_EXPORT bool isSendError(int sendResult);
+IKNET_EXPORT bool isSendError(IoSize sendResult);
 
 /*!
  * \brief Stops communications on the socket
