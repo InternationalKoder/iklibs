@@ -57,7 +57,7 @@ class UdpSocket : public Socket
 
 
         /*!
-         * \brief Constructor, throws std::runtime_exception if a problem occurs
+         * \brief Constructor, throws std::runtime_error if a problem occurs
          * \param listenAddress Address to listen to for incoming packets
          * \param listenPort Port to bind on local device
          */

@@ -47,7 +47,7 @@ class TcpListener
 
 
         /*!
-         * \brief Constructor, throws std::runtime_exception if a problem occurs
+         * \brief Constructor, throws std::runtime_error if a problem occurs
          * \param listenAddress Address to listen to for incoming connections
          * \param listenPort Port to listen to for incoming connections
          * \param maxWaitingConnections Maximum allowed count of pending connections in queue waiting to be accepted

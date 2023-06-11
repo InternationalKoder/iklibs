@@ -45,7 +45,7 @@ class TcpSocket : public Socket
 
 
         /*!
-         * \brief Constructor, throws std::runtime_exception if a problem occurs
+         * \brief Constructor, throws std::runtime_error if a problem occurs
          * \param remoteAddress Remote address to connect to
          * \param remotePort Remote port to connect to
          */

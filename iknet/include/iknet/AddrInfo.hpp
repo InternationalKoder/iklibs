@@ -56,7 +56,7 @@ class AddrInfo
         IKNET_EXPORT static ikgen::Result<AddrInfo, std::string> resolve(const std::string& host, uint16_t port, Protocol protocol, bool passive = false);
 
         /*!
-         * \brief Constructor, throws std::runtime_exception if a problem occurs
+         * \brief Constructor, throws std::runtime_error if a problem occurs
          * \param host Host name to resolve (can be IP address or domain name for example)
          * \param port Port to reach
          * \param protocol Protocol that will be used to communicate with the host
