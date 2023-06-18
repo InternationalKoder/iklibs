@@ -107,7 +107,7 @@ TcpListener::TcpListener(const std::string& listenAddress, uint16_t listenPort, 
     }
 
     // Listen to new connections
-    if(isSocketInvalid(::listen(m_socketImpl, static_cast<int>(maxWaitingConnections))))
+    if(::listen(m_socketImpl, static_cast<int>(maxWaitingConnections)) != 0)
     {
         iknet::closeSocket(m_socketImpl);
         m_socketImpl = iknet::DEFAULT_INVALID_SOCKET;

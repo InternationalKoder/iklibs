@@ -36,12 +36,6 @@ using IoResult = ikgen::Result<size_t, std::string>;
 using LengthReceiveResult = ikgen::Result<UdpRecLength, std::string>;
 using BufferReceiveResult = ikgen::Result<UdpRecBuffer, std::string>;
 
-#ifdef _WIN32
-using IoSize = int;
-#else
-using IoSize = ssize_t;
-#endif
-
 
 CreateResult UdpSocket::create(const std::string& listenAddress, uint16_t listenPort)
 {
@@ -129,7 +123,7 @@ IoResult UdpSocket::send(const char* const buffer, size_t length, const std::str
     // Send
     IoSize sendResult = iknet::DEFAULT_SOCKET_ERROR;
     addrinfo* addr = remoteAddr.getImpl();
-    while(iknet::isSendError(sendResult) && addr != nullptr)
+    while(isSendError(sendResult) && addr != nullptr)
     {
 #ifdef _WIN32
         sendResult = ::sendto(m_socketImpl, buffer, static_cast<int>(length), 0, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
@@ -137,11 +131,11 @@ IoResult UdpSocket::send(const char* const buffer, size_t length, const std::str
         sendResult = ::sendto(m_socketImpl, buffer, length, 0, addr->ai_addr, static_cast<socklen_t>(addr->ai_addrlen));
 #endif
 
-        if(iknet::isSendError(sendResult))
+        if(isSendError(sendResult))
             addr = addr->ai_next;
     }
 
-    if(iknet::isSendError(sendResult))
+    if(isSendError(sendResult))
         return IoResult::makeFailure("Failed to send data on UDP socket: " + lastNetworkErrorString());
 
     return IoResult::makeSuccess(sendResult);
@@ -209,7 +203,7 @@ BufferReceiveResult UdpSocket::receive()
     const UdpRecLength& received = receiveResult.getSuccess();
     const size_t receivedLength = received.getLength();
 
-    if(receivedLength < 0)
+    if(receivedLength == 0)
         return BufferReceiveResult::makeSuccess(Buffer(), std::move(received.getSender()));
 
     std::vector<std::byte> byteBuffer(receivedLength);

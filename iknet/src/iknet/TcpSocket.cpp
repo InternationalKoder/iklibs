@@ -34,12 +34,6 @@ using CreateResult = ikgen::Result<TcpSocket, std::string>;
 using IoResult = ikgen::Result<size_t, std::string>;
 using ReceiveResult = ikgen::Result<Buffer, std::string>;
 
-#ifdef _WIN32
-using IoSize = int;
-#else
-using IoSize = ssize_t;
-#endif
-
 
 CreateResult TcpSocket::create(const std::string& remoteAddress, uint16_t remotePort)
 {
@@ -125,7 +119,7 @@ IoResult TcpSocket::send(const char* const buffer, size_t length)
     const IoSize sendResult = ::send(m_socketImpl, buffer, length, 0);
 #endif
 
-    if(isSocketInvalid(sendResult))
+    if(isSendError(sendResult))
         return IoResult::makeFailure("Failed to send data on TCP socket: " + lastNetworkErrorString());
 
     return IoResult::makeSuccess(sendResult);
@@ -157,13 +151,13 @@ ReceiveResult TcpSocket::receive()
 {
     char buffer[TCP_MAX_LENGTH];
 
-    const ikgen::Result<size_t, std::string> receiveResult = receive(buffer, TCP_MAX_LENGTH);
+    const IoResult receiveResult = receive(buffer, TCP_MAX_LENGTH);
     if(receiveResult.isFailure())
         return ReceiveResult::makeFailure(receiveResult.getFailure());
 
     const size_t receivedLength = receiveResult.getSuccess();
 
-    if(receivedLength < 0)
+    if(receivedLength == 0)
         return ReceiveResult::makeSuccess();
 
     std::vector<std::byte> byteBuffer(receivedLength);

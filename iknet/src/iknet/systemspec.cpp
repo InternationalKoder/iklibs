@@ -71,7 +71,7 @@ bool isSocketInvalid(const SocketImpl& socket)
 #endif
 }
 
-bool isSendError(int sendResult)
+bool isSendError(IoSize sendResult)
 {
 #ifdef _WIN32
     return sendResult == SOCKET_ERROR;

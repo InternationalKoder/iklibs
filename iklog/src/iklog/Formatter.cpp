@@ -127,7 +127,21 @@ std::string Formatter::getClockTime(const Message& message)
     const Message::TimePoint& TIME = message.getClockTime();
     std::time_t time = std::chrono::system_clock::to_time_t(TIME);
 
-    struct tm tm;
+    struct tm tm = {
+        .tm_sec = 0,
+        .tm_min = 0,
+        .tm_hour = 0,
+        .tm_mday = 1,
+        .tm_mon = 0,
+        .tm_year = 0,
+        .tm_wday = 0,
+        .tm_yday = 0,
+        .tm_isdst = -1,
+#ifdef _GNU_SOURCE
+        .tm_gmtoff = 0,
+        .tm_zone = nullptr,
+#endif
+    };
 
 #ifdef _WIN32
     localtime_s(&tm, &time);
