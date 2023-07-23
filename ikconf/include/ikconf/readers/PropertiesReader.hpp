@@ -21,6 +21,7 @@
 #define IKCONF_PROPERTIES_READER_HPP
 
 #include "BaseReader.hpp"
+#include "ikconf/ikconf_export.hpp"
 
 namespace ikconf
 {
@@ -33,20 +34,12 @@ class PropertiesReader : public BaseReader
     public:
 
         /*!
-         * \brief Constructor which takes the configuration to valorize
-         * \param configuration The configuration that will hold the read values
-         */
-        IKCONF_EXPORT PropertiesReader(const Configuration& configuration);
-
-        IKCONF_EXPORT virtual ~PropertiesReader();
-
-
-        /*!
          * \brief Reads the given .properties file and sets the properties in the configuration (given in the constructor)
          * \param filePath Path to the .properties file to read
+         * \param configuration The configuration that will hold the read values
          * \return The warnings that may have been raised while reading the properties, or an error message
          */
-        IKCONF_EXPORT virtual ikgen::Result<std::vector<Warning>, std::string> read(const std::string& filePath);
+        IKCONF_EXPORT virtual ikgen::Result<std::vector<Warning>, std::string> read(const std::string& filePath, Configuration& configuration);
 };
 
 }

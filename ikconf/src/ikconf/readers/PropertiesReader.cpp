@@ -24,13 +24,7 @@
 namespace ikconf
 {
 
-PropertiesReader::PropertiesReader(const Configuration& configuration) :
-    BaseReader(configuration)
-{}
-
-PropertiesReader::~PropertiesReader() = default;
-
-ikgen::Result<std::vector<Warning>, std::string> PropertiesReader::read(const std::string& filePath)
+ikgen::Result<std::vector<Warning>, std::string> PropertiesReader::read(const std::string& filePath, Configuration& configuration)
 {
     BufferedFile file(filePath.c_str());
     std::string line;
@@ -59,7 +53,7 @@ ikgen::Result<std::vector<Warning>, std::string> PropertiesReader::read(const st
                 const std::string propertyName = line.substr(0, separatorPos);
 
                 // check if the property is known
-                if(!m_configuration.checkPropertyExists(propertyName))
+                if(!configuration.checkPropertyExists(propertyName))
                 {
                     warnings.emplace_back(Warning::Type::SKIPPED_UNKNOWN_PROPERTY, "Unknown property '" + propertyName + "' was skipped");
                     continue;
@@ -67,7 +61,7 @@ ikgen::Result<std::vector<Warning>, std::string> PropertiesReader::read(const st
 
                 const std::any propertyValue = line.substr(separatorPos + 1);
 
-                const bool setPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue);
+                const bool setPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
 
                 if(!setPropertySuccess)
                     return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Failed to set property '" + propertyName + "'");

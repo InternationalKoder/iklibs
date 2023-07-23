@@ -21,13 +21,6 @@
 
 namespace ikconf
 {
-    BaseReader::BaseReader(const Configuration& configuration) :
-        m_configuration(configuration)
-    {}
-
-    BaseReader::~BaseReader()
-    {}
-
     // specific template for bool, since it can be given as an integer or as a string
     // further interpretation is needed
     template<>

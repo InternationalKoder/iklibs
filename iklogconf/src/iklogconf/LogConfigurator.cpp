@@ -30,8 +30,8 @@ ikgen::Result<std::vector<Warning>, std::string> LogConfigurator::readJsonFile(c
 {
     // Read configuration file
     LogConfiguration configuration;
-    ikconf::JsonReader jsonReader(configuration);
-    auto readResult = jsonReader.read(filepath);
+    ikconf::JsonReader jsonReader;
+    auto readResult = jsonReader.read(filepath, configuration);
 
     if(readResult.isFailure())
         return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readResult.getFailure()));

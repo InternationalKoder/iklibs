@@ -22,7 +22,6 @@
 
 #include "ikconf/Configuration.hpp"
 #include "ikconf/Warning.hpp"
-#include "ikconf/ikconf_export.hpp"
 #include <ikgen/Result.hpp>
 #include <charconv>
 #include <algorithm>
@@ -49,21 +48,12 @@ class BaseReader
     public:
 
         /*!
-         * \brief Constructor which takes the configuration to valorize
-         * \param configuration The configuration that will hold the read values
-         */
-        BaseReader(const Configuration& configuration);
-
-
-        IKCONF_EXPORT virtual ~BaseReader();
-
-
-        /*!
          * \brief Reads the given file and sets the properties in the configuration (given in the constructor)
          * \param filePath Path to the file to read
+         * \param configuration The configuration that will hold the read values
          * \return The warnings that may have been raised while reading the properties, or an error message
          */
-        virtual ikgen::Result<std::vector<Warning>, std::string> read(const std::string& filePath) = 0;
+        virtual ikgen::Result<std::vector<Warning>, std::string> read(const std::string& filePath, Configuration& configuration) = 0;
 
     protected:
 
@@ -127,23 +117,11 @@ class BaseReader
 
 
         /*!
-         * \brief Gathers implementation of tryConvertAndSetProperty for all the fundamental types and std::string
-         */
-        inline bool tryConvertAndSetProperty(const std::string& name, const std::any& value)
-        {
-            return tryConvertAndSetProperty(name, value, m_configuration);
-        }
-
-
-        /*!
          * \brief Removes the blank characters at the beginning and at the end of a std::string
          * \param string The string to trim
          * \return The trimmed string
          */
         static std::string trim(const std::string& string);
-
-
-        Configuration m_configuration;
 
     private:
 

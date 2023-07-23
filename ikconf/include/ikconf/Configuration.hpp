@@ -39,9 +39,9 @@ class Configuration
         /*!
          * \brief Simple constructor that allows to start without any property and set them later
          */
-        Configuration() {}
+        Configuration() = default;
 
-        virtual ~Configuration() {}
+        virtual ~Configuration() = default;
 
 
         /*!

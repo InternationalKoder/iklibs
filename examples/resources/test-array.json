@@ -1,0 +1,10 @@
+[
+    {
+        "my.string": "String from JSON array, element 0",
+        "myint": 0
+    },
+    {
+        "my.string": "String from JSON array, element 1",
+        "myint": 1
+    }
+]

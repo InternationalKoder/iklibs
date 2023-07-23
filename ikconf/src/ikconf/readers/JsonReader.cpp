@@ -24,218 +24,234 @@
 namespace ikconf
 {
 
-JsonReader::JsonReader(const Configuration& configuration) :
-    BaseReader(configuration),
-    m_lineNumber(1)
-{}
+using ReadResult = ikgen::Result<std::vector<Warning>, std::string>;
+using ReadValueResult = ikgen::Result<std::string, std::string>;
 
+enum class ReadStep { BetweenValues, BeforeName, BeforeValue };
+enum class NodeType { Object, Array };
 
-JsonReader::~JsonReader() = default;
-
-
-ikgen::Result<std::vector<Warning>, std::string> JsonReader::read(const std::string& filePath)
+struct Node
 {
+    NodeType type;
+    Configuration* value;
+};
+
+
+ReadResult JsonReader::read(const std::string& filePath, Configuration& configuration)
+{
+    // Open File
     BufferedFile file(filePath.c_str());
-    char character;
     m_lineNumber = 1;
 
     if(!file.isOpen())
-        return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Cannot open file '" + filePath + "'");
+        return ReadResult::makeFailure("Cannot open file '" + filePath + "'");
 
-    std::string name, value;
+    // Read JSON
+    std::vector<Node> nodeStack;
+    std::optional<char> nextCharacter;
 
-    ikgen::Result<char, std::string> readCharacterResult = readCharacter(file);
+    // Initialize stack
+    ikgen::Result<char, std::string> readCharacterResult = skipWhitespaceAndReadChar(file, nextCharacter);
     if(readCharacterResult.isFailure())
-        return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
-    character = readCharacterResult.getSuccess();
+        return ReadResult::failure(std::move(readCharacterResult.getFailure()));
 
+    char character = readCharacterResult.getSuccess();
     if(character == '{')
-    {
-        return readObject(file, m_configuration);
-    }
+        nodeStack.push_back(Node { .type = NodeType::Object, .value = &configuration });
     else if(character == '[')
-    {
-        return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Array on base level is not supported, please insert the array in a JSON object");
-    }
+        nodeStack.push_back(Node { .type = NodeType::Array, .value = &configuration });
     else
-        return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
-}
+        return ReadResult::failure(buildUnexpectedCharacterMessage(character));
 
-
-ikgen::Result<std::vector<Warning>, std::string> JsonReader::readObject(BufferedFile& file, Configuration& configuration)
-{
+    ReadStep step = ReadStep::BetweenValues;
+    std::optional<std::string> propertyName;
     std::vector<Warning> warnings;
-    char character = ',';
-    std::string propertyName, propertyValue;
-    bool setPropertySuccess = false;
-    ikgen::Result<char, std::string> readCharacterResult = ikgen::Result<char, std::string>::makeSuccess(',');
 
-    while(character == ',')
+    // Read values
+    do
     {
-        propertyName = "";
-        propertyValue = "";
+        Configuration* const configuration = nodeStack.back().value;
+        const NodeType nodeType = nodeStack.back().type;
+        ReadValueResult readStringResult = ReadValueResult::makeFailure("Uknown error");
 
-        readCharacterResult = readCharacter(file);
-        if(readCharacterResult.isFailure())
-            return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
-        character = readCharacterResult.getSuccess();
-
-        if(character != '"')
-            return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
-
-        do
+        switch(step)
         {
-            readCharacterResult = readCharacter(file);
-            if(readCharacterResult.isFailure())
-                return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
-            character = readCharacterResult.getSuccess();
+            case ReadStep::BetweenValues:
+                readCharacterResult = skipWhitespaceAndReadChar(file, nextCharacter);
 
-            propertyName += character;
-        } while(character != '"');
-        propertyName.pop_back();
-
-        readCharacterResult = readCharacter(file);
-        if(readCharacterResult.isFailure())
-            return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
-        character = readCharacterResult.getSuccess();
-
-        if(character != ':')
-            return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
-
-        // check if the property is known
-        if(!configuration.checkPropertyExists(propertyName))
-        {
-            warnings.emplace_back(Warning::Type::SKIPPED_UNKNOWN_PROPERTY, "Unknown property '" + propertyName + "' was skipped");
-            unsigned int level = 1;
-            bool insideString = false;
-            while((character != ',' && level > 0) || insideString)
-            {
-                readCharacterResult = readCharacter(file, true);
                 if(readCharacterResult.isFailure())
-                    return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
+                    return ReadResult::failure(std::move(readCharacterResult.getFailure()));
                 character = readCharacterResult.getSuccess();
 
-                if(character == '[' || character == '{')
-                    level++;
-                else if(character == ']' || character == '}')
-                    level--;
+                if((character == '}' && nodeType == NodeType::Object) ||
+                    (character == ']' && nodeType == NodeType::Array))
+                {
+                    nodeStack.pop_back();
+                }
+                else
+                {
+                    if(character != ',')
+                        nextCharacter = character;
+
+                    step = nodeType == NodeType::Object ? ReadStep::BeforeName : ReadStep::BeforeValue;
+                }
+                break;
+
+            case ReadStep::BeforeName:
+                // Read until property name
+                readCharacterResult = skipWhitespaceAndReadChar(file, nextCharacter);
+
+                if(readCharacterResult.isFailure())
+                    return ReadResult::failure(std::move(readCharacterResult.getFailure()));
+                nextCharacter = readCharacterResult.getSuccess();
+
+                // Read the property name
+                readStringResult = readString(file, nextCharacter);
+
+                if(readStringResult.isFailure())
+                    return ReadResult::makeFailure(std::move(readStringResult.getFailure()));
+
+                propertyName = readStringResult.getSuccess();
+
+                // Read until after the ':' separator
+                readCharacterResult = skipWhitespaceAndReadChar(file, nextCharacter);
+
+                if(readCharacterResult.isFailure())
+                    return ReadResult::failure(std::move(readCharacterResult.getFailure()));
+                character = readCharacterResult.getSuccess();
+
+                if(character != ':')
+                    return ReadResult::failure(buildUnexpectedCharacterMessage(character));
+
+                step = ReadStep::BeforeValue;
+                break;
+
+            case ReadStep::BeforeValue:
+                // Make sure that we are in a correct state: the property name should have been read and
+                // should exist in configuration for an object
+                if(nodeType == NodeType::Object &&
+                    (!propertyName.has_value() || (configuration != nullptr && !configuration->checkPropertyExists(*propertyName))))
+                {
+                    warnings.emplace_back(Warning::Type::SKIPPED_UNKNOWN_PROPERTY, "Unknown property '" + propertyName.value_or("") + "' was skipped");
+                    propertyName.reset();
+                }
+
+                // Read value's first character to know what kind of value it is
+                readCharacterResult = skipWhitespaceAndReadChar(file, nextCharacter);
+
+                if(readCharacterResult.isFailure())
+                    return ReadResult::failure(std::move(readCharacterResult.getFailure()));
+                character = readCharacterResult.getSuccess();
+
+                // Read and handle the full value
+                if(character == '{')
+                {
+                    Configuration* subConfig = nullptr;
+
+                    // Get the object's property in defined configuration
+                    if(configuration != nullptr)
+                    {
+                        // Object inside an object
+                        if(nodeType == NodeType::Object && propertyName.has_value() &&
+                            configuration->checkPropertyExists(*propertyName))
+                        {
+                            subConfig = std::any_cast<Configuration*>(configuration->getPropertyValue(*propertyName));
+                        }
+
+                        // Array of objects == array of configurations
+                        else if(nodeType == NodeType::Array)
+                            subConfig = configuration->newListItem();
+                    }
+
+                    nodeStack.push_back(Node { .type = NodeType::Object, .value = subConfig });
+                    step = ReadStep::BetweenValues;
+                }
+                else if(character == '[')
+                {
+                    // Check whether it is an array of configurations
+                    readCharacterResult = skipWhitespaceAndReadChar(file, nextCharacter);
+
+                    if(readCharacterResult.isFailure())
+                        return ReadResult::failure(std::move(readCharacterResult.getFailure()));
+                    character = readCharacterResult.getSuccess();
+                    nextCharacter = character;
+
+                    Configuration* subConfig = configuration;
+
+                    // Get the array's property in defined configuration
+                    if(character == '{' && configuration != nullptr && propertyName.has_value() &&
+                        configuration->checkPropertyExists(*propertyName))
+                    {
+                        subConfig = std::any_cast<Configuration*>(configuration->getPropertyValue(*propertyName));
+                    }
+
+                    nodeStack.push_back(Node { .type = NodeType::Array, .value = subConfig });
+                    step = ReadStep::BetweenValues;
+                }
                 else if(character == '"')
-                    insideString = !insideString;
-            }
-            continue;
+                {
+                    nextCharacter = character;
+                    auto readValueResult = readString(file, nextCharacter);
+                    if(readValueResult.isFailure())
+                        return ReadResult::makeFailure(readValueResult.getFailure());
+
+                    if(propertyName.has_value() && configuration != nullptr &&
+                        !tryConvertAndSetProperty(*propertyName, readValueResult.getSuccess(), *configuration))
+                    {
+                        return ReadResult::makeFailure("Failed to set property '" + *propertyName + "'");
+                    }
+
+                    // Read until we get to values separator
+                    readCharacterResult = skipWhitespaceAndReadChar(file, nextCharacter);
+
+                    if(readCharacterResult.isFailure())
+                        return ReadResult::failure(std::move(readCharacterResult.getFailure()));
+                    character = readCharacterResult.getSuccess();
+
+                    if(character != ',' && (character != '}' || nodeType != NodeType::Object) && (character != ']' || nodeType != NodeType::Array))
+                        return ReadResult::makeFailure(buildUnexpectedCharacterMessage(character));
+
+                    if(character == ',')
+                        step = nodeType == NodeType::Object ? ReadStep::BeforeName : ReadStep::BeforeValue;
+                    else
+                    {
+                        nextCharacter = character;
+                        step = ReadStep::BetweenValues;
+                    }
+                }
+                else
+                {
+                    nextCharacter = character;
+                    auto readValueResult = readBasicValue(file, nextCharacter, nodeType == NodeType::Array);
+                    if(readValueResult.isFailure())
+                        return ReadResult::makeFailure(readValueResult.getFailure());
+
+                    if(!nextCharacter.has_value())
+                        return ReadResult::makeFailure(buildUnexpectedCharacterMessage(character));
+
+                    if(propertyName.has_value() && configuration != nullptr &&
+                        !tryConvertAndSetProperty(*propertyName, trim(readValueResult.getSuccess()), *configuration))
+                    {
+                        return ReadResult::makeFailure("Failed to set property '" + *propertyName + "'");
+                    }
+
+                    // Handle values separator
+                    character = readChar(file, nextCharacter);
+                    if(character == ',')
+                        step = nodeType == NodeType::Object ? ReadStep::BeforeName : ReadStep::BeforeValue;
+                    else
+                    {
+                        nextCharacter = character;
+                        step = ReadStep::BetweenValues;
+                    }
+                }
+
+                break;
         }
 
-        // assign value to property
-        readCharacterResult = readCharacter(file);
-        if(readCharacterResult.isFailure())
-            return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
-        character = readCharacterResult.getSuccess();
+    } while(!nodeStack.empty());
 
-        if(character == '{')
-        {
-            // value is an object
-            Configuration* subConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
-            readObject(file, *subConfig);
-
-            readCharacterResult = readCharacter(file);
-            if(readCharacterResult.isFailure())
-                return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
-            character = readCharacterResult.getSuccess();
-
-            setPropertySuccess = true;
-        }
-        else if(character == '[')
-        {
-            // value is an array
-            readArray(file, configuration, propertyName);
-
-            readCharacterResult = readCharacter(file);
-            if(readCharacterResult.isFailure())
-                return ikgen::Result<std::vector<Warning>, std::string>::failure(std::move(readCharacterResult.getFailure()));
-            character = readCharacterResult.getSuccess();
-
-            setPropertySuccess = true;
-        }
-        else
-        {
-            // value is a basic type
-            propertyValue += character;
-
-            character = file.nextChar();
-            while(character != ',' && character != '}')
-            {
-                propertyValue += character;
-                character = file.nextChar();
-            }
-
-            propertyValue = trim(propertyValue);
-
-            if(propertyValue.front() == '"' && propertyValue.back() == '"')
-            {
-                propertyValue.pop_back();
-                propertyValue = propertyValue.substr(1);
-            }
-
-            setPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
-        }
-
-        if(!setPropertySuccess)
-            return ikgen::Result<std::vector<Warning>, std::string>::makeFailure("Failed to set property '" + propertyName + "'");
-    }
-
-    if(character != '}')
-        return ikgen::Result<std::vector<Warning>, std::string>::failure(buildUnexpectedCharacterMessage(character));
-
-    return ikgen::Result<std::vector<Warning>, std::string>::success(std::move(warnings));
-}
-
-
-ikgen::Result<ikgen::EmptyResult, std::string> JsonReader::readArray(BufferedFile& file, Configuration& configuration, const std::string& propertyName)
-{
-    std::string propertyValue;
-    char character = '[';
-    bool addPropertySuccess = true;
-
-    while(character != ']' && addPropertySuccess)
-    {
-        // read the value
-        propertyValue = "";
-        character = file.nextChar();
-        while(character != ',' && character != ']' && character != '{')
-        {
-            propertyValue += character;
-            character = file.nextChar();
-        }
-
-        if(character == '{')
-        {
-            // value is an object
-            Configuration* const listConfig = std::any_cast<Configuration*>(configuration.getPropertyValue(propertyName));
-            Configuration* const subConfig = listConfig->newListItem();
-            readObject(file, *subConfig);
-
-            auto readCharacterResult = readCharacter(file);
-            if(readCharacterResult.isFailure())
-                return ikgen::Result<ikgen::EmptyResult, std::string>::failure(std::move(readCharacterResult.getFailure()));
-            character = readCharacterResult.getSuccess();
-        }
-        else
-        {
-            // arrange the value before inserting it
-            propertyValue = trim(propertyValue);
-
-            if(propertyValue.front() == '"' && propertyValue.back() == '"')
-            {
-                propertyValue.pop_back();
-                propertyValue = propertyValue.substr(1);
-            }
-
-            // insert the value
-            addPropertySuccess = tryConvertAndSetProperty(propertyName, propertyValue, configuration);
-        }
-    }
-
-    return ikgen::Result<ikgen::EmptyResult, std::string>::makeSuccess();
+    return ReadResult::success(std::move(warnings));
 }
 
 
@@ -249,22 +265,121 @@ std::string JsonReader::buildUnexpectedCharacterMessage(char character)
 }
 
 
-ikgen::Result<char, std::string> JsonReader::readCharacter(BufferedFile& file, bool acceptEof)
+ikgen::Result<char, std::string> JsonReader::skipWhitespaceAndReadChar(BufferedFile& file, std::optional<char>& nextCharacter)
 {
     char character = '\0';
 
     while(character == ' ' || character == '\n'
           || character == '\r' || character == '\t' || character == '\0')
     {
-        character = file.nextChar();
+        character = readChar(file, nextCharacter);
         if(character == '\n')
             ++m_lineNumber;
     }
 
-    if(character == '\0' && !acceptEof)
+    if(character == '\0')
         return ikgen::Result<char, std::string>::makeFailure("Unexpected end of file");
 
     return ikgen::Result<char, std::string>::success(std::move(character));
+}
+
+ReadValueResult JsonReader::readString(BufferedFile& file, std::optional<char>& nextCharacter)
+{
+    std::string result;
+
+    bool isEscaped = false;
+    bool isEscapedUnicode = false;
+    unsigned int unicodeEscapeCount = 0;
+
+    unsigned char c = readChar(file, nextCharacter);
+    if(c != '"')
+        return ReadValueResult::failure(buildUnexpectedCharacterMessage(c));
+
+    while(c != '\0')
+    {
+        c = file.nextChar();
+
+        if(c == '\n')
+            ++m_lineNumber;
+
+        if(c == '"' && !isEscaped)
+            break;
+
+        if(c < 0x20)
+            return ReadValueResult::failure(buildUnexpectedCharacterMessage(c));
+
+        if(isEscapedUnicode)
+        {
+            if(c < '0' || (c > '9' && c < 'A') || (c > 'F' && c < 'a') || c > 'f')
+                return ReadValueResult::failure(buildUnexpectedCharacterMessage(c));
+
+            ++unicodeEscapeCount;
+            if(unicodeEscapeCount == 4)
+            {
+                unicodeEscapeCount = 0;
+                isEscapedUnicode = false;
+            }
+        }
+        else if(isEscaped && (c == '"' || c == '/' || c == 'b' || c == 'f' || c == 'n' || c == 'r' || c == 't' || c == 'u'))
+        {
+            isEscaped = false;
+            if(c == 'u')
+                isEscapedUnicode = true;
+        }
+        else if(c == '\\')
+            isEscaped = !isEscaped;
+
+        result.push_back(c);
+    }
+
+    if(c == '\0')
+        return ReadValueResult::makeFailure("Unexpected end of file");
+
+    return ReadValueResult::success(std::move(result));
+}
+
+ReadValueResult JsonReader::readBasicValue(BufferedFile& file, std::optional<char>& nextCharacter, bool inArray)
+{
+    char c = readChar(file, nextCharacter);
+
+    if(c == '\n')
+        ++m_lineNumber;
+
+    std::string result;
+
+    while(c != '\0' && c != ',' && c != '}' && c != ']')
+    {
+        result.push_back(c);
+        c = file.nextChar();
+
+        if(c == '\n')
+            ++m_lineNumber;
+    }
+
+    if(c == '\0')
+        return ReadValueResult::makeFailure("Unexpected end of file");
+
+    if(c == ']' && !inArray)
+        return ReadValueResult::makeFailure(buildUnexpectedCharacterMessage(']'));
+
+    if(c == '}' && inArray)
+        return ReadValueResult::makeFailure(buildUnexpectedCharacterMessage('}'));
+
+    nextCharacter = c;
+
+    return ReadValueResult::success(std::move(result));
+}
+
+char JsonReader::readChar(BufferedFile& file, std::optional<char>& nextCharacter)
+{
+    if(nextCharacter.has_value())
+    {
+        char result = nextCharacter.value();
+        nextCharacter.reset();
+        return result;
+    }
+    else
+        return file.nextChar();
 }
 
 }

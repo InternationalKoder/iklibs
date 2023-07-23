@@ -22,16 +22,19 @@
 #include "ikconf/Settings.hpp"
 #include <ikconf/readers/PropertiesReader.hpp>
 #include <ikconf/readers/JsonReader.hpp>
+#include <ikconf/ConfigurationList.hpp>
 #include <iostream>
 
 void runIkconfExamples()
 {
+    using ReadResult = ikgen::Result<std::vector<ikconf::Warning>, std::string>;
+
     // create the object that will hold our configuration
     Settings settings;
 
     // read from a .properties file
-    ikconf::PropertiesReader propertiesReader(settings);
-    ikgen::Result<std::vector<ikconf::Warning>, std::string> propertiesReadResult = propertiesReader.read("resources/test.properties");
+    ikconf::PropertiesReader propertiesReader;
+    ReadResult propertiesReadResult = propertiesReader.read("resources/test.properties", settings);
 
     if(propertiesReadResult.isSuccess())
     {
@@ -54,9 +57,8 @@ void runIkconfExamples()
 
 
     // now read from a .json file
-    ikconf::JsonReader jsonReader(settings);
-
-    ikgen::Result<std::vector<ikconf::Warning>, std::string> jsonReadResult = jsonReader.read("resources/test.json");
+    ikconf::JsonReader jsonReader;
+    ReadResult jsonReadResult = jsonReader.read("resources/test.json", settings);
 
     if(jsonReadResult.isSuccess())
     {
@@ -74,7 +76,6 @@ void runIkconfExamples()
     std::cout << settings.getTestInt() << std::endl;
     std::cout << settings.getTestFloat() << std::endl;
     std::cout << settings.getTestBool() << std::endl;
-    std::cout << settings.getTestCharAsChar() << std::endl;
     std::cout << settings.getTestSubSettings().getTestSubString() << std::endl;
     std::cout << settings.getTestSubSettings().getTestSubInt() << std::endl;
     std::cout << settings.getTestSubSettings().getTestSubSubSettings().getTestSubSubFloat() << std::endl;
@@ -94,4 +95,15 @@ void runIkconfExamples()
     {
         std::cout << "object array item: { " << i.getIndex() << " ; " << i.getValue() << " }" << std::endl;
     }
+
+    // Read a .json file with an array as the base element
+    ikconf::ConfigurationList<Settings> settingsList;
+    ReadResult jsonReadListResult = jsonReader.read("resources/test-array.json", settingsList);
+
+    std::cout << "JSON file with array:" << std::endl;
+    for(const Settings& settings : settingsList.getProperties())
+    {
+        std::cout << "Settings array element: \"" << settings.getTestString() << "\" ; " << settings.getTestInt() << std::endl;
+    }
+
 }

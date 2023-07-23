@@ -21,7 +21,6 @@
     "othersubsettings": {
         "testOtherSubsettingsStr": "OK"
     },
-    "mychar.char": C,
     "myarray": [
         10,
         24,
