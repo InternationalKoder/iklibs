@@ -72,7 +72,7 @@ ReadResult JsonReader::read(const std::string& filePath, Configuration& configur
     {
         Configuration* const configuration = nodeStack.back().value;
         const NodeType nodeType = nodeStack.back().type;
-        ReadValueResult readStringResult = ReadValueResult::makeFailure("Uknown error");
+        ReadValueResult readStringResult = ReadValueResult::failure("Unknown error");
 
         switch(step)
         {
@@ -291,7 +291,7 @@ ReadValueResult JsonReader::readString(BufferedFile& file, std::optional<char>& 
     bool isEscapedUnicode = false;
     unsigned int unicodeEscapeCount = 0;
 
-    unsigned char c = readChar(file, nextCharacter);
+    char c = readChar(file, nextCharacter);
     if(c != '"')
         return ReadValueResult::failure(buildUnexpectedCharacterMessage(c));
 
@@ -305,7 +305,7 @@ ReadValueResult JsonReader::readString(BufferedFile& file, std::optional<char>& 
         if(c == '"' && !isEscaped)
             break;
 
-        if(c < 0x20)
+        if(static_cast<unsigned char>(c) < 0x20)
             return ReadValueResult::failure(buildUnexpectedCharacterMessage(c));
 
         if(isEscapedUnicode)
@@ -333,7 +333,7 @@ ReadValueResult JsonReader::readString(BufferedFile& file, std::optional<char>& 
     }
 
     if(c == '\0')
-        return ReadValueResult::makeFailure("Unexpected end of file");
+        return ReadValueResult::failure("Unexpected end of file");
 
     return ReadValueResult::success(std::move(result));
 }
